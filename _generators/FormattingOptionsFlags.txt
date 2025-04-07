@@ -1,0 +1,18 @@
+unknown,invalid          = -1
+none                     = 0
+argIdTaken               = 1  // fieldWidth value is set
+fieldWidthTaken               // fieldWidth value is set
+fieldWidthIndirect            // Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value
+signPlus                      // Mutually exclusive with signMinus
+signMinus                     // Mutually exclusive with signPlus
+signZero
+signAlterForm
+# alignTaken
+fillingTaken
+localeFormatting
+precisionTaken
+precisionIndirect
+grouppingTaken
+
+fieldWidthIndirectTaken  = fieldWidthTaken | fieldWidthIndirect
+precisionIndirectTaken   = precisionTaken | precisionIndirect

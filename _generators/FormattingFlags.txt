@@ -1,0 +1,16 @@
+unknown,invalid             = -1
+none                        = 0
+ignoreFormatStringErrors    = 1    // Ignore errors in format string
+ignoreArgumentErrors               // Ignore errors while searching for arguments
+ignoreFormattingErrors             // Ignore errors while formatting values
+ignoreWidthIndirectErrors          // Ignore errors while searching for arguments for width
+ignorePrecisionIndirectErrors      // Ignore errors while searching for arguments for precision
+
+considerZeroWidthSpaces            // Учитывать пробелы нулевой ширины
+considerCombiningChars             // Учитывать комбинированные символы
+
+ignoreOptionsIndirectErrors = ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
+ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors
+considerUnicodeFeatures     = considerZeroWidthSpaces | considerCombiningChars
+
+all = ignoreErrors | considerUnicodeFeatures
