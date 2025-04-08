@@ -1,0 +1,9 @@
+format_spec ::= [options][width][grouping]["." precision][type]
+options     ::= [[fill]align][sign]["z"]["#"]["0"]
+fill        ::= <any character>
+align       ::= "<" | ">" | "=" | "^"
+sign        ::= "+" | "-" | " "
+width       ::= digit+
+grouping    ::= "," | "_" | "'"
+precision   ::= digit+
+type        ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"

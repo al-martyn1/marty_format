@@ -1,0 +1,6 @@
+replacement_field ::= "{" [arg_id] ["!" conversion] [":" format_spec] "}"
+arg_id            ::= arg_index | arg_name
+arg_index         ::= digit+
+arg_name          ::= identifier
+conversion        ::= "r" | "s" | "a"
+format_spec       ::= format_spec_expr
