@@ -1,10 +1,17 @@
 - [Список задач](#user-content-список-задач)
+  - [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
+  - [Задачи](#user-content-задачи)
 
 # Список задач
 
-- Описание форматной строки в языке `python` - Format String Syntax - https://docs.python.org/3/library/string.html#format-string-syntax
-- C++ std::format - https://en.cppreference.com/w/cpp/utility/format/format
-- C++ Standard format specification - https://en.cppreference.com/w/cpp/utility/format/spec
+## Ссылки на референсные спецификации
+
+- `Python`: Описание форматной строки - Format String Syntax - https://docs.python.org/3/library/string.html#format-string-syntax
+- C++: `std::format` - https://en.cppreference.com/w/cpp/utility/format/format
+- C++: `Standard format specification` - https://en.cppreference.com/w/cpp/utility/format/spec
+
+
+## Задачи
 
 - [ ] Для поддержки STM32 (и подобной встройки) сделать опциональным использование UTF-8 (и все зависимости от marty_utf).
 

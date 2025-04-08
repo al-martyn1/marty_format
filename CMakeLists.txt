@@ -11,9 +11,11 @@ endif()
 set(MODULE_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 file(GLOB_RECURSE sources "${MODULE_ROOT}/*.cpp")
+list(FILTER sources EXCLUDE REGEX "examples/.*\\.h$")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Sources" FILES ${sources})
 
 file(GLOB_RECURSE headers "${MODULE_ROOT}/*.h")
+list(FILTER headers EXCLUDE REGEX "examples/.*\\.h$")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Headers" FILES ${headers})
 
 

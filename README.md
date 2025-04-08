@@ -1,5 +1,6 @@
 - [Библиотека форматирования marty::format](#user-content-библиотека-форматирования-martyformat)
   - [Возможности библиотеки](#user-content-возможности-библиотеки)
+  - [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
   - [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
     - [Преобразование типа аргумента](#user-content-преобразование-типа-аргумента)
     - [Спецификатор формата](#user-content-спецификатор-формата)
@@ -14,6 +15,14 @@
 2. Поддержка именованных аргументов для `C++` при использовании соответствующих контейнеров для аргументов.
 3. Поддержка передачи аргументов через std::initializer_list.
 4. Поддержка Unicode в кодировке UTF-8.
+
+
+
+## Ссылки на референсные спецификации
+
+- `Python`: Описание форматной строки - Format String Syntax - https://docs.python.org/3/library/string.html#format-string-syntax
+- C++: `std::format` - https://en.cppreference.com/w/cpp/utility/format/format
+- C++: `Standard format specification` - https://en.cppreference.com/w/cpp/utility/format/spec
 
 
 ## Синтаксис форматной строки
