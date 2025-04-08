@@ -2,6 +2,11 @@
 
 #!insert{no-fail,doc,raise=-1} md_/reference_specs.md_
 
+## README
+
+Описание библиотеки - [README](README.md_).
+
+
 ## Задачи
 
 - [ ] Для поддержки STM32 (и подобной встройки) сделать опциональным использование UTF-8 (и все зависимости от marty_utf).
