@@ -5,6 +5,7 @@
 #pragma once
 
 #include "enums.h"
+#include "defs.h"
 
 // 
 #include "marty_utf/utf.h"

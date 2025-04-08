@@ -7,6 +7,7 @@
 #include "marty_format_types.h"
 #include "exceptions.h"
 #include "utils.h"
+#include "defs.h"
 //
 #include "marty_decimal/marty_decimal.h"
 
@@ -22,6 +23,8 @@
 #include <vector>
 #include <unordered_map>
 #include <map>
+#include <initializer_list>
+
 
 /*
 Делаем форматирование по типу std::format:
@@ -600,6 +603,13 @@ struct has_size<T, std::void_t<decltype(std::declval<T>().size())>> : std::true_
 
 //----------------------------------------------------------------------------
 template< typename C, typename = void >
+struct has_end : std::false_type {};
+ 
+template<typename T>
+struct has_end<T, std::void_t<decltype(std::declval<T>().end())>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
 struct has_string_find : std::false_type {};
  
 template<typename T>
@@ -611,6 +621,13 @@ struct has_size_t_find : std::false_type {};
  
 template<typename T>
 struct has_size_t_find<T, std::void_t<decltype(std::declval<T>().find(std::size_t(0)))>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_find_by_pos : std::false_type {};
+ 
+template<typename T>
+struct has_find_by_pos<T, std::void_t<decltype(std::declval<T>().find_by_pos(std::size_t(0)))>> : std::true_type {};
 
 //----------------------------------------------------------------------------
 template< typename C, typename = void >
@@ -628,11 +645,12 @@ template<typename ContainerType, typename ConditionType=void>
 struct MartyFormatValueGetter;
 
 //----------------------------------------------------------------------------
-// Версия для контейнеров, у которых есть find как по строке, так и по индексу, а элементы имеют second_type и соотв поле second
+// Версия для контейнеров, у которых есть find как по строке, так и по индексу (find_by_pos), а элементы имеют second_type и соотв поле second
 template<typename ContainerType>
 struct MartyFormatValueGetter< ContainerType
                              , typename std::enable_if< has_string_find<ContainerType>::value 
-                                                     && has_size_t_find<ContainerType>::value
+                                                     && has_find_by_pos<ContainerType>::value
+                                                     && has_end<ContainerType>::value // Сравнивать с результатом find
                                                      && has_second_type<typename ContainerType::value_type>::value
                                                      // && is_range<ContainerType>::value
                                                       >::type
@@ -661,7 +679,7 @@ struct MartyFormatValueGetter< ContainerType
         
         if (szIdx!=std::size_t(-1))
         {
-            auto it = container.find(szIdx);
+            auto it = container.find_by_pos(szIdx);
             if (it==container.end())
                 throw argid_out_of_range("integer argId is out of range");
 
@@ -679,11 +697,12 @@ struct MartyFormatValueGetter< ContainerType
 
 
 //----------------------------------------------------------------------------
-// Версия для контейнеров, у которых есть find как по строке, так и по индексу, а элементы не имеют second_type
+// Версия для контейнеров, у которых есть find как по строке, так и по индексу (find_by_pos), а элементы не имеют second_type
 template<typename ContainerType>
 struct MartyFormatValueGetter< ContainerType
                              , typename std::enable_if< has_string_find<ContainerType>::value 
-                                                     && has_size_t_find<ContainerType>::value
+                                                     && has_find_by_pos<ContainerType>::value
+                                                     && has_end<ContainerType>::value // Сравнивать с результатом find
                                                      && !has_second_type<typename ContainerType::value_type>::value
                                                      // && is_range<ContainerType>::value
                                                       >::type
@@ -712,7 +731,7 @@ struct MartyFormatValueGetter< ContainerType
 
         if (szIdx!=std::size_t(-1))
         {
-            auto it = container.find(szIdx);
+            auto it = container.find_by_pos(szIdx);
             if (it==container.end())
                 throw argid_out_of_range("integer argId is out of range");
 
@@ -787,6 +806,7 @@ template<typename ContainerType>
 struct MartyFormatValueGetter< ContainerType
                              , typename std::enable_if< !has_string_find<ContainerType>::value
                                                      && is_range<ContainerType>::value
+                                                     && !has_find_by_pos<ContainerType>::value
                                                      && has_first_type <typename ContainerType::value_type>::value
                                                      && has_second_type<typename ContainerType::value_type>::value
                                                       >::type
@@ -840,6 +860,7 @@ struct MartyFormatValueGetter< ContainerType
 template<typename ContainerType>
 struct MartyFormatValueGetter< ContainerType
                              , typename std::enable_if< is_range<ContainerType>::value
+                                                     && !has_find_by_pos<ContainerType>::value
                                                      && !has_first_type <typename ContainerType::value_type>::value
                                                      && !has_second_type<typename ContainerType::value_type>::value
                                                       >::type
@@ -1002,7 +1023,7 @@ public:
         return m_values.begin() + std::ptrdiff_t(idx);
     }
     
-    const_iterator find(std::size_t idx) const
+    const_iterator find_by_pos(std::size_t idx) const
     {
         if (idx>=m_values.size())
             return m_values.end();
@@ -1032,10 +1053,139 @@ public:
 
 
 //----------------------------------------------------------------------------
+template<typename StringType> inline
+StringType simple_convert_to_string(char ch)
+{
+    return StringType(1, ch);
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+StringType simple_convert_to_string(const char *str)
+{
+    return str ? StringType(str) : StringType();
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+StringType simple_convert_to_string(const std::string &str)
+{
+    return simple_convert_to_string<StringType>(str.c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::uint8_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string(unsigned(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::int8_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string(int(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::uint16_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string(unsigned(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::int16_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string(int(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::uint32_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string((unsigned long)(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::int32_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string(long(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::uint64_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string((unsigned long long)(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(std::int64_t i)
+{
+    return simple_convert_to_string<StringType>(std::to_string((long long)(i)).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(float f)
+{
+    return simple_convert_to_string<StringType>(std::to_string(f).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(double d)
+{
+    return simple_convert_to_string<StringType>(std::to_string(d).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(long double d)
+{
+    return simple_convert_to_string<StringType>(std::to_string(d).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(const std::wstring &str)
+{
+    return simple_convert_to_string<StringType>(marty::utf::string_from_wstring(str).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(const wchar_t *str)
+{
+    return simple_convert_to_string<StringType>(marty::utf::string_from_wstring(str?std::wstring(str):std::wstring()).c_str());
+}
+
+//----------------------------------------------------------------------------
+template<typename StringType> inline
+std::string simple_convert_to_string(const marty::Decimal &d)
+{
+    return simple_convert_to_string<StringType>(to_string(d).c_str());
+}
+
+//----------------------------------------------------------------------------
+
+
+
+                // , marty::Decimal
+
+
+
+//----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, char ch)
 {
-    return StringType(1, typename StringType::value_type(ch));
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(ch);
+    // StringType(1, typename StringType::value_type(ch));
 }
 
 //----------------------------------------------------------------------------
@@ -1056,84 +1206,96 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, ch
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int8_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint8_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int16_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint16_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int32_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint32_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int64_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint64_t v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, float v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, double v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long double v)
 {
-    return StringType(std::to_string(v).c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(v);
 }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const std::string &str)
 {
-    return StringType(str.c_str());
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(str);
 }
 
 //----------------------------------------------------------------------------
@@ -1155,6 +1317,14 @@ template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const wchar_t* str)
 {
     return martyFormatValueFormat<StringType>(formattingOptions, std::wstring(str));
+}
+
+//----------------------------------------------------------------------------
+template< typename StringType=std::string >
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const marty::Decimal &d)
+{
+    MARTY_ARG_USED(formattingOptions);
+    return simple_convert_to_string<StringType>(d);
 }
 
 //----------------------------------------------------------------------------
@@ -1183,6 +1353,7 @@ template< typename IntType
         >
 int convertFormatArgumentVariantValueToInt(IntType i)
 {
+    MARTY_ARG_USED(i);
     throw invalid_argument_type("invalid argument type (required any kind of integer)");
 }
 
@@ -1198,6 +1369,10 @@ int convertFormatArgumentVariantToInt(VariantType v)
                      );
 }
 //----------------------------------------------------------------------------
+
+
+
+
 
 // auto val = std::visit([](auto && arg) -> std::optional<uint64_t)
 // {
@@ -1248,18 +1423,15 @@ int convertFormatArgumentVariantToInt(VariantType v)
 using Args = BasicArgs<FormatArgumentVariant, std::vector<FormatArgumentVariant>, std::unordered_map<std::string, std::size_t> >;
 
 
-template< typename StringType=std::string
-        , typename ArgumentVariantType=FormatArgumentVariant
-        , typename VectorType=std::vector<ArgumentVariantType>
-        , typename MapType=std::unordered_map<StringType, std::size_t>
-        , typename ArgsType = BasicArgs<ArgumentVariantType, VectorType, MapType>
+template< typename StringType = std::string
+        , typename ArgsType   = Args
         >
-StringType formatMessage( const StringType &fmt
-                        , const ArgsType   &args
-                        , FormattingFlags  formattingFlags=FormattingFlags::all
-                        )
+StringType formatMessageImpl( const StringType &fmt
+                            , const ArgsType   &args
+                            , FormattingFlags  formattingFlags=FormattingFlags::all
+                            )
 {
-    using ContainerType = Args<ArgumentVariantType, VectorType, MapType>;
+    using ContainerType = ArgsType;
 
     std::size_t argIdx = 0;
 
@@ -1271,7 +1443,7 @@ StringType formatMessage( const StringType &fmt
         {
             valToFormat = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.argId, argIdx);
         }
-        catch(const base_error &e)
+        catch(const base_error &)
         {
             if ((formattingFlags&FormattingFlags::ignoreArgumentErrors)==0) // Ошибки поиска аргументов не игнорируем
                 throw; // Прокидываем исключение выше
@@ -1285,7 +1457,7 @@ StringType formatMessage( const StringType &fmt
                 auto widthVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.fieldWidthRef, argIdx);
                 formattingOptions.fieldWidth = convertFormatArgumentVariantToInt(widthVal);
             }
-            catch(const base_error &e)
+            catch(const base_error &)
             {
                 if ((formattingFlags&FormattingFlags::ignoreWidthIndirectErrors)==0) // Ошибки поиска аргументов не игнорируем
                     throw; // Прокидываем исключение выше
@@ -1305,7 +1477,7 @@ StringType formatMessage( const StringType &fmt
                 auto precisionVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.precisionRef, argIdx);
                 formattingOptions.precision = convertFormatArgumentVariantToInt(precisionVal);
             }
-            catch(const base_error &e)
+            catch(const base_error &)
             {
                 if ((formattingFlags&FormattingFlags::ignorePrecisionIndirectErrors)==0) // Ошибки поиска аргументов не игнорируем
                     throw; // Прокидываем исключение выше
@@ -1319,14 +1491,14 @@ StringType formatMessage( const StringType &fmt
 
         try
         {
-            return std::visit( [](auto && a) -> StringType
+            return std::visit( [&](auto && a) -> StringType
                                {
                                    return martyFormatValueFormat(formattingOptions, a);
                                }
                              , valToFormat
                              );
         }
-        catch(const base_error &e)
+        catch(const base_error &)
         {
             if ((formattingFlags&FormattingFlags::ignoreFormattingErrors)==0)
                 throw; // Прокидываем исключение выше
@@ -1334,39 +1506,52 @@ StringType formatMessage( const StringType &fmt
 
         return std::visit( [](auto && a) -> StringType
                            {
-                               return to_string(a);
+                               return simple_convert_to_string<StringType>(a);
                            }
                          , valToFormat
                          );
 
-
-// struct MartyFormatValueGetter< ContainerType
-//                              , typename std::enable_if< is_range<ContainerType>::value
-//                                                      && !has_first_type <typename ContainerType::value_type>::value
-//                                                      && !has_second_type<typename ContainerType::value_type>::value
-//                                                       >::type
-//                              >
-// {
-//     using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
-//  
-//     const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
-//     {
-
-
-
-        //martyFormatValueFormat<StringType>(formattingOptions, v)
-        //return std::string("www");
     };
 
     return processFormatStringImpl(fmt, formatHandler, (formattingFlags&FormattingFlags::ignoreFormatStringErrors)!=0);
 }
 
-// ignoreFormatStringErrors    = 1    // Ignore errors in format string
-// ignoreArgumentErrors               // Ignore errors while searching for arguments
-// ignoreFormattingErrors             // Ignore errors while formatting values
-//  
-// considerZeroWidthSpaces            // Учитывать пробелы нулевой ширины
-// considerCombiningChars             // Учитывать комбинированные символы
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+template< typename StringType = std::string
+        , typename ArgsType   = Args
+        >
+StringType formatMessage( const StringType &fmt
+                        , const ArgsType   &args
+                        , FormattingFlags  formattingFlags=FormattingFlags::all
+                        )
+{
+    return formatMessageImpl<StringType, ArgsType>(fmt, args, formattingFlags);
+}
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+template< typename StringType = std::string
+        >
+StringType formatMessage( const StringType                              &fmt
+                        , std::initializer_list<FormatArgumentVariant>  &&args
+                        , FormattingFlags                               formattingFlags=FormattingFlags::all
+                        )
+{
+    using ArgsType = std::initializer_list<FormatArgumentVariant>;
+    return formatMessageImpl<StringType, ArgsType>(fmt, args, formattingFlags);
+}
+
+
+//----------------------------------------------------------------------------
+
+
 
 //----------------------------------------------------------------------------
 
