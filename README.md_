@@ -1,0 +1,3 @@
+# Библиотека форматирования
+
+#!insert{no-fail,doc,raise=-1} md_/format_spec.md_
