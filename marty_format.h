@@ -1046,6 +1046,11 @@ public:
         return addArg(k, value_type{t});
     }
 
+    BasicArgs& arg()
+    {
+        return addArg(value_type{0});
+    }
+
 }; // class BasicArgs
 
 //----------------------------------------------------------------------------

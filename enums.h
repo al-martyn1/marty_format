@@ -131,10 +131,11 @@ enum class FormattingFlags : std::uint32_t
     ignoreFormattingErrors          = 0x04 /*!< Ignore errors while formatting values */,
     ignoreWidthIndirectErrors       = 0x08 /*!< Ignore errors while searching for arguments for width */,
     ignorePrecisionIndirectErrors   = 0x10 /*!< Ignore errors while searching for arguments for precision */,
-    considerZeroWidthSpaces         = 0x20 /*!< Учитывать пробелы нулевой ширины */,
-    considerCombiningChars          = 0x40 /*!< Учитывать комбинированные символы */,
+    ignoreOnversionErrors           = 0x20 /*!< Ignore formatting type specifications and allow automatic type conversion */,
+    considerZeroWidthSpaces         = 0x40 /*!< Учитывать пробелы нулевой ширины */,
+    considerCombiningChars          = 0x80 /*!< Учитывать комбинированные символы */,
     ignoreOptionsIndirectErrors     = ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!<  */,
-    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors /*!<  */,
+    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreСonversionErrors /*!<  */,
     considerUnicodeFeatures         = considerZeroWidthSpaces | considerCombiningChars /*!<  */,
     all                             = ignoreErrors | considerUnicodeFeatures /*!<  */
 
@@ -147,11 +148,12 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::unknown                         , "Unknown"                       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::none                            , "None"                          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "IgnoreFormatStringErrors"      );
-    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "ConsiderZeroWidthSpaces"       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreArgumentErrors            , "IgnoreArgumentErrors"          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreFormattingErrors          , "IgnoreFormattingErrors"        );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignorePrecisionIndirectErrors   , "IgnorePrecisionIndirectErrors" );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreWidthIndirectErrors       , "IgnoreWidthIndirectErrors"     );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreOnversionErrors           , "IgnoreСOnversionErrors"       );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "ConsiderZeroWidthSpaces"       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "ConsiderCombiningChars"        );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "IgnoreOptionsIndirectErrors"   );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreErrors                    , "IgnoreErrors"                  );
@@ -166,9 +168,6 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignore-format-string-errors"      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignore_format_string_errors"      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignoreformatstringerrors"         );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider-zero-width-spaces"       );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider_zero_width_spaces"       );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "considerzerowidthspaces"          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreArgumentErrors            , "ignore-argument-errors"           );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreArgumentErrors            , "ignoreargumenterrors"             );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreArgumentErrors            , "ignore_argument_errors"           );
@@ -181,6 +180,12 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreWidthIndirectErrors       , "ignore-width-indirect-errors"     );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreWidthIndirectErrors       , "ignore_width_indirect_errors"     );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreWidthIndirectErrors       , "ignorewidthindirecterrors"        );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreOnversionErrors           , "ignore-С-onversion-errors"       );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreOnversionErrors           , "ignore_С_onversion_errors"       );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreOnversionErrors           , "ignoreСonversionerrors"          );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider-zero-width-spaces"       );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider_zero_width_spaces"       );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "considerzerowidthspaces"          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "consider-combining-chars"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "considercombiningchars"           );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "consider_combining_chars"         );
