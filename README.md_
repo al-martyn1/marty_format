@@ -11,11 +11,13 @@
 4. Поддержка Unicode в кодировке UTF-8.
 
 
+#!insert{no-fail,doc,raise=-1} md_/reference_specs.md_
+
+#!insert{no-fail,doc,raise=-1} md_/format_spec.md_
+
+
 ## Список задач
 
 Список задач по библиотеке - [TODO](todo.md_).
 
 
-#!insert{no-fail,doc,raise=-1} md_/reference_specs.md_
-
-#!insert{no-fail,doc,raise=-1} md_/format_spec.md_

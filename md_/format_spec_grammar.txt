@@ -1,4 +1,4 @@
-format_spec ::= [options][width][grouping]["." precision][type]
+format_spec ::= [options][width][grouping]["." precision]["L"][type]
 options     ::= [[fill]align][sign]["z"]["#"]["0"]
 fill        ::= <any character>
 align       ::= "<" | ">" | "=" | "^"
