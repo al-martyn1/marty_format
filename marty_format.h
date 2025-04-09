@@ -896,7 +896,10 @@ protected:
 
 public:
 
+    //#! BasicArgsCtor
     BasicArgs(bool caseIgnore=true) : m_caseIgnore(caseIgnore) {}
+    //#! 
+
     BasicArgs(const BasicArgs &) = default;
     BasicArgs(BasicArgs &&) = default;
     BasicArgs& operator=(const BasicArgs &) = default;
@@ -917,7 +920,9 @@ public:
         return m_values.size();
     }
 
+    //#! BasicArgsFind
     const_iterator find(const key_type &k) const
+    //#!
     {
         auto nameIt = m_nameMap.find(caseConvert(k));
         if (nameIt==m_nameMap.end())
@@ -930,7 +935,9 @@ public:
         return m_values.begin() + std::ptrdiff_t(idx);
     }
     
+    //#! BasicArgsFindByPos
     const_iterator find_by_pos(std::size_t idx) const
+    //#!
     {
         if (idx>=m_values.size())
             return m_values.end();
@@ -938,22 +945,30 @@ public:
         return m_values.begin() + std::ptrdiff_t(idx);
     }
 
+    //#! BasicArgs
     template<typename T> BasicArgs& arg(T t)
+    //#!
     {
         return addArg(value_type{t});
     }
 
+    //#! BasicArgs
     template<typename T> BasicArgs& arg(const char* k, T t)
+    //#!
     {
         return addArg(key_type{k}, value_type{t});
     }
 
+    //#! BasicArgs
     template<typename T> BasicArgs& arg(const key_type &k, T t)
+    //#!
     {
         return addArg(k, value_type{t});
     }
 
+    //#! BasicArgs
     BasicArgs& arg()
+    //#!
     {
         return addArg(value_type{0});
     }
