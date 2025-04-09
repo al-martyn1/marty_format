@@ -265,6 +265,85 @@ inline std::string      rtrim_copy(std::string       sv)   { rtrim(sv); return s
 //----------------------------------------------------------------------------
 inline void             trim      (std::string      &sv)   { ltrim(sv); rtrim(sv); }
 inline std::string      trim_copy (std::string       sv)   { return ltrim_copy(rtrim_copy(sv)); }
+//----------------------------------------------------------------------------
+
+
+
+
+//----------------------------------------------------------------------------
+//! Базовый false-тип для детекта наличия типа first_type у объекта
+template< typename C, typename = void >
+struct has_first_type : std::false_type {};
+
+//------------------------------
+//! Базовый false-тип для детекта наличия типа second_type у объекта
+template< typename C, typename = void >
+struct has_second_type : std::false_type {};
+
+//----------------------------------------------------------------------------
+// See also: https://en.cppreference.com/w/cpp/types/void_t
+
+//----------------------------------------------------------------------------
+//! Специализация, тестирующая наличие типа first_type у объекта
+template< typename C >
+struct has_first_type< C, std::void_t<typename C::first_type> > : std::true_type {};
+
+//------------------------------
+//! Специализация, тестирующая наличие типа second_type у объекта
+template< typename C >
+struct has_second_type< C, std::void_t<typename C::second_type> > : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct is_range : std::false_type {};
+ 
+template<typename T>
+struct is_range<T, std::void_t<decltype(std::declval<T>().begin()), decltype(std::declval<T>().end())>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_size : std::false_type {};
+ 
+template<typename T>
+struct has_size<T, std::void_t<decltype(std::declval<T>().size())>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_end : std::false_type {};
+ 
+template<typename T>
+struct has_end<T, std::void_t<decltype(std::declval<T>().end())>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_string_find : std::false_type {};
+ 
+template<typename T>
+struct has_string_find<T, std::void_t<decltype(std::declval<T>().find(std::string()))>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_size_t_find : std::false_type {};
+ 
+template<typename T>
+struct has_size_t_find<T, std::void_t<decltype(std::declval<T>().find(std::size_t(0)))>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_find_by_pos : std::false_type {};
+ 
+template<typename T>
+struct has_find_by_pos<T, std::void_t<decltype(std::declval<T>().find_by_pos(std::size_t(0)))>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_operator_string_index : std::false_type {};
+ 
+template<typename T>
+struct has_operator_string_index<T, std::void_t<decltype(std::declval<T>().operator[](std::string()))>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+
 
 
 //----------------------------------------------------------------------------

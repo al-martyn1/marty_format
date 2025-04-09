@@ -10,10 +10,13 @@
 // 
 #include "marty_utf/utf.h"
 //
+#include "marty_decimal/marty_decimal.h"
+//
 #include "utils.h"
 //namespace marty_utf {
 
 #include <string>
+#include <variant>
 
 // #include "marty_format/marty_format.h"
 // marty::format::
@@ -104,27 +107,37 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
     return oss;
 }
 
-
-// enum class FormattingOptionsFlags : std::uint32_t
-// {
-//     unknown              = (std::uint32_t)(-1) /*!<  */,
-//     invalid              = (std::uint32_t)(-1) /*!<  */,
-//     none                 = 0x00 /*!<  */,
-//     argIdTaken           = 0x01 /*!< fieldWidth value is set */,
-//     fieldWidthTaken      = 0x02 /*!< fieldWidth value is set */,
-//     fieldWidthIndirect   = 0x04 /*!< Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value */,
-//     signPlus             = 0x08 /*!< Mutually exclusive with signMinus */,
-//     signMinus            = 0x10 /*!< Mutually exclusive with signPlus */,
-//     signZero             = 0x20 /*!<  */,
-//     signAlterForm        = 0x40 /*!<  */,
-//     alignTaken           = 0x80 /*!<  */,
-//     fillingTaken         = 0x100 /*!<  */,
-//     localeFormatting     = 0x200 /*!<  */,
-//     precisionTaken       = 0x400 /*!<  */
-//  
-// }; // enum 
+//----------------------------------------------------------------------------
 
 
+
+//----------------------------------------------------------------------------
+using FormatArgumentVariant = 
+    std::variant< bool
+                , char
+                , std::int8_t
+                , std::uint8_t
+                , std::int16_t
+                , std::uint16_t
+                , std::int32_t
+                , std::uint32_t
+                , std::int64_t
+                , std::uint64_t
+                , float
+                , double
+                , long double
+                , const char*
+                , const wchar_t*
+                , std::string
+                , std::wstring
+                , marty::Decimal
+                >;
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
 
 } // namespace format
 } // namespace marty
