@@ -23,10 +23,10 @@
 - [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
 - [Примеры использования](#user-content-примеры-использования)
 - [API библиотеки](#user-content-api-библиотеки)
-  - [Variant-тип аргумента](#user-content-variant-тип-аргумента)
-  - [BasicArgs](#user-content-basicargs)
-    - [Конструктор BasicArgs](#user-content-конструктор-basicargs)
-  - [Args](#user-content-args)
+  - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#user-content-martyformatformatargumentvariant---variant-тип-аргумента)
+  - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
+    - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
+  - [marty::format::Args](#user-content-martyformatargs)
 - [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
   - [Преобразование типа аргумента](#user-content-преобразование-типа-аргумента)
   - [Спецификатор формата](#user-content-спецификатор-формата)
@@ -162,7 +162,7 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
 
 ## API библиотеки
 
-### Variant-тип аргумента
+### marty::format::FormatArgumentVariant - Variant-тип аргумента
 
 Стандартный тип аргумента на базе `std::variant`
 
@@ -193,7 +193,7 @@ using FormatArgumentVariant =
 свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
 
 
-### BasicArgs
+### marty::format::BasicArgs
 
 Контейнер `BasicArgs` предоставляет возможности по поиску аргумента как по целочисленному по индексу, 
 так и по строковому ассоциативному индексу.
@@ -202,7 +202,7 @@ using FormatArgumentVariant =
 выбор стратегии работы с контейнером аргументов - детектируется наличие данных методов (также проверяются
 некоторые свойства контейнера аргументов).
 
-Ремарка. Я не настоящий `си-плюс-плюс` программист, и я не осилил, как отличить наличие метода `find(std::string)`
+**Ремарка**. Я не настоящий `C++` программист, и я не осилил, как отличить наличие метода `find(std::string)`
 для поиска по строковому значению от
 от наличия метода `find(std::size_t)`
 для поиска по индексу.
@@ -210,9 +210,9 @@ using FormatArgumentVariant =
 Поэтому для определения факта использования своего контейнера я решил завести отдельный новый метод
 `find_by_pos`.
 
-Имя функции `at`, как оказалось, есть как у `std::vector`, так и у `std::*map`, и не позволяет отделить 
+Метод `at`, как оказалось, есть как у `std::vector`, так и у `std::*map`, и не позволяет отделить 
 ассоциативные контейнеры от контейнеров произвольного доступа, поэтому пришлось для своего контейнера
-завести оригинальное имя метода `find_by_pos`
+завести оригинальное имя метода `find_by_pos`.
 
 Контейнер типа `marty::format::BasicArgs` предоставляет как метод `find` по имени, так и метод 
 `find_by_pos(std::size_t)` для "поиска" по индексу.
@@ -226,26 +226,31 @@ class BasicArgs
 ```
 
 
-#### Конструктор BasicArgs
+#### Конструктор marty::format::BasicArgs
 
 Конструктор `BasicArgs` позволяет задать игнорирование регистра именованных аргументов. 
-По умолчанию регистр имён именованных аргументом игнорируется.
+По умолчанию регистр имён именованных аргументов игнорируется.
 
 Игнорирование регистра именованных аргументов производится путём приведения имён
 к нижнему регистру, и работает только для имён, содержащих символы из базовой таблицы ASCII.
 
 ```cpp
-BasicArgs(bool caseIgnore=true) : m_caseIgnore(caseIgnore) {}
+BasicArgs(bool caseIgnore=true)
+: m_caseIgnore(caseIgnore)
+{}
 ```
 
 
-### Args
+### marty::format::Args
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
 
 
 ```cpp
-using Args = BasicArgs<FormatArgumentVariant, std::vector<FormatArgumentVariant>, std::unordered_map<std::string, std::size_t> >;
+using Args = BasicArgs< FormatArgumentVariant
+                      , std::vector<FormatArgumentVariant>
+                      , std::unordered_map<std::string, std::size_t>
+                      >;
 ```
 
 ```cpp

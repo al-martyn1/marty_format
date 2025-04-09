@@ -897,7 +897,9 @@ protected:
 public:
 
     //#! BasicArgsCtor
-    BasicArgs(bool caseIgnore=true) : m_caseIgnore(caseIgnore) {}
+    BasicArgs(bool caseIgnore=true)
+    : m_caseIgnore(caseIgnore)
+    {}
     //#! 
 
     BasicArgs(const BasicArgs &) = default;
@@ -1296,7 +1298,10 @@ int convertFormatArgumentVariantToInt(VariantType v)
 
 //----------------------------------------------------------------------------
 //#! Args
-using Args = BasicArgs<FormatArgumentVariant, std::vector<FormatArgumentVariant>, std::unordered_map<std::string, std::size_t> >;
+using Args = BasicArgs< FormatArgumentVariant
+                      , std::vector<FormatArgumentVariant>
+                      , std::unordered_map<std::string, std::size_t>
+                      >;
 //#!
 
 //#! BasicImpl
