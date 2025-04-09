@@ -4,10 +4,10 @@
 
 Стандартный тип аргумента на базе `std::variant`
 
-#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format_types.h#FormatArgumentVariant
-
 Это стандартный тип `marty::format::FormatArgumentVariant`. Пользователь библиотеки может определить
 свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format_types.h#FormatArgumentVariant
 
 
 ## marty::format::BasicArgs
@@ -52,9 +52,18 @@
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
 
-
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#Args
+
+
+## marty::format::formatMessageImpl
+
+Базовая реализация функций форматирования. При помощи данной функции пользователь библиотеки
+может создавать свои функции форматирования своих собственных данных.
+
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicImpl
+
+
+
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageGeneric
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageGenericConstCharPtr
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerList

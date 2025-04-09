@@ -27,6 +27,7 @@
   - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
   - [marty::format::Args](#user-content-martyformatargs)
+  - [marty::format::formatMessageImpl](#user-content-martyformatformatmessageimpl)
 - [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
   - [Преобразование типа аргумента](#user-content-преобразование-типа-аргумента)
   - [Спецификатор формата](#user-content-спецификатор-формата)
@@ -166,6 +167,9 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
 
 Стандартный тип аргумента на базе `std::variant`
 
+Это стандартный тип `marty::format::FormatArgumentVariant`. Пользователь библиотеки может определить
+свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
+
 ```cpp
 using FormatArgumentVariant =
     std::variant< bool
@@ -188,9 +192,6 @@ using FormatArgumentVariant =
                 , marty::Decimal
                 >;
 ```
-
-Это стандартный тип `marty::format::FormatArgumentVariant`. Пользователь библиотеки может определить
-свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
 
 
 ### marty::format::BasicArgs
@@ -245,13 +246,18 @@ BasicArgs(bool caseIgnore=true)
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
 
-
 ```cpp
 using Args = BasicArgs< FormatArgumentVariant
                       , std::vector<FormatArgumentVariant>
                       , std::unordered_map<std::string, std::size_t>
                       >;
 ```
+
+
+### marty::format::formatMessageImpl
+
+Базовая реализация функций форматирования. При помощи данной функции пользователь библиотеки
+может создавать свои функции форматирования своих собственных данных.
 
 ```cpp
 template< typename StringType = std::string
@@ -262,6 +268,8 @@ StringType formatMessageImpl( const StringType &fmt
                             , FormattingFlags  formattingFlags=FormattingFlags::all
                             )
 ```
+
+
 
 ```cpp
 template< typename StringType = std::string
