@@ -82,6 +82,7 @@ cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
                      );
 ```
 
+
 Используем `std::initializer_list<marty::format::FormatArgumentVariant>`
 
 ```cpp
@@ -95,6 +96,7 @@ cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
                      ) << "\n";
 ```
 
+
 Используем `std::vector<marty::format::FormatArgumentVariant>`
 
 ```cpp
@@ -107,6 +109,7 @@ cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
                      , argsVec
                      ) << "\n";
 ```
+
 
 Используем `marty::format::Args` с именоваными параметрами
 
@@ -124,6 +127,7 @@ cout << formatMessage(
              .arg("int", 10)
      );
 ```
+
 
 Используем `std::vector< std::pair<std::string, marty::format::FormatArgumentVariant> >` - аналогично использованию `marty::format::Args`,
 но поиск по имени каждый раз производится перебором от начала вектора
@@ -144,6 +148,7 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
                       "Pi: {Pi:f}\n", argsVec)
      << "\n";
 ```
+
 
 
 

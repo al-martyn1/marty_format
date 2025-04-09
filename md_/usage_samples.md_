@@ -3,18 +3,23 @@
 Используем `marty::format::Args`
 #!snippet{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingArgs
 
+
 Используем `std::initializer_list<marty::format::FormatArgumentVariant>`
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingInitializerList
+
 
 Используем `std::vector<marty::format::FormatArgumentVariant>`
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFlatVector
 
+
 Используем `marty::format::Args` с именоваными параметрами
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingNamedArgs
+
 
 Используем `std::vector< std::pair<std::string, marty::format::FormatArgumentVariant> >` - аналогично использованию `marty::format::Args`,
 но поиск по имени каждый раз производится перебором от начала вектора
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingVectorOfNameValuePairs
+
 
 #// Используем ``
 #// !insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#
