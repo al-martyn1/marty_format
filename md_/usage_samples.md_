@@ -1,22 +1,22 @@
 # Примеры использования
 
 Используем `marty::format::Args`
-#!snippet{nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingArgs
+#!snippet{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingArgs
 
 Используем `std::initializer_list<marty::format::FormatArgumentVariant>`
-#!insert{nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingInitializerList
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingInitializerList
 
 Используем `std::vector<marty::format::FormatArgumentVariant>`
-#!insert{nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFlatVector
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFlatVector
 
 Используем `marty::format::Args` с именоваными параметрами
-#!insert{nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingNamedArgs
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingNamedArgs
 
 Используем `std::vector< std::pair<std::string, marty::format::FormatArgumentVariant> >` - аналогично использованию `marty::format::Args`,
 но поиск по имени каждый раз производится перебором от начала вектора
-#!insert{nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingVectorOfNameValuePairs
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingVectorOfNameValuePairs
 
 #// Используем ``
-#// !insert{nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#
+#// !insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#
 
 
