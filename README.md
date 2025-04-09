@@ -22,6 +22,8 @@
 - [Возможности библиотеки](#user-content-возможности-библиотеки)
 - [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
 - [Примеры использования](#user-content-примеры-использования)
+- [API библиотеки](#user-content-api-библиотеки)
+  - [Variant-тип аргумента](#user-content-variant-тип-аргумента)
 - [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
   - [Преобразование типа аргумента](#user-content-преобразование-типа-аргумента)
   - [Спецификатор формата](#user-content-спецификатор-формата)
@@ -131,7 +133,7 @@ cout << formatMessage(
 
 
 Используем `std::vector< std::pair<std::string, marty::format::FormatArgumentVariant> >` - аналогично использованию `marty::format::Args`,
-но поиск по имени каждый раз производится перебором от начала вектора
+но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
 
 ```cpp
 // Используем std::vector вместо marty::format::Args
@@ -149,6 +151,106 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
                       "Pi: {Pi:f}\n", argsVec)
      << "\n";
 ```
+
+
+
+
+
+
+## API библиотеки
+
+### Variant-тип аргумента
+
+Стандартный тип аргумента на базе `std::variant`
+
+```cpp
+using FormatArgumentVariant =
+    std::variant< bool
+                , char
+                , std::int8_t
+                , std::uint8_t
+                , std::int16_t
+                , std::uint16_t
+                , std::int32_t
+                , std::uint32_t
+                , std::int64_t
+                , std::uint64_t
+                , float
+                , double
+                , long double
+                , const char*
+                , const wchar_t*
+                , std::string
+                , std::wstring
+                , marty::Decimal
+                >;
+```
+
+
+```cpp
+template< typename ArgumentVariantType=FormatArgumentVariant
+        , typename VectorType=std::vector<ArgumentVariantType>
+        , typename MapType=std::unordered_map<std::string, std::size_t>
+        >
+class BasicArgs
+```
+
+```cpp
+using Args = BasicArgs<FormatArgumentVariant, std::vector<FormatArgumentVariant>, std::unordered_map<std::string, std::size_t> >;
+```
+
+```cpp
+template< typename StringType = std::string
+        , typename ArgsType   = Args
+        >
+StringType formatMessageImpl( const StringType &fmt
+                            , const ArgsType   &args
+                            , FormattingFlags  formattingFlags=FormattingFlags::all
+                            )
+```
+
+```cpp
+template< typename StringType = std::string
+        , typename ArgsType   = Args
+        >
+StringType formatMessage( const StringType &fmt
+                        , const ArgsType   &args
+                        , FormattingFlags  formattingFlags=FormattingFlags::all
+                        )
+```
+
+```cpp
+template< typename ArgsType = Args >
+std::string formatMessage( const char *fmt
+                         , const ArgsType   &args
+                         , FormattingFlags  formattingFlags=FormattingFlags::all
+                         )
+```
+
+```cpp
+template< typename StringType = std::string >
+StringType formatMessage( const StringType                              &fmt
+                        , std::initializer_list<FormatArgumentVariant>  &&args
+                        , FormattingFlags                               formattingFlags=FormattingFlags::all
+                        )
+```
+
+```cpp
+inline
+std::string formatMessage( const char                                    *fmt
+                         , std::initializer_list<FormatArgumentVariant>  &&args
+                         , FormattingFlags                               formattingFlags=FormattingFlags::all
+                         )
+```
+
+
+
+
+
+
+
+
+
 
 
 
@@ -361,6 +463,9 @@ type        ::= &quot;b&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | 
 
 
 #### 
+
+
+
 
 
 

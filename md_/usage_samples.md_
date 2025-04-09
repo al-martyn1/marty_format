@@ -17,7 +17,7 @@
 
 
 Используем `std::vector< std::pair<std::string, marty::format::FormatArgumentVariant> >` - аналогично использованию `marty::format::Args`,
-но поиск по имени каждый раз производится перебором от начала вектора
+но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingVectorOfNameValuePairs
 
 

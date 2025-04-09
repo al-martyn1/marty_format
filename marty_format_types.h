@@ -112,6 +112,7 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
 
 
 //----------------------------------------------------------------------------
+//#! FormatArgumentVariant
 using FormatArgumentVariant = 
     std::variant< bool
                 , char
@@ -132,7 +133,7 @@ using FormatArgumentVariant =
                 , std::wstring
                 , marty::Decimal
                 >;
-
+//#!
 //----------------------------------------------------------------------------
 
 

@@ -1,0 +1,30 @@
+# API библиотеки
+
+## Variant-тип аргумента
+
+Стандартный тип аргумента на базе `std::variant`
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format_types.h#FormatArgumentVariant
+
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicArgs
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#Args
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicImpl
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageGeneric
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageGenericConstCharPtr
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerList
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerListConstCharPtr
+
+#// !insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#
+
+
+
+
+
+
+
+
+
+
+
+

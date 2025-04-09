@@ -834,11 +834,13 @@ struct MartyFormatValueGetter< ContainerType
 
 
 //----------------------------------------------------------------------------
+//#! BasicArgs
 template< typename ArgumentVariantType=FormatArgumentVariant
         , typename VectorType=std::vector<ArgumentVariantType>
         , typename MapType=std::unordered_map<std::string, std::size_t>
         >
 class BasicArgs
+//#!
 {
 
 public:
@@ -1278,9 +1280,11 @@ int convertFormatArgumentVariantToInt(VariantType v)
 
 
 //----------------------------------------------------------------------------
+//#! Args
 using Args = BasicArgs<FormatArgumentVariant, std::vector<FormatArgumentVariant>, std::unordered_map<std::string, std::size_t> >;
+//#!
 
-
+//#! BasicImpl
 template< typename StringType = std::string
         , typename ArgsType   = Args
         >
@@ -1288,6 +1292,7 @@ StringType formatMessageImpl( const StringType &fmt
                             , const ArgsType   &args
                             , FormattingFlags  formattingFlags=FormattingFlags::all
                             )
+//#!
 {
     using ContainerType = ArgsType;
 
@@ -1382,6 +1387,7 @@ StringType formatMessageImpl( const StringType &fmt
 
 
 //----------------------------------------------------------------------------
+//#! formatMessageGeneric
 template< typename StringType = std::string
         , typename ArgsType   = Args
         >
@@ -1389,16 +1395,19 @@ StringType formatMessage( const StringType &fmt
                         , const ArgsType   &args
                         , FormattingFlags  formattingFlags=FormattingFlags::all
                         )
+//#!
 {
     return formatMessageImpl<StringType, ArgsType>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
+//#! formatMessageGenericConstCharPtr
 template< typename ArgsType = Args >
 std::string formatMessage( const char *fmt
                          , const ArgsType   &args
                          , FormattingFlags  formattingFlags=FormattingFlags::all
                          )
+//#!
 {
     return formatMessageImpl<std::string, ArgsType>(fmt, args, formattingFlags);
 }
@@ -1408,22 +1417,26 @@ std::string formatMessage( const char *fmt
 
 
 //----------------------------------------------------------------------------
+//#! formatMessageInitializerList
 template< typename StringType = std::string >
 StringType formatMessage( const StringType                              &fmt
                         , std::initializer_list<FormatArgumentVariant>  &&args
                         , FormattingFlags                               formattingFlags=FormattingFlags::all
                         )
+//#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
     return formatMessageImpl<StringType, ArgsType>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
+//#! formatMessageInitializerListConstCharPtr
 inline
 std::string formatMessage( const char                                    *fmt
                          , std::initializer_list<FormatArgumentVariant>  &&args
                          , FormattingFlags                               formattingFlags=FormattingFlags::all
                          )
+//#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
     return formatMessageImpl<std::string, ArgsType>(fmt, args, formattingFlags);
