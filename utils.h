@@ -56,7 +56,23 @@ inline
 constexpr
 bool isFormatSignMarker(utf32_char_t ch)
 {
-    return ch==utf32_char_t('-') || ch==utf32_char_t('+');
+    return ch==utf32_char_t('-') || ch==utf32_char_t('+') /*  || ch==utf32_char_t(' ') */ ;
+}
+
+//----------------------------------------------------------------------------
+inline
+constexpr
+bool isFormatConvertMarker(utf32_char_t ch)
+{
+    return ch==utf32_char_t('!');
+}
+
+//----------------------------------------------------------------------------
+inline
+constexpr
+bool isFormatConvertChar(utf32_char_t ch)
+{
+    return ch==utf32_char_t('r') || ch==utf32_char_t('s') || ch==utf32_char_t('a');
 }
 
 //----------------------------------------------------------------------------
@@ -343,8 +359,8 @@ template<typename T>
 struct has_operator_string_index<T, std::void_t<decltype(std::declval<T>().operator[](std::string()))>> : std::true_type {};
 
 //----------------------------------------------------------------------------
-
-
+template<typename T> using is_bool = std::is_same<T, bool>;
+template<typename T> using is_char = std::is_same<T, char>;
 
 //----------------------------------------------------------------------------
 

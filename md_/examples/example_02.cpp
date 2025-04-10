@@ -92,10 +92,29 @@ int main(int argc, char* argv[])
                        , {"int", 10}
                        };
         cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, "
-                              "Pi: {Pi:f}\n", argsVec)
-             << "\n";
+                              "Pi: {Pi:f}\n", argsVec);
         //#!
     }
+
+    {
+        //#! UsingFillRefAndConvert
+        // Используем именованные аргументы
+        // Задаём конвертацию (игнорируем)
+        // Символ заполнения передаём аргументом
+        using namespace marty::format;
+        cout << formatMessage(
+            "Integer number: {int:d}, string: {str!s:{fill}<{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
+             , Args().arg("str", "Very long string, does not fit into 20 characters")
+                     .arg("Pi", 3.14159)
+                     .arg("fill", '*')
+                     .arg("strMaxW", 20) // это точность (для чисел), но для строк 
+                                         // это максимальная ширина поля
+                     .arg("strW", 10) // задаём ширину поля
+                     .arg("int", 10)
+             );
+        //#!
+    }
+
     
     return 0;
 }

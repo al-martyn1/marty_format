@@ -31,6 +31,7 @@ using utf32_char_t = marty::utf::utf32_char_t;
 struct FormattingOptions
 {
     std::string             argId;
+    std::string             fillRef;
     std::string             fieldWidthRef;
     std::string             precisionRef;
 
@@ -40,6 +41,7 @@ struct FormattingOptions
     int                     fieldWidth     = 0; // auto
     int                     precision      = 6; // default precision
 
+    utf32_char_t            convertChar    = 0;
     char                    alignment      = '>'; // По левому краю ('<'), по правому краю ('>'), по ширине ('^'). По умолчанию - по правому краю
     utf32_char_t            fillChar       = utf32_char_t(' '); // Символ заполнения, по умолчанию - пробел.
     utf32_char_t            grouppingChar  = 0; // разделитель разрядов, по умолчанию - 0 (без разделения).

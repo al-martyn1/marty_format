@@ -31,17 +31,20 @@ enum class FormattingOptionsFlags : std::uint32_t
     argIdTaken                = 0x01 /*!< fieldWidth value is set */,
     fieldWidthTaken           = 0x02 /*!< fieldWidth value is set */,
     fieldWidthIndirect        = 0x04 /*!< Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value */,
-    signPlus                  = 0x08 /*!< Mutually exclusive with signMinus */,
-    signMinus                 = 0x10 /*!< Mutually exclusive with signPlus */,
-    signZero                  = 0x20 /*!<  */,
-    signAlterForm             = 0x40 /*!<  */,
-    fillingTaken              = 0x80 /*!<  */,
-    localeFormatting          = 0x100 /*!<  */,
-    precisionTaken            = 0x200 /*!<  */,
-    precisionIndirect         = 0x400 /*!<  */,
-    grouppingTaken            = 0x800 /*!<  */,
+    signPlus                  = 0x08 /*!< Mutually exclusive with signMinus & signSpace */,
+    signMinus                 = 0x10 /*!< Mutually exclusive with signPlus & signSpace */,
+    signSpace                 = 0x20 /*!< Mutually exclusive with signMinus & signPlus */,
+    signZero                  = 0x40 /*!<  */,
+    signAlterForm             = 0x80 /*!<  */,
+    fillingTaken              = 0x100 /*!<  */,
+    fillingIndirect           = 0x200 /*!<  */,
+    localeFormatting          = 0x400 /*!<  */,
+    precisionTaken            = 0x800 /*!<  */,
+    precisionIndirect         = 0x1000 /*!<  */,
+    grouppingTaken            = 0x2000 /*!<  */,
     fieldWidthIndirectTaken   = fieldWidthTaken | fieldWidthIndirect /*!<  */,
-    precisionIndirectTaken    = precisionTaken | precisionIndirect /*!<  */
+    precisionIndirectTaken    = precisionTaken | precisionIndirect /*!<  */,
+    fillingIndirectTaken      = fillingTaken | fillingIndirect /*!<  */
 
 }; // enum 
 //#!
@@ -57,14 +60,17 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signPlus                 , "SignPlus"                );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::localeFormatting         , "LocaleFormatting"        );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthTaken          , "FieldWidthTaken"         );
-    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "SignZero"                );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "SignAlterForm"           );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "SignSpace"               );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "SignZero"                );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fillingTaken             , "FillingTaken"            );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirect          , "FillingIndirect"         );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::precisionTaken           , "PrecisionTaken"          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirect        , "PrecisionIndirect"       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::grouppingTaken           , "GrouppingTaken"          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthIndirectTaken  , "FieldWidthIndirectTaken" );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirectTaken   , "PrecisionIndirectTaken"  );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirectTaken     , "FillingIndirectTaken"    );
 MARTY_CPP_ENUM_FLAGS_SERIALIZE_END( FormattingOptionsFlags, std::map, 1 )
 
 MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
@@ -89,15 +95,21 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthTaken          , "field-width-taken"          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthTaken          , "field_width_taken"          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthTaken          , "fieldwidthtaken"            );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "sign-zero"                  );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "sign_zero"                  );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "signzero"                   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "sign-alter-form"            );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "signalterform"              );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "sign_alter_form"            );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "sign-space"                 );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "sign_space"                 );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "signspace"                  );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "sign-zero"                  );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "sign_zero"                  );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "signzero"                   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingTaken             , "filling-taken"              );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingTaken             , "filling_taken"              );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingTaken             , "fillingtaken"               );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirect          , "filling-indirect"           );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirect          , "filling_indirect"           );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirect          , "fillingindirect"            );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionTaken           , "precision-taken"            );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionTaken           , "precision_taken"            );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionTaken           , "precisiontaken"             );
@@ -113,6 +125,9 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirectTaken   , "precision-indirect-taken"   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirectTaken   , "precision_indirect_taken"   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirectTaken   , "precisionindirecttaken"     );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirectTaken     , "filling-indirect-taken"     );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirectTaken     , "filling_indirect_taken"     );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirectTaken     , "fillingindirecttaken"       );
 MARTY_CPP_ENUM_FLAGS_DESERIALIZE_END( FormattingOptionsFlags, std::map, 1 )
 
 MARTY_CPP_ENUM_FLAGS_SERIALIZE_SET(FormattingOptionsFlags, std::set)
@@ -129,12 +144,13 @@ enum class FormattingFlags : std::uint32_t
     ignoreFormatStringErrors        = 0x01 /*!< Ignore errors in format string */,
     ignoreArgumentErrors            = 0x02 /*!< Ignore errors while searching for arguments */,
     ignoreFormattingErrors          = 0x04 /*!< Ignore errors while formatting values */,
-    ignoreWidthIndirectErrors       = 0x08 /*!< Ignore errors while searching for arguments for width */,
-    ignorePrecisionIndirectErrors   = 0x10 /*!< Ignore errors while searching for arguments for precision */,
-    ignoreConversionErrors          = 0x20 /*!< Ignore formatting type specifications and allow automatic type conversion */,
-    considerZeroWidthSpaces         = 0x40 /*!< Учитывать пробелы нулевой ширины */,
-    considerCombiningChars          = 0x80 /*!< Учитывать комбинированные символы */,
-    ignoreOptionsIndirectErrors     = ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!<  */,
+    ignoreFillIndirectErrors        = 0x08 /*!< Ignore errors while searching for arguments for fill char */,
+    ignoreWidthIndirectErrors       = 0x10 /*!< Ignore errors while searching for arguments for width */,
+    ignorePrecisionIndirectErrors   = 0x20 /*!< Ignore errors while searching for arguments for precision */,
+    ignoreConversionErrors          = 0x40 /*!< Ignore formatting type specifications and allow automatic type conversion */,
+    considerZeroWidthSpaces         = 0x80 /*!< Учитывать пробелы нулевой ширины */,
+    considerCombiningChars          = 0x100 /*!< Учитывать комбинированные символы */,
+    ignoreOptionsIndirectErrors     = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!<  */,
     ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors /*!<  */,
     considerUnicodeFeatures         = considerZeroWidthSpaces | considerCombiningChars /*!<  */,
     all                             = ignoreErrors | considerUnicodeFeatures /*!<  */
@@ -146,6 +162,7 @@ MARTY_CPP_MAKE_ENUM_FLAGS(FormattingFlags)
 
 MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::unknown                         , "Unknown"                       );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreFillIndirectErrors        , "IgnoreFillIndirectErrors"      );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::none                            , "None"                          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "IgnoreFormatStringErrors"      );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreArgumentErrors            , "IgnoreArgumentErrors"          );
@@ -164,6 +181,9 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_END( FormattingFlags, std::map, 1 )
 MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::unknown                         , "unknown"                          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::unknown                         , "invalid"                          );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFillIndirectErrors        , "ignore-fill-indirect-errors"      );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFillIndirectErrors        , "ignore_fill_indirect_errors"      );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFillIndirectErrors        , "ignorefillindirecterrors"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::none                            , "none"                             );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignore-format-string-errors"      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignore_format_string_errors"      );
