@@ -8,6 +8,8 @@
 
 **ignoreFormattingErrors** - игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.
 
+**ignoreFillIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего символ заполнения.
+
 **ignoreWidthIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего ширину поля.
 
 **ignorePrecisionIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего точность.
@@ -17,7 +19,7 @@
 #// **considerZeroWidthSpaces**            // Учитывать пробелы нулевой ширины
 #// **considerCombiningChars**             // Учитывать комбинированные символы
 
-**ignoreOptionsIndirectErrors** - игнорировать ошибки косвенного задания опций форматирования (`ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
+**ignoreOptionsIndirectErrors** - игнорировать ошибки косвенного задания опций форматирования (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
 
 **ignoreErrors**                - игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
 #// **considerUnicodeFeatures**     = considerZeroWidthSpaces | considerCombiningChars
