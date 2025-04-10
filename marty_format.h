@@ -1438,10 +1438,12 @@ std::string formatMessage( const char *fmt
 
 //----------------------------------------------------------------------------
 //#! formatMessageInitializerList
+using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
+
 template< typename StringType = std::string >
-StringType formatMessage( const StringType                              &fmt
-                        , std::initializer_list<FormatArgumentVariant>  &&args
-                        , FormattingFlags                               formattingFlags=FormattingFlags::all
+StringType formatMessage( const StringType          &fmt
+                        , FormatArgumentVariantList &&args
+                        , FormattingFlags           formattingFlags=FormattingFlags::all
                         )
 //#!
 {
@@ -1452,9 +1454,9 @@ StringType formatMessage( const StringType                              &fmt
 //----------------------------------------------------------------------------
 //#! formatMessageInitializerListConstCharPtr
 inline
-std::string formatMessage( const char                                    *fmt
-                         , std::initializer_list<FormatArgumentVariant>  &&args
-                         , FormattingFlags                               formattingFlags=FormattingFlags::all
+std::string formatMessage( const char                *fmt
+                         , FormatArgumentVariantList &&args
+                         , FormattingFlags           formattingFlags=FormattingFlags::all
                          )
 //#!
 {

@@ -12,7 +12,7 @@
 
 ## marty::format::BasicArgs
 
-Контейнер `BasicArgs` предоставляет возможности по поиску аргумента как по целочисленному по индексу, 
+Контейнер `BasicArgs` предоставляет возможности по поиску аргумента как по целочисленному индексу, 
 так и по строковому ассоциативному индексу.
 
 Контейнер `BasicArgs` предоставляет предоставляет функции `find` и `find_by_pos`, по которым производится
@@ -21,7 +21,7 @@
 
 **Ремарка**. Я не настоящий `C++` программист, и я не осилил, как отличить наличие метода `find(std::string)`
 для поиска по строковому значению от
-от наличия метода `find(std::size_t)`
+наличия метода `find(std::size_t)`
 для поиска по индексу.
 При этом разные компиляторы на мои проверки срабатывали по-разному.
 Поэтому для определения факта использования своего контейнера я решил завести отдельный новый метод
@@ -54,20 +54,29 @@
 
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#Args
 
+#!insert{no-fail,doc,raise=-1} md_/FormattingFlags.md_
+
 
 ## marty::format::formatMessageImpl
 
-Базовая реализация функций форматирования. При помощи данной функции пользователь библиотеки
-может создавать свои функции форматирования своих собственных данных.
+Базовая реализация функций форматирования. 
+Пользователь библиотеки может создать свой собственный variant-тип аргумента, добавив
+свои собственные типы, и, используя данную функцию, сделать свою кастомизированную функцию форматирования.
 
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicImpl
 
 
+## marty::format::formatMessage - аргументы передаются в generic-контейнере
 
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageGeneric
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageGenericConstCharPtr
+
+
+## marty::format::formatMessage - аргументы передаются в виде std::initializer_list
+
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerList
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerListConstCharPtr
+
 
 #// !insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#
 

@@ -12,7 +12,7 @@
 Как бонус, существует возможность использования функций форматирования библиотеки вместо 
 `std::format` при помощи контейнера `std::initializer_list`.
 
-Не пинайте ~~пианиста~~программиста, он ~~играет~~пишет, как умеет.
+Не бейте ~~пианиста~~программиста, он ~~играет~~пишет, как умеет.
 
 Замечания, предложения, фиксы - приветствуются.
 
@@ -28,6 +28,8 @@
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
   - [marty::format::Args](#user-content-martyformatargs)
   - [marty::format::formatMessageImpl](#user-content-martyformatformatmessageimpl)
+  - [marty::format::formatMessage - аргументы передаются в generic-контейнере](#user-content-martyformatformatmessage---аргументы-передаются-в-generic-контейнере)
+  - [marty::format::formatMessage - аргументы передаются в виде std::initializer_list](#user-content-martyformatformatmessage---аргументы-передаются-в-виде-stdinitializer_list)
 - [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
   - [Преобразование типа аргумента](#user-content-преобразование-типа-аргумента)
   - [Спецификатор формата](#user-content-спецификатор-формата)
@@ -196,7 +198,7 @@ using FormatArgumentVariant =
 
 ### marty::format::BasicArgs
 
-Контейнер `BasicArgs` предоставляет возможности по поиску аргумента как по целочисленному по индексу, 
+Контейнер `BasicArgs` предоставляет возможности по поиску аргумента как по целочисленному индексу, 
 так и по строковому ассоциативному индексу.
 
 Контейнер `BasicArgs` предоставляет предоставляет функции `find` и `find_by_pos`, по которым производится
@@ -205,7 +207,7 @@ using FormatArgumentVariant =
 
 **Ремарка**. Я не настоящий `C++` программист, и я не осилил, как отличить наличие метода `find(std::string)`
 для поиска по строковому значению от
-от наличия метода `find(std::size_t)`
+наличия метода `find(std::size_t)`
 для поиска по индексу.
 При этом разные компиляторы на мои проверки срабатывали по-разному.
 Поэтому для определения факта использования своего контейнера я решил завести отдельный новый метод
@@ -254,10 +256,12 @@ using Args = BasicArgs< FormatArgumentVariant
 ```
 
 
+
 ### marty::format::formatMessageImpl
 
-Базовая реализация функций форматирования. При помощи данной функции пользователь библиотеки
-может создавать свои функции форматирования своих собственных данных.
+Базовая реализация функций форматирования. 
+Пользователь библиотеки может создать свой собственный variant-тип аргумента, добавив
+свои собственные типы, и, используя данную функцию, сделать свою кастомизированную функцию форматирования.
 
 ```cpp
 template< typename StringType = std::string
@@ -270,6 +274,7 @@ StringType formatMessageImpl( const StringType &fmt
 ```
 
 
+### marty::format::formatMessage - аргументы передаются в generic-контейнере
 
 ```cpp
 template< typename StringType = std::string
@@ -289,21 +294,27 @@ std::string formatMessage( const char *fmt
                          )
 ```
 
+
+### marty::format::formatMessage - аргументы передаются в виде std::initializer_list
+
 ```cpp
+using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
+
 template< typename StringType = std::string >
-StringType formatMessage( const StringType                              &fmt
-                        , std::initializer_list<FormatArgumentVariant>  &&args
-                        , FormattingFlags                               formattingFlags=FormattingFlags::all
+StringType formatMessage( const StringType          &fmt
+                        , FormatArgumentVariantList &&args
+                        , FormattingFlags           formattingFlags=FormattingFlags::all
                         )
 ```
 
 ```cpp
 inline
-std::string formatMessage( const char                                    *fmt
-                         , std::initializer_list<FormatArgumentVariant>  &&args
-                         , FormattingFlags                               formattingFlags=FormattingFlags::all
+std::string formatMessage( const char                *fmt
+                         , FormatArgumentVariantList &&args
+                         , FormattingFlags           formattingFlags=FormattingFlags::all
                          )
 ```
+
 
 
 
