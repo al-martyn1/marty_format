@@ -27,6 +27,7 @@
   - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
   - [marty::format::Args](#user-content-martyformatargs)
+  - [enum флаги marty::format::FormattingFlags](#user-content-enum-флаги-martyformatformattingflags)
   - [marty::format::formatMessageImpl](#user-content-martyformatformatmessageimpl)
   - [marty::format::formatMessage - аргументы передаются в generic-контейнере](#user-content-martyformatformatmessage---аргументы-передаются-в-generic-контейнере)
   - [marty::format::formatMessage - аргументы передаются в виде std::initializer_list](#user-content-martyformatformatmessage---аргументы-передаются-в-виде-stdinitializer_list)
@@ -213,9 +214,6 @@ using FormatArgumentVariant =
 Поэтому для определения факта использования своего контейнера я решил завести отдельный новый метод
 `find_by_pos`.
 
-Метод `at`, как оказалось, есть как у `std::vector`, так и у `std::*map`, и не позволяет отделить 
-ассоциативные контейнеры от контейнеров произвольного доступа, поэтому пришлось для своего контейнера
-завести оригинальное имя метода `find_by_pos`.
 
 Контейнер типа `marty::format::BasicArgs` предоставляет как метод `find` по имени, так и метод 
 `find_by_pos(std::size_t)` для "поиска" по индексу.
@@ -254,6 +252,28 @@ using Args = BasicArgs< FormatArgumentVariant
                       , std::unordered_map<std::string, std::size_t>
                       >;
 ```
+
+### enum флаги marty::format::FormattingFlags
+
+**none** - флаги не установлены.
+
+**ignoreFormatStringErrors** - игнорировать ршибки в форматной строке.
+
+**ignoreArgumentErrors** - игнорировать ошибки поиска аргументов.
+
+**ignoreFormattingErrors** - игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.
+
+**ignoreWidthIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего ширину поля.
+
+**ignorePrecisionIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего точность.
+
+**ignoreConversionErrors** - игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип.
+
+
+**ignoreOptionsIndirectErrors** - игнорировать ошибки косвенного задания опций форматирования (`ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
+**ignoreErrors**                - игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
+
+**all** - всё флаги установлены.
 
 
 
