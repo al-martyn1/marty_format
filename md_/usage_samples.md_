@@ -20,6 +20,9 @@
 но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingVectorOfNameValuePairs
 
+Задаём конвертацию аргумента, также символ заполнения передаём аргументом:
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFillRefAndConvert
+
 
 #// Используем ``
 #// !insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#

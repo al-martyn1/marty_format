@@ -70,7 +70,6 @@
 ## Зависимости
 
 - [marty_decimal](https://github.com/al-martyn1/marty_decimal)
-
 - [marty_utf](https://github.com/al-martyn1/marty_utf)
 
 
@@ -165,6 +164,25 @@ auto argsVec = std::vector< std::pair<std::string, FormatArgumentVariant> >
                };
 cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, "
                       "Pi: {Pi:f}\n", argsVec);
+```
+
+Задаём конвертацию аргумента, также символ заполнения передаём аргументом:
+
+```cpp
+// Используем именованные аргументы
+// Задаём конвертацию (игнорируем)
+// Символ заполнения передаём аргументом
+using namespace marty::format;
+cout << formatMessage(
+    "Integer number: {int:d}, string: {str!s:{fill}<{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
+     , Args().arg("str", "Very long string, does not fit into 20 characters")
+             .arg("Pi", 3.14159)
+             .arg("fill", '*')
+             .arg("strMaxW", 20) // это точность (для чисел), но для строк
+                                 // это максимальная ширина поля
+             .arg("strW", 10) // задаём ширину поля
+             .arg("int", 10)
+     );
 ```
 
 
