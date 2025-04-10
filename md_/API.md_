@@ -49,7 +49,7 @@
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicArgsCtor
 
 
-### Метод marty::format::BasicArgs::arg
+### Методы marty::format::BasicArgs::arg
 
 Семейство методов `arg()` задаёт значения аргументов для форматирования
 и возвращает ссылку на объект `marty::format::BasicArgs` для того, чтобы можно было делать цепочки вызовов.

@@ -43,6 +43,8 @@ title: Библиотека форматирования marty::format
 
 
 
+#!insert{no-fail,doc,raise=-1} md_/dependencies.md_
+
 #!insert{no-fail,doc,raise=-1} md_/reference_specs.md_
 
 #!insert{no-fail,doc,raise=-1} md_/usage_samples.md_
@@ -50,8 +52,6 @@ title: Библиотека форматирования marty::format
 #!insert{no-fail,doc,raise=-1} md_/API.md_
 
 #!insert{no-fail,doc,raise=-1} md_/format_spec.md_
-
-
 
 
 

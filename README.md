@@ -20,13 +20,14 @@
 
 
 - [Возможности библиотеки](#user-content-возможности-библиотеки)
+- [Зависимости](#user-content-зависимости)
 - [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
 - [Примеры использования](#user-content-примеры-использования)
 - [API библиотеки](#user-content-api-библиотеки)
   - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#user-content-martyformatformatargumentvariant---variant-тип-аргумента)
   - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
-    - [Метод marty::format::BasicArgs::arg](#user-content-метод-martyformatbasicargsarg)
+    - [Методы marty::format::BasicArgs::arg](#user-content-методы-martyformatbasicargsarg)
   - [marty::format::Args](#user-content-martyformatargs)
   - [enum флаги marty::format::FormattingFlags](#user-content-enum-флаги-martyformatformattingflags)
   - [marty::format::formatMessageImpl](#user-content-martyformatformatmessageimpl)
@@ -64,6 +65,13 @@
 8. Возможность создания собственной системы/библиотеки форматирования на базе данной библиотеки с поддержкой
    вывода собственных произвольных типов данных.
 
+
+
+## Зависимости
+
+- [marty_decimal](https://github.com/al-martyn1/marty_decimal)
+
+- [marty_utf](https://github.com/al-martyn1/marty_utf)
 
 
 ## Ссылки на референсные спецификации
@@ -156,8 +164,7 @@ auto argsVec = std::vector< std::pair<std::string, FormatArgumentVariant> >
                , {"int", 10}
                };
 cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, "
-                      "Pi: {Pi:f}\n", argsVec)
-     << "\n";
+                      "Pi: {Pi:f}\n", argsVec);
 ```
 
 
@@ -243,7 +250,7 @@ BasicArgs(bool caseIgnore=true)
 ```
 
 
-#### Метод marty::format::BasicArgs::arg
+#### Методы marty::format::BasicArgs::arg
 
 Семейство методов `arg()` задаёт значения аргументов для форматирования
 и возвращает ссылку на объект `marty::format::BasicArgs` для того, чтобы можно было делать цепочки вызовов.
@@ -588,8 +595,6 @@ type        ::= &quot;b&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | 
 
 
 #### 
-
-
 
 
 
