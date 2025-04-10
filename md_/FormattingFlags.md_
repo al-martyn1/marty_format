@@ -18,6 +18,7 @@
 #// **considerCombiningChars**             // Учитывать комбинированные символы
 
 **ignoreOptionsIndirectErrors** - игнорировать ошибки косвенного задания опций форматирования (`ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
+
 **ignoreErrors**                - игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
 #// **considerUnicodeFeatures**     = considerZeroWidthSpaces | considerCombiningChars
 

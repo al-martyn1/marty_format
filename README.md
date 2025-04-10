@@ -26,6 +26,7 @@
   - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#user-content-martyformatformatargumentvariant---variant-тип-аргумента)
   - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
+    - [Метод marty::format::BasicArgs::arg](#user-content-метод-martyformatbasicargsarg)
   - [marty::format::Args](#user-content-martyformatargs)
   - [enum флаги marty::format::FormattingFlags](#user-content-enum-флаги-martyformatformattingflags)
   - [marty::format::formatMessageImpl](#user-content-martyformatformatmessageimpl)
@@ -57,7 +58,7 @@
 4. Упор на использование библиотеки в своих скриптовых языках/DSL языках.
 5. Поддержка Unicode в кодировке UTF-8.
 6. Поддержка чисел с плавающей точкой произвольной размерности `marty::Decimal`.
-7. Поддержка пользовательских типов строк взамен `std::string` и поддержка микроконтроллеров 
+7. Поддержка пользовательских типов строк вместо `std::string` и поддержка микроконтроллеров 
    (`STM32`, как пример). Пока не реализовано, но весьма ready, требует отключения части кода 
    условными макросами, также требуется модифицировать некоторые части, пока завязанные на `std::string`.
 8. Возможность создания собственной системы/библиотеки форматирования на базе данной библиотеки с поддержкой
@@ -242,6 +243,36 @@ BasicArgs(bool caseIgnore=true)
 ```
 
 
+#### Метод marty::format::BasicArgs::arg
+
+Семейство методов `arg()` задаёт значения аргументов для форматирования
+и возвращает ссылку на объект `marty::format::BasicArgs` для того, чтобы можно было делать цепочки вызовов.
+
+Добавляет безымянный аргумент:
+
+```cpp
+template<typename T> BasicArgs& arg(T t)
+```
+
+Добавляет именованный аргумент, имя задаётся параметром типа `const char*`:
+
+```cpp
+template<typename T> BasicArgs& arg(const char* k, T t)
+```
+
+Добавляет именованный аргумент, имя задаётся параметром типа ключа в `map`, хранящей индексы именованных аргументов:
+
+```cpp
+template<typename T> BasicArgs& arg(const key_type &k, T t)
+```
+
+Добавляет безымянный аргумент типа int со значением `0`:
+
+```cpp
+BasicArgs& arg()
+```
+
+
 ### marty::format::Args
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
@@ -271,6 +302,7 @@ using Args = BasicArgs< FormatArgumentVariant
 
 
 **ignoreOptionsIndirectErrors** - игнорировать ошибки косвенного задания опций форматирования (`ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
+
 **ignoreErrors**                - игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
 
 **all** - всё флаги установлены.

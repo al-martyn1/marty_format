@@ -49,6 +49,24 @@
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicArgsCtor
 
 
+### Метод marty::format::BasicArgs::arg
+
+Семейство методов `arg()` задаёт значения аргументов для форматирования
+и возвращает ссылку на объект `marty::format::BasicArgs` для того, чтобы можно было делать цепочки вызовов.
+
+Добавляет безымянный аргумент:
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_T
+
+Добавляет именованный аргумент, имя задаётся параметром типа `const char*`:
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_CharK_T
+
+Добавляет именованный аргумент, имя задаётся параметром типа ключа в `map`, хранящей индексы именованных аргументов:
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_KeyK_T
+
+Добавляет безымянный аргумент типа int со значением `0`:
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_empty
+
+
 ## marty::format::Args
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
