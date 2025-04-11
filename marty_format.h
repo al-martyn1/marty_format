@@ -1122,6 +1122,21 @@ template<typename StringType> inline StringType martyFormatSimpleConvertToString
 
 
 
+
+//----------------------------------------------------------------------------
+template< typename StringType, typename IntType >
+StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize);
+
+template< typename StringType, typename IntType >
+StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize);
+
+template< typename StringType, typename FloatType >
+StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, FloatType v);
+
+template< typename StringType >
+StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str);
+
+
 //----------------------------------------------------------------------------
 template< typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bool b)
@@ -1169,7 +1184,7 @@ StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOption
 }
 
 //----------------------------------------------------------------------------
-template< typename StringType=std::string >
+template< typename StringType >
 StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1365,6 +1380,8 @@ StringType formatMessageImpl( const StringType &fmt
     auto formatHandler = [&](marty::format::FormattingOptions formattingOptions)
     {
         using value_type = typename ContainerValueTypeDeducer<ArgsType>::value_type;
+
+        formattingOptions.formattingFlags = formattingFlags;
 
         // typename ContainerType::value_type valToFormat = typename ContainerType::value_type("<ERR>");
         value_type valToFormat = value_type{"<ERR>"};

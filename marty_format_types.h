@@ -47,6 +47,8 @@ struct FormattingOptions
     utf32_char_t            grouppingChar  = 0; // разделитель разрядов, по умолчанию - 0 (без разделения).
     char                    typeChar       = 0;   // Символ типа, 0 - auto
 
+    FormattingFlags         formattingFlags = FormattingFlags::none; // Копируем сюда аргумент функции форматирования, чтобы не таскать отдельно
+
 }; // struct FormattingOptions
 
 
