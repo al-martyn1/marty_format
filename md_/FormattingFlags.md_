@@ -1,12 +1,14 @@
 # enum флаги marty::format::FormattingFlags
 
+Флаги marty::format::FormattingFlags могут принимать следующие значения:
+
 <arg-list>
 
 -none
 флаги не установлены.
 
 -ignoreFormatStringErrors
-игнорировать ршибки в форматной строке.
+игнорировать ошибки в форматной строке.
 
 -ignoreArgumentErrors
 игнорировать ошибки поиска аргументов.
@@ -30,10 +32,12 @@
 #// **considerCombiningChars**             // Учитывать комбинированные символы
 
 -ignoreOptionsIndirectErrors
-игнорировать ошибки косвенного задания опций форматирования (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
+игнорировать ошибки косвенного задания опций форматирования.
+Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
 
 -ignoreErrors
-игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
+игнорировать все ошибки.
+Групповое значение для всех типов ошибок (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`).
 #// **considerUnicodeFeatures**     = considerZeroWidthSpaces | considerCombiningChars
 
 -all
