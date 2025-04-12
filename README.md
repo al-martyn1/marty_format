@@ -316,28 +316,21 @@ using Args = BasicArgs< FormatArgumentVariant
 
 ### enum флаги marty::format::FormattingFlags
 
-**none** - флаги не установлены.
 
-**ignoreFormatStringErrors** - игнорировать ршибки в форматной строке.
-
-**ignoreArgumentErrors** - игнорировать ошибки поиска аргументов.
-
-**ignoreFormattingErrors** - игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.
-
-**ignoreFillIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего символ заполнения.
-
-**ignoreWidthIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего ширину поля.
-
-**ignorePrecisionIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего точность.
-
-**ignoreConversionErrors** - игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип.
-
-
-**ignoreOptionsIndirectErrors** - игнорировать ошибки косвенного задания опций форматирования (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
-
-**ignoreErrors**                - игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
-
-**all** - всё флаги установлены.
+|Значение|Описание|
+|:-------|:-------|
+|||
+|**none**|флаги не установлены.|
+|**ignoreFormatStringErrors**|игнорировать ршибки в форматной строке.|
+|**ignoreArgumentErrors**|игнорировать ошибки поиска аргументов.|
+|**ignoreFormattingErrors**|игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.|
+|**ignoreFillIndirectErrors**|игнорировать ошибку поиска аргумента, содержащего символ заполнения.|
+|**ignoreWidthIndirectErrors**|игнорировать ошибку поиска аргумента, содержащего ширину поля.|
+|**ignorePrecisionIndirectErrors**|игнорировать ошибку поиска аргумента, содержащего точность.|
+|**ignoreConversionErrors**|игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип.|
+|**ignoreOptionsIndirectErrors**|игнорировать ошибки косвенного задания опций форматирования (`ignoreFillIndirectErrors \| ignoreWidthIndirectErrors \| ignorePrecisionIndirectErrors`).|
+|**ignoreErrors**|игнорировать все ошибки (`ignoreFormatStringErrors \| ignoreArgumentErrors \| ignoreFormattingErrors \| ignoreOptionsIndirectErrors \| ignoreConversionErrors`)|
+|**all**|всё флаги установлены.|
 
 
 

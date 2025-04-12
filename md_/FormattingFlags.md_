@@ -1,28 +1,43 @@
 # enum флаги marty::format::FormattingFlags
 
-**none** - флаги не установлены.
+<arg-list>
 
-**ignoreFormatStringErrors** - игнорировать ршибки в форматной строке.
+-none
+флаги не установлены.
 
-**ignoreArgumentErrors** - игнорировать ошибки поиска аргументов.
+-ignoreFormatStringErrors
+игнорировать ршибки в форматной строке.
 
-**ignoreFormattingErrors** - игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.
+-ignoreArgumentErrors
+игнорировать ошибки поиска аргументов.
 
-**ignoreFillIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего символ заполнения.
+-ignoreFormattingErrors
+игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.
 
-**ignoreWidthIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего ширину поля.
+-ignoreFillIndirectErrors
+игнорировать ошибку поиска аргумента, содержащего символ заполнения.
 
-**ignorePrecisionIndirectErrors** - игнорировать ошибку поиска аргумента, содержащего точность.
+-ignoreWidthIndirectErrors
+игнорировать ошибку поиска аргумента, содержащего ширину поля.
 
-**ignoreConversionErrors** - игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип.
+-ignorePrecisionIndirectErrors
+игнорировать ошибку поиска аргумента, содержащего точность.
+
+-ignoreConversionErrors
+игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип.
 
 #// **considerZeroWidthSpaces**            // Учитывать пробелы нулевой ширины
 #// **considerCombiningChars**             // Учитывать комбинированные символы
 
-**ignoreOptionsIndirectErrors** - игнорировать ошибки косвенного задания опций форматирования (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
+-ignoreOptionsIndirectErrors
+игнорировать ошибки косвенного задания опций форматирования (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
 
-**ignoreErrors**                - игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
+-ignoreErrors
+игнорировать все ошибки (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`)
 #// **considerUnicodeFeatures**     = considerZeroWidthSpaces | considerCombiningChars
 
-**all** - всё флаги установлены.
+-all
+всё флаги установлены.
 #// ignoreErrors | considerUnicodeFeatures
+
+</arg-list>
