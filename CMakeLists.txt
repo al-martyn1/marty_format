@@ -18,8 +18,11 @@ file(GLOB_RECURSE headers "${MODULE_ROOT}/*.h")
 list(FILTER headers EXCLUDE REGEX ".*/examples/.*$")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Headers" FILES ${headers})
 
+file(GLOB_RECURSE docs  "${MODULE_ROOT}/*.md")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Docs" FILES ${docs})
 
-add_library(${PROJECT_NAME} OBJECT ${sources} ${headers})
+
+add_library(${PROJECT_NAME} OBJECT ${sources} ${headers} ${docs})
 add_library(marty::format ALIAS ${PROJECT_NAME})
 
 # target_include_directories(${PROJECT_NAME} PRIVATE ${MODULE_ROOT}/..)
