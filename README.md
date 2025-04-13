@@ -330,8 +330,8 @@ using Args = BasicArgs< FormatArgumentVariant
 |**ignoreWidthIndirectErrors**|ignoreWidthIndirectErrors игнорировать ошибку поиска аргумента, содержащего ширину поля.|
 |**ignorePrecisionIndirectErrors**|ignorePrecisionIndirectErrors игнорировать ошибку поиска аргумента, содержащего точность.|
 |**ignoreConversionErrors**|ignoreConversionErrors игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип.|
-|**ignoreOptionsIndirectErrors**|ignoreOptionsIndirectErrors игнорировать ошибки косвенного задания опций форматирования. Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors &#124; ignoreWidthIndirectErrors &#124; ignorePrecisionIndirectErrors`).|
-|**ignoreErrors**|ignoreErrors игнорировать все ошибки. Групповое значение для всех типов ошибок (`ignoreFormatStringErrors &#124; ignoreArgumentErrors &#124; ignoreFormattingErrors &#124; ignoreOptionsIndirectErrors &#124; ignoreConversionErrors`).|
+|**ignoreOptionsIndirectErrors**|ignoreOptionsIndirectErrors игнорировать ошибки косвенного задания опций форматирования. Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors \| ignoreWidthIndirectErrors \| ignorePrecisionIndirectErrors`).|
+|**ignoreErrors**|ignoreErrors игнорировать все ошибки. Групповое значение для всех типов ошибок (`ignoreFormatStringErrors \| ignoreArgumentErrors \| ignoreFormattingErrors \| ignoreOptionsIndirectErrors \| ignoreConversionErrors`).|
 |**all**|all всё флаги установлены.|
 
 
@@ -526,7 +526,7 @@ type        ::= &quot;b&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | 
 
 |Значение|Описание|
 |:-------|:-------|
-|`'+'`|'+' Указывает, что знак следует использовать как для положительных, так и для отрицательных чисел.&#124;|
+|`'+'`|'+' Указывает, что знак следует использовать как для положительных, так и для отрицательных чисел.\||
 |`'-'`|'-' Указывает, что знак следует использовать только для отрицательных чисел (это поведение используется по умолчанию).|
 |`space`|space Указывает, что для положительных чисел следует использовать пробел, а для отрицательных чисел — знак `'-'`.|
 
