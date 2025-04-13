@@ -54,7 +54,7 @@
 `marty::format::BaseArgs<...>`, специфицированный пользовательскими типами или явно специфицированный `marty::format::Args`.
 
 
-## Преобразование типа аргумента
+## Преобразование типа аргумента - !conversion
 
 В данный момент обрабатывается при разборе форматной строки, но игнорируется при дальнейшей обработке.
 Надо разобраться, что делают режимы преобразования в оригинальной реализации форматирования в `Python`,
@@ -75,7 +75,7 @@
 </arg-list>
 
 
-## Спецификатор формата
+## Спецификатор формата - format_spec
 
 #// https://docs.python.org/3/library/string.html#formatspec
 #// Format Specification Mini-Language - https://docs.python.org/3/library/string.html#format-specification-mini-language
