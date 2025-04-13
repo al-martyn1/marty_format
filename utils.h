@@ -169,7 +169,9 @@ bool isFormatAnySpecialChar(utf32_char_t ch)
 {
     return isFormatAlignMarker(ch) || isFormatSignMarker(ch) || isFormatAlterChar(ch) 
         || isFormatFormatThousandSep(ch) || isFormatPeriodChar(ch) || isFormatLocaleChar(ch)
-        || isFormatDigit(ch) || isFormatTypeChar(ch) || ch==utf32_char_t('{')
+        || isFormatDigit(ch) || isFormatTypeChar(ch)
+        || ch==utf32_char_t('{')
+        || ch==utf32_char_t('z')
            ;
 }
 

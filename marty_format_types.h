@@ -120,14 +120,16 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
 using FormatArgumentVariant = 
     std::variant< bool
                 , char
-                , std::int8_t
-                , std::uint8_t
-                , std::int16_t
-                , std::uint16_t
-                , std::int32_t
-                , std::uint32_t
-                , std::int64_t
-                , std::uint64_t
+                , unsigned char        // std::uint8_t
+                , signed char          // std::int8_t
+                , unsigned short       // std::uint16_t
+                , signed short         // std::int16_t
+                , unsigned int         // std::uint32_t
+                , int                  // std::int32_t
+                , unsigned long        // 32/64, it's depends
+                , long                 // 32/64, it's depends
+                , unsigned long long   // std::uint64_t
+                , long long            // std::int64_t
                 , float
                 , double
                 , long double

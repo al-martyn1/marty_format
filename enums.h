@@ -34,14 +34,15 @@ enum class FormattingOptionsFlags : std::uint32_t
     signPlus                  = 0x08 /*!< Mutually exclusive with signMinus & signSpace */,
     signMinus                 = 0x10 /*!< Mutually exclusive with signPlus & signSpace */,
     signSpace                 = 0x20 /*!< Mutually exclusive with signMinus & signPlus */,
-    signZero                  = 0x40 /*!<  */,
+    signZ                     = 0x40 /*!<  */,
     signAlterForm             = 0x80 /*!<  */,
-    fillingTaken              = 0x100 /*!<  */,
-    fillingIndirect           = 0x200 /*!<  */,
-    localeFormatting          = 0x400 /*!<  */,
-    precisionTaken            = 0x800 /*!<  */,
-    precisionIndirect         = 0x1000 /*!<  */,
-    grouppingTaken            = 0x2000 /*!<  */,
+    signZero                  = 0x100 /*!<  */,
+    fillingTaken              = 0x200 /*!<  */,
+    fillingIndirect           = 0x400 /*!<  */,
+    localeFormatting          = 0x800 /*!<  */,
+    precisionTaken            = 0x1000 /*!<  */,
+    precisionIndirect         = 0x2000 /*!<  */,
+    grouppingTaken            = 0x4000 /*!<  */,
     fieldWidthIndirectTaken   = fieldWidthTaken | fieldWidthIndirect /*!<  */,
     precisionIndirectTaken    = precisionTaken | precisionIndirect /*!<  */,
     fillingIndirectTaken      = fillingTaken | fillingIndirect /*!<  */
@@ -61,6 +62,7 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::localeFormatting         , "LocaleFormatting"        );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthTaken          , "FieldWidthTaken"         );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "SignAlterForm"           );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signZ                    , "SignZ"                   );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "SignSpace"               );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signZero                 , "SignZero"                );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fillingTaken             , "FillingTaken"            );
@@ -98,6 +100,9 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "sign-alter-form"            );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "signalterform"              );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signAlterForm            , "sign_alter_form"            );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZ                    , "sign-z"                     );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZ                    , "sign_z"                     );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signZ                    , "signz"                      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "sign-space"                 );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "sign_space"                 );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::signSpace                , "signspace"                  );

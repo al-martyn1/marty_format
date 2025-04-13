@@ -235,6 +235,8 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         // Если argId конвертируется в число - то это числовой позиционный индекс
         // Если в качестве списка элементов - плоский вектор без имён, то тогда
         // именованные argId недопустимы
+
+        // **arg_id**
         {
             auto argIdOutIt = marty::utf::UtfOutputIterator<char>(formattingOptions.argId);
             while(b!=e)
@@ -258,6 +260,8 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
             incB(); doFormat(); continue;
         }
 
+
+        // **conversion**
         if (utils::isFormatConvertMarker(ch))
         {
             incB();
@@ -301,11 +305,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         }
 
 
-        
-        //fillingIndirect
-        //waitForPrecision
-        // std::string possibleFillRef;
-        // bool possibleFillRefGot = false;
+        // **fill**
         if (!utils::isFormatAnySpecialChar(ch))
         {
             formattingOptions.fillChar = ch;
@@ -354,6 +354,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
         // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
 
+        // **align** **width**
         if (utils::isFormatAlignMarker(ch))
         {
             formattingOptions.alignment = char(ch); // флаги не нужны - выравнивание задано по умолчанию
@@ -387,7 +388,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
         // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
 
-
+        // **sign**
         if (utils::isFormatSignMarker(ch) || ch==utfch_t(' '))
         {
             switch(ch)
@@ -407,6 +408,22 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         }
 
 
+        // **z**
+        if (ch==utfch_t('z'))
+        {
+            formattingOptions.optionsFlags |= FormattingOptionsFlags::signZ;
+
+            incB(); // Идём дальше
+            if (b==e) // Дошли до конца
+                return finalizeParsing("unexpected end reached while reading format spec");
+            if (ch==utfch_t('}'))
+            {
+                incB(); doFormat(); continue;
+            }
+        }
+
+
+        // **#**
         if (utils::isFormatAlterChar(ch))
         {
             formattingOptions.optionsFlags |= FormattingOptionsFlags::signAlterForm;
@@ -423,6 +440,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
         // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
 
+        // **0**
         if (utils::isFormatDigit(ch, 0, 0))
         {
             formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
@@ -436,7 +454,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
             }
         }
 
-
+        // **width**
         if (utils::isFormatDigit(ch, 1, 9))
         {
             formattingOptions.optionsFlags |= FormattingOptionsFlags::fieldWidthTaken;
@@ -491,6 +509,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
         // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
 
+        // **grouping**
         if (utils::isFormatFormatThousandSep(ch))
         {
             formattingOptions.grouppingChar = ch;
@@ -507,6 +526,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
         // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
         // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
 
+        // **precision** start
         if (utils::isFormatPeriodChar(ch))
         {
             formattingOptions.optionsFlags |= FormattingOptionsFlags::precisionTaken;
@@ -1101,19 +1121,21 @@ StringType martyFormatSimpleConvertToString(const std::string &str)
 
 
 //----------------------------------------------------------------------------
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(bool b)          { return StringType(b ? "true" : "false" ); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(char ch)         { return StringType(1, ch); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::uint8_t i)  { return martyFormatSimpleConvertToString<StringType>(std::to_string(unsigned(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::int8_t i)   { return martyFormatSimpleConvertToString<StringType>(std::to_string(int(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::uint16_t i) { return martyFormatSimpleConvertToString<StringType>(std::to_string(unsigned(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::int16_t i)  { return martyFormatSimpleConvertToString<StringType>(std::to_string(int(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::uint32_t i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::int32_t i)  { return martyFormatSimpleConvertToString<StringType>(std::to_string(long(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::uint64_t i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(std::int64_t i)  { return martyFormatSimpleConvertToString<StringType>(std::to_string((long long)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(float f)         { return martyFormatSimpleConvertToString<StringType>(std::to_string(f).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(double d)        { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(long double d)   { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(bool b)               { return StringType(b ? "true" : "false" ); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(char ch)              { return StringType(1, ch); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned char      i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed char        i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned short     i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed short       i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned int       i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(int                i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long      i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(long               i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((long         )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long long i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(long long          i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((long long         )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(float f)              { return martyFormatSimpleConvertToString<StringType>(std::to_string(f).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(double d)             { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(long double d)        { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const std::wstring &str) { return martyFormatSimpleConvertToString<StringType>(marty::utf::string_from_wstring(str).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const wchar_t *str)      { return martyFormatSimpleConvertToString<StringType>(marty::utf::string_from_wstring(str?std::wstring(str):std::wstring()).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const marty::Decimal &d) { return martyFormatSimpleConvertToString<StringType>(to_string(d).c_str()); }
@@ -1192,15 +1214,17 @@ StringType martyFormatValueFormatString(const FormattingOptions &formattingOptio
 }
 
 //----------------------------------------------------------------------------
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int8_t   v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int16_t  v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int32_t  v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::int64_t  v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed char  v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed short v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, int          v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long         v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long long    v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
 
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint8_t  v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint16_t v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint32_t v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::uint64_t v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned char      v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned short     v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned int       v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long      v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long long v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
 
 //----------------------------------------------------------------------------
 template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, float v)       { return martyFormatValueFormatFloat<StringType>(formattingOptions, v); }
@@ -1305,53 +1329,6 @@ marty::utf::utf32_char_t convertFormatArgumentVariantToChar(VariantType v)
                      );
 }
 //----------------------------------------------------------------------------
-
-
-
-
-
-// auto val = std::visit([](auto && arg) -> std::optional<uint64_t)
-// {
-//     if constexpr(std::numeric_limits<decltype(arg)>::is_integer)
-//         return arg;
-//     return std::nullopt}, myVariant);
-
-
-    // template< typename IntType >
-    // static
-    // typename std::enable_if<std::is_signed<IntType>::value,  /* typename */  StringType>::type
-    // formatIntDecimal(IntType intVal, bool showSign = false)
-    // {
-    // typename std::enable_if<std::is_unsigned<UnsignedType>::value,  /* typename  */ StringType >::type
-
-// template< typename EnumType, typename std::enable_if< (!std::is_enum<EnumType>::value
-//                                                     &&  std::is_integral<EnumType>::value
-//                                                       )
-//                                                     , bool
-//                                                     >::type = true
-//         > inline
-
-
-
-
-// using FormatArgumentVariant = std::variant< char
-//                                           , std::int8_t
-//                                           , std::uint8_t
-//                                           , std::int16_t
-//                                           , std::uint16_t
-//                                           , std::int32_t
-//                                           , std::uint32_t
-//                                           , std::int64_t
-//                                           , std::uint64_t
-//                                           , float
-//                                           , double
-//                                           , long double
-//                                           , const char*
-//                                           , const wchar_t*
-//                                           , std::string
-//                                           , std::wstring
-//                                           , marty::Decimal
-//                                           >;
 
 
 

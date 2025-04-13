@@ -6,8 +6,9 @@ fieldWidthIndirect            // Indirect field width - fieldWidth member contai
 signPlus                      // Mutually exclusive with signMinus & signSpace
 signMinus                     // Mutually exclusive with signPlus & signSpace
 signSpace                     // Mutually exclusive with signMinus & signPlus
-signZero
+signZ
 signAlterForm
+signZero
 # alignTaken
 fillingTaken
 fillingIndirect
