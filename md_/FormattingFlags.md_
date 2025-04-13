@@ -41,7 +41,7 @@
 #// **considerUnicodeFeatures**     = considerZeroWidthSpaces | considerCombiningChars
 
 -all
-всё флаги установлены.
+все флаги установлены.
 #// ignoreErrors | considerUnicodeFeatures
 
 </arg-list>
