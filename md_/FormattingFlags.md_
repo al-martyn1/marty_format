@@ -31,6 +31,10 @@
 #// **considerZeroWidthSpaces**            // Учитывать пробелы нулевой ширины
 #// **considerCombiningChars**             // Учитывать комбинированные символы
 
+-fractionalGroupping
+Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа. 
+Без указания данного флага для дробной части числа следует явно указывать спецификатор разделителя разрядов.
+
 -ignoreOptionsIndirectErrors
 игнорировать ошибки косвенного задания опций форматирования.
 Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
@@ -38,10 +42,12 @@
 -ignoreErrors
 игнорировать все ошибки.
 Групповое значение для всех типов ошибок (`ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors`).
+
 #// **considerUnicodeFeatures**     = considerZeroWidthSpaces | considerCombiningChars
 
 -all
-все флаги установлены.
+все флаги установлены (`ignoreErrors | fractionalGroupping`).
 #// ignoreErrors | considerUnicodeFeatures
 
 </arg-list>
+

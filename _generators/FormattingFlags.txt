@@ -11,8 +11,10 @@ ignoreConversionErrors             // Ignore formatting type specifications and 
 considerZeroWidthSpaces            // Учитывать пробелы нулевой ширины
 considerCombiningChars             // Учитывать комбинированные символы
 
+fractionalGroupping                // Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа
+
 ignoreOptionsIndirectErrors = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
 ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors
 considerUnicodeFeatures     = considerZeroWidthSpaces | considerCombiningChars
 
-all = ignoreErrors | considerUnicodeFeatures
+all = ignoreErrors | considerUnicodeFeatures | fractionalGroupping

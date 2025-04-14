@@ -598,6 +598,24 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
 
         }
 
+        // **fractional_grouping**
+        if (utils::isFormatFormatThousandSep(ch))
+        {
+            if ((formattingOptions.optionsFlags&FormattingOptionsFlags::precisionTaken)==0)
+                optionalError("unexpected symbol reached while parsing format spec");
+
+            formattingOptions.fractionalGrouppingChar = ch;
+
+            incB();
+            if (b==e) // Дошли до конца
+                return finalizeParsing("unexpected end reached while reading format spec");
+            if (ch==utfch_t('}'))
+            {
+                incB(); doFormat(); continue;
+            }
+        }
+
+
         // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
         // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
 
@@ -1367,6 +1385,7 @@ StringType formatMessageImpl( const StringType &fmt
 
     std::size_t argIdx = 0;
 
+
     auto formatHandler = [&](marty::format::FormattingOptions formattingOptions)
     {
         using value_type = typename ContainerValueTypeDeducer<ArgsType>::value_type;
@@ -1375,6 +1394,12 @@ StringType formatMessageImpl( const StringType &fmt
 
         // typename ContainerType::value_type valToFormat = typename ContainerType::value_type("<ERR>");
         value_type valToFormat = value_type{"<ERR>"};
+
+        // Если явно задано флагами, что дробную часть надо тоже разделять по разрядам,
+        // и разделитель разрядов не задан явно для дробной части
+        // то устанавливаем разделитель разрядов такой же, как и для целой части числа
+        if ((formattingOptions.formattingFlags&FormattingFlags::fractionalGroupping)!=0 && formattingOptions.fractionalGrouppingChar==0)
+            formattingOptions.fractionalGrouppingChar = formattingOptions.grouppingChar;
 
         try
         {
