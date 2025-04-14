@@ -422,6 +422,19 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
             }
         }
 
+        // **!** caseInvert
+        if (ch==utfch_t('!'))
+        {
+            formattingOptions.optionsFlags |= FormattingOptionsFlags::caseInvert;
+
+            incB(); // Идём дальше
+            if (b==e) // Дошли до конца
+                return finalizeParsing("unexpected end reached while reading format spec");
+            if (ch==utfch_t('}'))
+            {
+                incB(); doFormat(); continue;
+            }
+        }
 
         // **#**
         if (utils::isFormatAlterChar(ch))

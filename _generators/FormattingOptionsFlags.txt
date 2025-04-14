@@ -16,6 +16,7 @@ localeFormatting
 precisionTaken
 precisionIndirect
 grouppingTaken
+caseInvert
 
 fieldWidthIndirectTaken  = fieldWidthTaken | fieldWidthIndirect
 precisionIndirectTaken   = precisionTaken | precisionIndirect

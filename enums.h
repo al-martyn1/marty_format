@@ -43,6 +43,7 @@ enum class FormattingOptionsFlags : std::uint32_t
     precisionTaken            = 0x1000 /*!<  */,
     precisionIndirect         = 0x2000 /*!<  */,
     grouppingTaken            = 0x4000 /*!<  */,
+    caseInvert                = 0x8000 /*!<  */,
     fieldWidthIndirectTaken   = fieldWidthTaken | fieldWidthIndirect /*!<  */,
     precisionIndirectTaken    = precisionTaken | precisionIndirect /*!<  */,
     fillingIndirectTaken      = fillingTaken | fillingIndirect /*!<  */
@@ -56,6 +57,7 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::unknown                  , "Unknown"                 );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::none                     , "None"                    );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthIndirect       , "FieldWidthIndirect"      );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::caseInvert               , "CaseInvert"              );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::argIdTaken               , "ArgIdTaken"              );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signMinus                , "SignMinus"               );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::signPlus                 , "SignPlus"                );
@@ -82,6 +84,9 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthIndirect       , "field-width-indirect"       );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthIndirect       , "field_width_indirect"       );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::fieldWidthIndirect       , "fieldwidthindirect"         );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::caseInvert               , "case-invert"                );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::caseInvert               , "case_invert"                );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::caseInvert               , "caseinvert"                 );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::argIdTaken               , "arg-id-taken"               );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::argIdTaken               , "argidtaken"                 );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::argIdTaken               , "arg_id_taken"               );
