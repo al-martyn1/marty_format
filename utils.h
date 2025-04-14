@@ -361,8 +361,8 @@ template<typename T>
 struct has_operator_string_index<T, std::void_t<decltype(std::declval<T>().operator[](std::string()))>> : std::true_type {};
 
 //----------------------------------------------------------------------------
-template<typename T> using is_bool = std::is_same<T, bool>;
-template<typename T> using is_char = std::is_same<T, char>;
+template<typename T> using is_bool = std::is_same<std::decay_t<T>, bool>;
+template<typename T> using is_char = std::is_same<std::decay_t<T>, char>;
 
 //----------------------------------------------------------------------------
 
