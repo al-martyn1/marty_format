@@ -1152,21 +1152,21 @@ StringType martyFormatSimpleConvertToString(const std::string &str)
 
 
 //----------------------------------------------------------------------------
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(bool b)               { return StringType(b ? "true" : "false" ); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(char ch)              { return StringType(1, ch); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned char      i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed char        i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned short     i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed short       i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned int       i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(int                i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long      i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(long               i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((long         )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long long i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(long long          i) { return martyFormatSimpleConvertToString<StringType>(std::to_string((long long         )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(float f)              { return martyFormatSimpleConvertToString<StringType>(std::to_string(f).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(double d)             { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(long double d)        { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(bool b)                  { return StringType(b ? "true" : "false" ); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(char ch)                 { return StringType(1, ch); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned char      i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed char        i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned short     i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed short       i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned int       i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(int                i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long      i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(long               i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((long         )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long long i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(long long          i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((long long         )(i)).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(float f)                 { return martyFormatSimpleConvertToString<StringType>(std::to_string(f).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(double d)                { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(long double d)           { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const std::wstring &str) { return martyFormatSimpleConvertToString<StringType>(marty::utf::string_from_wstring(str).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const wchar_t *str)      { return martyFormatSimpleConvertToString<StringType>(marty::utf::string_from_wstring(str?std::wstring(str):std::wstring()).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const marty::Decimal &d) { return martyFormatSimpleConvertToString<StringType>(to_string(d).c_str()); }
@@ -1175,23 +1175,21 @@ template<typename StringType> inline StringType martyFormatSimpleConvertToString
 
 
 
-
 //----------------------------------------------------------------------------
-template< typename StringType, typename IntType >
+template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize);
 
-template< typename StringType, typename IntType >
+template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize);
 
-template< typename StringType, typename FloatType >
+template< typename WidthCalculator, typename StringType, typename FloatType >
 StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, FloatType v);
 
-template< typename StringType >
+template< typename WidthCalculator, typename StringType >
 StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str);
 
-
 //----------------------------------------------------------------------------
-template< typename StringType=std::string >
+template< typename WidthCalculator, typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bool b)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1199,7 +1197,7 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
 }
 
 //----------------------------------------------------------------------------
-template< typename StringType=std::string >
+template< typename WidthCalculator, typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, char ch)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1211,7 +1209,7 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, ch
 
 
 //----------------------------------------------------------------------------
-template< typename StringType, typename IntType >
+template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1220,7 +1218,7 @@ StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions,
 }
 
 //----------------------------------------------------------------------------
-template< typename StringType, typename IntType >
+template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1229,7 +1227,7 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
 }
 
 //----------------------------------------------------------------------------
-template< typename StringType, typename FloatType >
+template< typename WidthCalculator, typename StringType, typename FloatType >
 StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, FloatType v)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1237,7 +1235,7 @@ StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOption
 }
 
 //----------------------------------------------------------------------------
-template< typename StringType >
+template< typename WidthCalculator, typename StringType >
 StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1245,31 +1243,31 @@ StringType martyFormatValueFormatString(const FormattingOptions &formattingOptio
 }
 
 //----------------------------------------------------------------------------
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed char  v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed short v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, int          v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long         v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long long    v) { return martyFormatValueFormatInt<StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed char  v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed short v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, int          v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long         v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long long    v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
 
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned char      v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned short     v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned int       v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long      v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long long v) { return martyFormatValueFormatUnsigned<StringType>(formattingOptions, v, sizeof(v)); }
-
-//----------------------------------------------------------------------------
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, float v)       { return martyFormatValueFormatFloat<StringType>(formattingOptions, v); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, double v)      { return martyFormatValueFormatFloat<StringType>(formattingOptions, v); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long double v) { return martyFormatValueFormatFloat<StringType>(formattingOptions, v); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned char      v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned short     v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned int       v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long      v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long long v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
 
 //----------------------------------------------------------------------------
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const std::string &str)  { return martyFormatValueFormatString<StringType>(formattingOptions, str); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const char* str)         { return martyFormatValueFormat<StringType>(formattingOptions, str ? std::string(str) : std::string()); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const std::wstring &str) { return martyFormatValueFormat<StringType>(formattingOptions, marty::utf::string_from_wstring(str)); }
-template< typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const wchar_t* str)      { return martyFormatValueFormat<StringType>(formattingOptions, str ? std::wstring(str) : std::wstring()); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, float v)       { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, v); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, double v)      { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, v); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long double v) { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, v); }
 
 //----------------------------------------------------------------------------
-template< typename StringType=std::string >
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const std::string &str)  { return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, str); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const char* str)         { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, str ? std::string(str) : std::string()); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const std::wstring &str) { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, marty::utf::string_from_wstring(str)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const wchar_t* str)      { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, str ? std::wstring(str) : std::wstring()); }
+
+//----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const marty::Decimal &d)
 {
     MARTY_ARG_USED(formattingOptions);
@@ -1364,6 +1362,8 @@ marty::utf::utf32_char_t convertFormatArgumentVariantToChar(VariantType v)
 
 
 //----------------------------------------------------------------------------
+using DefaultUtfWidthCalculator = utils::DefaultUtfWidthCalculator;
+
 //#! Args
 using Args = BasicArgs< FormatArgumentVariant
                       , std::vector<FormatArgumentVariant>
@@ -1372,8 +1372,9 @@ using Args = BasicArgs< FormatArgumentVariant
 //#!
 
 //#! BasicImpl
-template< typename StringType = std::string
-        , typename ArgsType   = Args
+template< typename StringType      = std::string
+        , typename ArgsType        = Args
+        , typename WidthCalculator = DefaultUtfWidthCalculator
         >
 StringType formatMessageImpl( const StringType &fmt
                             , const ArgsType   &args
@@ -1475,7 +1476,7 @@ StringType formatMessageImpl( const StringType &fmt
         {
             return std::visit( [&](auto && a) -> StringType
                                {
-                                   return martyFormatValueFormat<StringType>(formattingOptions, a);
+                                   return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, a);
                                }
                              , valToFormat
                              );
@@ -1504,8 +1505,9 @@ StringType formatMessageImpl( const StringType &fmt
 
 //----------------------------------------------------------------------------
 //#! formatMessageGeneric
-template< typename StringType = std::string
-        , typename ArgsType   = Args
+template< typename StringType      = std::string
+        , typename ArgsType        = Args
+        , typename WidthCalculator = DefaultUtfWidthCalculator
         >
 StringType formatMessage( const StringType &fmt
                         , const ArgsType   &args
@@ -1513,19 +1515,21 @@ StringType formatMessage( const StringType &fmt
                         )
 //#!
 {
-    return formatMessageImpl<StringType, ArgsType>(fmt, args, formattingFlags);
+    return formatMessageImpl<StringType, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
 //#! formatMessageGenericConstCharPtr
-template< typename ArgsType = Args >
+template< typename ArgsType        = Args
+        , typename WidthCalculator = DefaultUtfWidthCalculator
+        >
 std::string formatMessage( const char *fmt
                          , const ArgsType   &args
                          , FormattingFlags  formattingFlags=FormattingFlags::all
                          )
 //#!
 {
-    return formatMessageImpl<std::string, ArgsType>(fmt, args, formattingFlags);
+    return formatMessageImpl<std::string, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
@@ -1536,7 +1540,9 @@ std::string formatMessage( const char *fmt
 //#! formatMessageInitializerList
 using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
 
-template< typename StringType = std::string >
+template< typename StringType = std::string
+        , typename WidthCalculator = DefaultUtfWidthCalculator
+        >
 StringType formatMessage( const StringType          &fmt
                         , FormatArgumentVariantList &&args
                         , FormattingFlags           formattingFlags=FormattingFlags::all
@@ -1544,11 +1550,13 @@ StringType formatMessage( const StringType          &fmt
 //#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
-    return formatMessageImpl<StringType, ArgsType>(fmt, args, formattingFlags);
+    return formatMessageImpl<StringType, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
 //#! formatMessageInitializerListConstCharPtr
+template< typename WidthCalculator = DefaultUtfWidthCalculator
+        >
 inline
 std::string formatMessage( const char                *fmt
                          , FormatArgumentVariantList &&args
@@ -1557,7 +1565,7 @@ std::string formatMessage( const char                *fmt
 //#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
-    return formatMessageImpl<std::string, ArgsType>(fmt, args, formattingFlags);
+    return formatMessageImpl<std::string, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
 }
 
 

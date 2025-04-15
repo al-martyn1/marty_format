@@ -366,6 +366,40 @@ template<typename T> using is_char = std::is_same<std::decay_t<T>, char>;
 
 //----------------------------------------------------------------------------
 
+
+
+//----------------------------------------------------------------------------
+// Подсчитывает длину строки в символах
+struct DefaultUtfWidthCalculator
+{
+    std::size_t operator()(const char* b, const char* e) const
+    {
+        auto it    = marty::utf::UtfInputIterator<char>(b, e);
+        auto endIt = marty::utf::UtfInputIterator<char>();
+
+        std::size_t size = 0;
+
+        for(; it!=endIt; ++it)
+        {
+            auto ch = *it;
+            // suf - simpleUnicodeFeature
+            if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
+                continue;
+
+            ++size;
+        }
+
+        return size;
+    }
+
+}; // struct DefaultUtfWidthCalculator
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+
 } // namespace utils
 } // namespace format
 } // namespace marty
