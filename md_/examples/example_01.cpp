@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
                          ) << "\n";
 
     // Используем именованные аргументы,
-    // перемешали порядок, по сравнению с предыдущим примером
+    // перемешали порядок аргументов, по сравнению с предыдущим примером
     cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
                          , Args().arg("str", "Very long string, does not fit into 20 characters")
                                  .arg("Pi", 3.14159)

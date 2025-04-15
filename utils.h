@@ -370,6 +370,7 @@ template<typename T> using is_char = std::is_same<std::decay_t<T>, char>;
 
 //----------------------------------------------------------------------------
 // Подсчитывает длину строки в символах
+//#! DefaultUtfWidthCalculator
 struct DefaultUtfWidthCalculator
 {
     std::size_t operator()(const char* b, const char* e) const
@@ -393,6 +394,7 @@ struct DefaultUtfWidthCalculator
     }
 
 }; // struct DefaultUtfWidthCalculator
+//#!
 
 //----------------------------------------------------------------------------
 

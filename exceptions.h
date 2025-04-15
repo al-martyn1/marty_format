@@ -72,6 +72,7 @@ MARTY_FORMAT_DECLARE_EXCEPTION_CLASS(argid_not_found, base_error);
 MARTY_FORMAT_DECLARE_EXCEPTION_CLASS(argid_already_exist, base_error);
 MARTY_FORMAT_DECLARE_EXCEPTION_CLASS(invalid_argument_type, base_error);
 MARTY_FORMAT_DECLARE_EXCEPTION_CLASS(filter_as_value_error, base_error);
+MARTY_FORMAT_DECLARE_EXCEPTION_CLASS(unknown_value_filter, base_error);
 
 
     // std::size_t getSymbolOffset() const

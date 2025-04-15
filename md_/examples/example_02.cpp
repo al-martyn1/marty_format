@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
     {
         //#! UsingNamedArgs
         // Используем именованные аргументы,
-        // перемешали порядок, по сравнению с предыдущим примером
+        // перемешали порядок аргументов, по сравнению с предыдущим примером
         using namespace marty::format;
         cout << formatMessage(
             "Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
     {
         //#! UsingFillRefAndConvert
         // Используем именованные аргументы
-        // Задаём конвертацию (игнорируем)
+        // Задаём конвертацию значения (но в текущий момент она игнорируется)
         // Символ заполнения передаём аргументом
         using namespace marty::format;
         cout << formatMessage(

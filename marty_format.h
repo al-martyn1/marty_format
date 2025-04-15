@@ -1378,7 +1378,9 @@ marty::utf::utf32_char_t convertFormatArgumentVariantToChar(VariantType v)
 
 
 //----------------------------------------------------------------------------
+//#! DefaultUtfWidthCalculator
 using DefaultUtfWidthCalculator = utils::DefaultUtfWidthCalculator;
+//#!
 
 //#! Args
 using Args = BasicArgs< FormatArgumentVariant

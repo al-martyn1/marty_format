@@ -121,12 +121,30 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
 
 //#! BasicFormatValueFilter
 template<typename InputIteratorType, typename OutputIteratorType>
-using BasicFormatValueFilter = std::function<void(InputIteratorType, InputIteratorType, OutputIteratorType)>;
+using BasicFormatValueFilter = std::function< void( InputIteratorType  // begin
+                                                  , InputIteratorType  // end
+                                                  , OutputIteratorType
+                                                  )
+                                            >;
 //#!
 
 //#! FormatValueFilter
-using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>, marty::utf::UtfOutputIterator<char> >;
+using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>
+                                                , marty::utf::UtfOutputIterator<char>
+                                                >;
 //#!
+
+//----------------------------------------------------------------------------
+//#! makeStandardFormatValueFilter
+template<typename StringType>
+FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName)
+//#!
+{
+    throw unknown_value_filter("unknown value filter");
+}
+
+//----------------------------------------------------------------------------
+
 
 
 //----------------------------------------------------------------------------
