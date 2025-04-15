@@ -26,6 +26,7 @@
     - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#user-content-пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
   - [Тип фильтра FormatValueFilter](#user-content-тип-фильтра-formatvaluefilter)
   - [Стандартные фильтры](#user-content-стандартные-фильтры)
+  - [Фабрика стандартных фильтров - makeStandardFormatValueFilter](#user-content-фабрика-стандартных-фильтров---makestandardformatvaluefilter)
   - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#user-content-martyformatformatargumentvariant---variant-тип-аргумента)
   - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
@@ -35,6 +36,7 @@
   - [marty::format::formatMessageImpl](#user-content-martyformatformatmessageimpl)
   - [marty::format::formatMessage - аргументы передаются в generic-контейнере](#user-content-martyformatformatmessage---аргументы-передаются-в-generic-контейнере)
   - [marty::format::formatMessage - аргументы передаются в виде std::initializer_list](#user-content-martyformatformatmessage---аргументы-передаются-в-виде-stdinitializer_list)
+  - [Базовая реализация функтора вычисления отображаемой ширины строки](#user-content-базовая-реализация-функтора-вычисления-отображаемой-ширины-строки)
 - [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
   - [Грамматика полей замены](#user-content-грамматика-полей-замены)
   - [Преобразование типа аргумента - !conversion](#user-content-преобразование-типа-аргумента---conversion)
@@ -148,7 +150,7 @@ cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
 
 ```cpp
 // Используем именованные аргументы,
-// перемешали порядок, по сравнению с предыдущим примером
+// перемешали порядок аргументов, по сравнению с предыдущим примером
 using namespace marty::format;
 cout << formatMessage(
     "Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
@@ -185,7 +187,7 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
 
 ```cpp
 // Используем именованные аргументы
-// Задаём конвертацию (игнорируем)
+// Задаём конвертацию значения (но в текущий момент она игнорируется)
 // Символ заполнения передаём аргументом
 using namespace marty::format;
 cout << formatMessage(
@@ -205,18 +207,24 @@ cout << formatMessage(
 
 
 
+
 ## API библиотеки
 
 
 ### Обобщённый тип фильтра BasicFormatValueFilter
 
-Объект-фильтр для преобразования форматированного значения.
+Функциональный объект - фильтр, для преобразования форматированного значения в целевую строку.
 
 Фильтрация производится после форматирования поля.
 
+**marty_format_types.h**
 ```cpp
 template<typename InputIteratorType, typename OutputIteratorType>
-using BasicFormatValueFilter = std::function<void(InputIteratorType, InputIteratorType, OutputIteratorType)>;
+using BasicFormatValueFilter = std::function< void( InputIteratorType  // begin
+                                                  , InputIteratorType  // end
+                                                  , OutputIteratorType
+                                                  )
+                                            >;
 ```
 
 Параметры шаблона:
@@ -262,8 +270,11 @@ const char* m_ptrEnd  = 0;
 
 Специализация базового фильтра `BasicFormatValueFilter` для UTF-8 строк: 
 
+**marty_format_types.h**
 ```cpp
-using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>, marty::utf::UtfOutputIterator<char> >;
+using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>
+                                                , marty::utf::UtfOutputIterator<char>
+                                                >;
 ```
 
 
@@ -284,6 +295,33 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 **Примечание**. В текущий момент стандартные фильтры не реализованы (**NOT_IMPLEMENTED**).
 
 
+### Фабрика стандартных фильтров - makeStandardFormatValueFilter
+
+Возвращает стандартный фильтр по его имени.
+
+**marty_format_types.h**
+```cpp
+template<typename StringType>
+FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName)
+```
+
+В настоящее время фабрика не реализована и выбрасывает исключение на любое переданное имя фильтра (**NOT_IMPLEMENTED**).
+
+Допустимые имена фильтров:
+
+
+|Значение|Описание|
+|:-------|:-------|
+|`'xml'`|возвращает экземпляр фильтра для `XML`, как для текста, так и для атрибутов.|
+|`'xml_text'`|возвращает экземпляр фильтра для текста `XML`.|
+|`'xml_attr'`|возвращает экземпляр фильтра для атрибутов `XML`.|
+|`'html'`|возвращает экземпляр фильтра для `HTML`, как для текста, так и для атрибутов.|
+|`'html_text'`|возвращает экземпляр фильтра для текста `HTML`.|
+|`'html_attr'`|возвращает экземпляр фильтра для атрибутов `HTML`.|
+|`'sql'`|возвращает экземпляр фильтра для значений `SQL`-запросов.|
+
+
+
 ### marty::format::FormatArgumentVariant - Variant-тип аргумента
 
 Стандартный тип аргумента на базе `std::variant`.
@@ -291,6 +329,7 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 Это стандартный тип `marty::format::FormatArgumentVariant`. Пользователь библиотеки может определить
 свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
 
+**marty_format_types.h**
 ```cpp
 using FormatArgumentVariant =
     std::variant< bool
@@ -333,6 +372,7 @@ using FormatArgumentVariant =
 Контейнер типа `marty::format::BasicArgs` предоставляет как метод `find` по имени, так и метод 
 `find_by_pos(std::size_t)` для "поиска" по индексу.
 
+**marty_format.h**
 ```cpp
 template< typename ArgumentVariantType=FormatArgumentVariant
         , typename VectorType=std::vector<ArgumentVariantType>
@@ -350,6 +390,7 @@ class BasicArgs
 Игнорирование регистра именованных аргументов производится путём приведения имён
 к нижнему регистру, и работает только для имён, содержащих символы из базовой таблицы ASCII.
 
+**marty_format.h**
 ```cpp
 BasicArgs(bool caseIgnore=true)
 : m_caseIgnore(caseIgnore)
@@ -364,24 +405,28 @@ BasicArgs(bool caseIgnore=true)
 
 Добавляет безымянный аргумент:
 
+**marty_format.h**
 ```cpp
 template<typename T> BasicArgs& arg(T t)
 ```
 
 Добавляет именованный аргумент, имя задаётся параметром типа `const char*`:
 
+**marty_format.h**
 ```cpp
 template<typename T> BasicArgs& arg(const char* k, T t)
 ```
 
 Добавляет именованный аргумент, имя задаётся параметром типа ключа в `map`, хранящей индексы именованных аргументов:
 
+**marty_format.h**
 ```cpp
 template<typename T> BasicArgs& arg(const key_type &k, T t)
 ```
 
 Добавляет безымянный аргумент типа int со значением `0`:
 
+**marty_format.h**
 ```cpp
 BasicArgs& arg()
 ```
@@ -391,6 +436,7 @@ BasicArgs& arg()
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
 
+**marty_format.h**
 ```cpp
 using Args = BasicArgs< FormatArgumentVariant
                       , std::vector<FormatArgumentVariant>
@@ -428,6 +474,7 @@ using Args = BasicArgs< FormatArgumentVariant
 Пользователь библиотеки может создать свой собственный variant-тип аргумента, добавив
 свои собственные типы, и, используя данную функцию, сделать свою кастомизированную функцию форматирования.
 
+**marty_format.h**
 ```cpp
 template< typename StringType      = std::string
         , typename ArgsType        = Args
@@ -440,8 +487,10 @@ StringType formatMessageImpl( const StringType &fmt
 ```
 
 
+
 ### marty::format::formatMessage - аргументы передаются в generic-контейнере
 
+**marty_format.h**
 ```cpp
 template< typename StringType      = std::string
         , typename ArgsType        = Args
@@ -453,6 +502,7 @@ StringType formatMessage( const StringType &fmt
                         )
 ```
 
+**marty_format.h**
 ```cpp
 template< typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
@@ -466,6 +516,7 @@ std::string formatMessage( const char *fmt
 
 ### marty::format::formatMessage - аргументы передаются в виде std::initializer_list
 
+**marty_format.h**
 ```cpp
 using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
 
@@ -478,6 +529,7 @@ StringType formatMessage( const StringType          &fmt
                         )
 ```
 
+**marty_format.h**
 ```cpp
 template< typename WidthCalculator = DefaultUtfWidthCalculator
         >
@@ -489,6 +541,43 @@ std::string formatMessage( const char                *fmt
 ```
 
 
+### Базовая реализация функтора вычисления отображаемой ширины строки
+
+Базовая реализация функтора вычисления отображаемой ширины строки использует функции библиотеки
+`marty::utf` с префиксом `suf` - `simpleUnicodeFeature`. В текущий момент поддерживается
+детект пробелов нулевой ширины по кодам символов и детект комбинируемых диакретиков (по диапазонам символов).
+
+**utils.h**
+```cpp
+struct DefaultUtfWidthCalculator
+{
+    std::size_t operator()(const char* b, const char* e) const
+    {
+        auto it    = marty::utf::UtfInputIterator<char>(b, e);
+        auto endIt = marty::utf::UtfInputIterator<char>();
+
+        std::size_t size = 0;
+
+        for(; it!=endIt; ++it)
+        {
+            auto ch = *it;
+            // suf - simpleUnicodeFeature
+            if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
+                continue;
+
+            ++size;
+        }
+
+        return size;
+    }
+
+}; // struct DefaultUtfWidthCalculator
+```
+
+**marty_format.h**
+```cpp
+using DefaultUtfWidthCalculator = utils::DefaultUtfWidthCalculator;
+```
 
 
 
