@@ -22,6 +22,10 @@
 - [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
 - [Примеры использования](#user-content-примеры-использования)
 - [API библиотеки](#user-content-api-библиотеки)
+  - [Обобщённый тип фильтра BasicFormatValueFilter](#user-content-обобщённый-тип-фильтра-basicformatvaluefilter)
+    - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#user-content-пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
+  - [Тип фильтра FormatValueFilter](#user-content-тип-фильтра-formatvaluefilter)
+  - [Стандартные фильтры](#user-content-стандартные-фильтры)
   - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#user-content-martyformatformatargumentvariant---variant-тип-аргумента)
   - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
@@ -32,6 +36,7 @@
   - [marty::format::formatMessage - аргументы передаются в generic-контейнере](#user-content-martyformatformatmessage---аргументы-передаются-в-generic-контейнере)
   - [marty::format::formatMessage - аргументы передаются в виде std::initializer_list](#user-content-martyformatformatmessage---аргументы-передаются-в-виде-stdinitializer_list)
 - [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
+  - [Грамматика полей замены](#user-content-грамматика-полей-замены)
   - [Преобразование типа аргумента - !conversion](#user-content-преобразование-типа-аргумента---conversion)
   - [Спецификатор формата - format_spec](#user-content-спецификатор-формата---format_spec)
     - [Маркер выравнивания align](#user-content-маркер-выравнивания-align)
@@ -62,7 +67,8 @@
     задаваемым символом, или таким же символом группировки, как и для целой части числа, при задании
     соответствующего флага при вызове функции форматирования, отсутствует в `Python` и `C++`;
   - инверсия регистра в альтернативной форме `'!#'`.
-  -fractionalGroupping
+  - фильтры для отформатированных значений. Можно использовать цепочки фильтров длиной до 8ми.
+    Фильтры могут экранировать символы для вывода в `XML`/`HTML` или в `SQL`.
 6. Упор на использование библиотеки в своих скриптовых языках/DSL языках.
 7. Поддержка Unicode в кодировке UTF-8.
 8. Поддержка чисел с плавающей точкой произвольной размерности `marty::Decimal`.
@@ -201,6 +207,83 @@ cout << formatMessage(
 
 ## API библиотеки
 
+
+### Обобщённый тип фильтра BasicFormatValueFilter
+
+Объект-фильтр для преобразования форматированного значения.
+
+Фильтрация производится после форматирования поля.
+
+```cpp
+template<typename InputIteratorType, typename OutputIteratorType>
+using BasicFormatValueFilter = std::function<void(InputIteratorType, InputIteratorType, OutputIteratorType)>;
+```
+
+Параметры шаблона:
+
+
+|Значение|Описание|
+|:-------|:-------|
+|**InputIteratorType**|Тип входного итератора, должен иметь конструктор, принимающий два аргумента: `const CharType* pBegin` и `const CharType* pEnd`, и конструктор без параметров, создающий `end`-итератор, при вызове оператора `operator==` для него и итератора, в котором равенство указателей `pBegin` и `pEnd` обозначает достижение конца последовательности, должен возвращать `true`.|
+|**OutputIteratorType**|Тип выходного итератора, добавляет символы в результирующую строку/контейнер символов.|
+
+
+**Примечание**. Попытка вывода объекта фильтра как значение вызовет ошибку (исключение), или будет 
+проигнорирована, в зависимости от режима игнорирования ошибок.
+
+#### Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter
+
+```cpp
+bool operator==(InputIterator other) const
+{
+    return isIteratorEnd()==other.isIteratorEnd();
+}
+
+bool operator!=(InputIterator other) const
+{
+    return isIteratorEnd()!=other.isIteratorEnd();
+}
+
+InputIterator() : m_ptr(0), m_ptrEnd(0) {}
+
+InputIterator(const char* b, const char* e) : m_ptr(const_pointer_type(b)), m_ptrEnd(const_pointer_type(e)) {}
+
+bool isIteratorEnd() const
+{
+    return m_ptr==m_ptrEnd;
+}
+
+const char* m_ptr     = 0;
+const char* m_ptrEnd  = 0;
+```
+
+
+### Тип фильтра FormatValueFilter
+
+Специализация базового фильтра `BasicFormatValueFilter` для UTF-8 строк: 
+
+```cpp
+using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>, marty::utf::UtfOutputIterator<char> >;
+```
+
+
+### Стандартные фильтры
+
+Стандартные фильтры располагаются в пространстве имён `marty::format::filters`.
+
+Стандартные фильтры:
+
+
+|Тип|Описание|
+|-------|-------|
+|**XmlTextFilter**|производит преобразование символов, которые недопустимы в тексте `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.|
+|**XmlAttrFilter**|производит преобразование символов, которые недопустимы в атрибутах `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.|
+|**SqlValueFilter**|производит преобразование символов, которые недопустимы в значениях в тексте `SQL`-запросов.|
+
+
+**Примечание**. В текущий момент стандартные фильтры не реализованы (**NOT_IMPLEMENTED**).
+
+
 ### marty::format::FormatArgumentVariant - Variant-тип аргумента
 
 Стандартный тип аргумента на базе `std::variant`.
@@ -230,6 +313,7 @@ using FormatArgumentVariant =
                 , std::string
                 , std::wstring
                 , marty::Decimal
+                , FormatValueFilter
                 >;
 ```
 
@@ -345,8 +429,9 @@ using Args = BasicArgs< FormatArgumentVariant
 свои собственные типы, и, используя данную функцию, сделать свою кастомизированную функцию форматирования.
 
 ```cpp
-template< typename StringType = std::string
-        , typename ArgsType   = Args
+template< typename StringType      = std::string
+        , typename ArgsType        = Args
+        , typename WidthCalculator = DefaultUtfWidthCalculator
         >
 StringType formatMessageImpl( const StringType &fmt
                             , const ArgsType   &args
@@ -358,8 +443,9 @@ StringType formatMessageImpl( const StringType &fmt
 ### marty::format::formatMessage - аргументы передаются в generic-контейнере
 
 ```cpp
-template< typename StringType = std::string
-        , typename ArgsType   = Args
+template< typename StringType      = std::string
+        , typename ArgsType        = Args
+        , typename WidthCalculator = DefaultUtfWidthCalculator
         >
 StringType formatMessage( const StringType &fmt
                         , const ArgsType   &args
@@ -368,7 +454,9 @@ StringType formatMessage( const StringType &fmt
 ```
 
 ```cpp
-template< typename ArgsType = Args >
+template< typename ArgsType        = Args
+        , typename WidthCalculator = DefaultUtfWidthCalculator
+        >
 std::string formatMessage( const char *fmt
                          , const ArgsType   &args
                          , FormattingFlags  formattingFlags=FormattingFlags::all
@@ -381,7 +469,9 @@ std::string formatMessage( const char *fmt
 ```cpp
 using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
 
-template< typename StringType = std::string >
+template< typename StringType = std::string
+        , typename WidthCalculator = DefaultUtfWidthCalculator
+        >
 StringType formatMessage( const StringType          &fmt
                         , FormatArgumentVariantList &&args
                         , FormattingFlags           formattingFlags=FormattingFlags::all
@@ -389,6 +479,8 @@ StringType formatMessage( const StringType          &fmt
 ```
 
 ```cpp
+template< typename WidthCalculator = DefaultUtfWidthCalculator
+        >
 inline
 std::string formatMessage( const char                *fmt
                          , FormatArgumentVariantList &&args
@@ -423,6 +515,8 @@ std::string formatMessage( const char                *fmt
 единственной.
 
 
+### Грамматика полей замены
+
 Грамматика для полей замены выглядит так:
 
 <pre>
@@ -430,6 +524,8 @@ replacement_field ::= &quot;{&quot; [arg_id] [&quot;!&quot; conversion] [&quot;:
 arg_id            ::= arg_index | arg_name
 arg_index         ::= digit+
 arg_name          ::= identifier
+identifier        ::= identifier_char [identifier_char | digit &quot;.&quot;]+
+identifier_char   ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-&quot;Z&quot;
 conversion        ::= &quot;r&quot; | &quot;s&quot; | &quot;a&quot;
 format_spec       ::= format_spec_expr
 </pre>
@@ -440,21 +536,27 @@ format_spec       ::= format_spec_expr
 
 
 **arg_id** - 
-идентификатор аргумента. Может отсутствовать, тогда используется автоматически
+Идентификатор аргумента. Может отсутствовать, тогда используется автоматически
 подставляемый индекс, который инкрементируется при появлении каждого "поля замены" с отсутствующим
 идентификатором аргумента.
 
 **arg_index** - 
-индекс аргумента, начиная с нуля. Для ассоциативных контейнеров
+Индекс аргумента, начиная с нуля. Для ассоциативных контейнеров
 типа `std::map` и `std::unordered_map` обращение по индексу производится с использованием
 `std::advance`. Индекс аргумента должен быть корректным десятичным числом.
 
 **arg_name** - 
-имя аргумента, допустимы любые символы, кроме символов `:`, `{` и `}`.
+Имя аргумента, допустимы любые символы, кроме символов `:`, `{` и `}`.
 В зависимости от типа контейнера, в котором передаются аргументы, именованное обращение к аргументам
 может не поддерживаться. Так, для контейнеров типа `std::vector` или `std::initializer_list`
 использование именованного аргумента приведёт к выбросу исключения, если это не запрещено режимом
 игнорирования ошибок.
+
+**identifier** - 
+Идентификатор - начинается с `identifier_char`, последующие символы могут быть `identifier_char`, цифры, или символ `'.'`.
+
+**identifier_char** - 
+символ идентификатора - символ подчеркивания `'_'`, строчная или прописная латинская буква.
 
 **conversion** - 
 преобразование типа аргумента, см. далее "Преобразование типа аргумента".
@@ -493,16 +595,23 @@ format_spec       ::= format_spec_expr
 
 
 <pre>
-format_spec    ::= [options][width][grouping][&quot;.&quot; precision][frac_grouping][&quot;L&quot;][type]
-options        ::= [[fill]align][sign][&quot;z&quot;][&quot;!&quot;][&quot;#&quot;][&quot;0&quot;]
-fill           ::= &lt;any character&gt;
-align          ::= &quot;&lt;&quot; | &quot;&gt;&quot; | &quot;=&quot; | &quot;^&quot;
-sign           ::= &quot;+&quot; | &quot;-&quot; | &quot; &quot;
-width          ::= digit+
-grouping       ::= &quot;,&quot; | &quot;_&quot; | &quot;&apos;&quot;
-frac_grouping  ::= &quot;,&quot; | &quot;_&quot; | &quot;&apos;&quot;
-precision      ::= digit+
-type           ::= &quot;b&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | &quot;E&quot; | &quot;f&quot; | &quot;F&quot; | &quot;g&quot; | &quot;G&quot; | &quot;n&quot; | &quot;o&quot; | &quot;s&quot; | &quot;x&quot; | &quot;X&quot; | &quot;%&quot;
+format_spec     ::= [options][width][grouping][&quot;.&quot; precision][frac_grouping][&quot;L&quot;][type][filters]
+options         ::= [[fill]align][sign][&quot;z&quot;][&quot;!&quot;][&quot;#&quot;][&quot;0&quot;]
+fill            ::= &lt;any character&gt; | &quot;{&quot; argId &quot;}&quot;
+align           ::= &quot;&lt;&quot; | &quot;&gt;&quot; | &quot;=&quot; | &quot;^&quot;
+sign            ::= &quot;+&quot; | &quot;-&quot; | &quot; &quot;
+width           ::= digit+ | &quot;{&quot; argId &quot;}&quot;
+grouping        ::= &quot;,&quot; | &quot;_&quot; | &quot;&apos;&quot;
+frac_grouping   ::= &quot;,&quot; | &quot;_&quot; | &quot;&apos;&quot;
+precision       ::= digit+ | &quot;{&quot; argId &quot;}&quot;
+type            ::= &quot;b&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | &quot;E&quot; | &quot;f&quot; | &quot;F&quot; | &quot;g&quot; | &quot;G&quot; | &quot;n&quot; | &quot;o&quot; | &quot;s&quot; | &quot;x&quot; | &quot;X&quot; | &quot;%&quot;
+filters         ::= filter+
+filter          ::= &quot;|&quot; argId
+arg_id          ::= arg_index | arg_name
+arg_index       ::= digit+
+arg_name        ::= identifier
+identifier      ::= identifier_char [identifier_char | digit &quot;.&quot;]+
+identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-&quot;Z&quot;
 </pre>
 
 <!-- -->
@@ -522,9 +631,15 @@ type           ::= &quot;b&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot;
 |**grouping**|Параметр группировки после поля ширины указывает разделитель групп цифр для целой части числа. Для десятичных чисел разделение разрядов производится по три цифры. Для спецификаторов `'b'`, `'o'`, `'x'`, and `'X'` разделение производится на группы по четыре цифры. Разделитель групп разрядов может быть одним из следующих: `','`, `'_'`, `'''` (apos).<br/><br/> Данный параметр не используется для форматирования в библиотеке языка `C++`.<br/><br/> В языке `Python` символ `'''` (apos) не используется. Также, в языке `Python` разделители `','` и `'_'` используются при отображении десятичных чисел и отображении `'b'`, `'o'`, `'x'`, and `'X'` чисел соответственно. Данная библиотека позволяет использовать все допустимые разделители для любых чисел.|
 |**precision**|Точность - десятичное целое число, указывающее, сколько цифр должно отображаться после десятичной точки для типов представления 'f' и 'F', или до и после десятичной точки для типов представления 'g' или 'G'. Для строковых типов представления поле указывает максимальный размер поля — другими словами, сколько символов будет использовано из содержимого поля. Точность не допускается для целочисленных типов представления.|
 |**frac_grouping**|Группировка цифр числа в дробной части (fractional part groupping). По умолчанию, если при вызове функции форматирования не задан флаг форматирования `marty::format::FormattingFlags::fractionalGroupping`, группировка цифр в дробной части чисел с плавающей точкой не производится.|
-|**L**|locale-зависимое форматирование. Аналогично спецификатору типа `'n'`. В текущий момент игнорируется (**IGNORED**).|
+|**L**|Locale-зависимое форматирование. Аналогично спецификатору типа `'n'`. В текущий момент игнорируется (**IGNORED**).|
 |**type**|спецификатор типа. Определяет, как должны быть отображены данные.|
+|**filters**|последовательность фильтров, до восьми в цепочке.|
+|**filter**|идентификатор аргумента, предварённый символом пайпа `'\|'` (broken vertical bar)|
+|**arg_id**, **arg_index**, **arg_name**, **identifier**, **identifier_char**|См. предыдущий раздел "Грамматика полей замены"|
 
+
+**Примечание**. Поддержка фильтров в форматной строке в данный момент не реализавана (**NOT_IMPLEMENTED**). Попытка 
+использовать фильтры вызовет ошибку на этапе разбора форматной строки.
 
 
 #### Маркер выравнивания align

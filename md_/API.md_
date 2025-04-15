@@ -1,5 +1,65 @@
 # API библиотеки
 
+
+## Обобщённый тип фильтра BasicFormatValueFilter
+
+Объект-фильтр для преобразования форматированного значения.
+
+Фильтрация производится после форматирования поля.
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format_types.h#BasicFormatValueFilter
+
+Параметры шаблона:
+
+<arg-list>
+
+- InputIteratorType
+Тип входного итератора, должен иметь конструктор, принимающий два аргумента: `const CharType* pBegin` и `const CharType* pEnd`,
+и конструктор без параметров, создающий `end`-итератор, при вызове оператора `operator==` для него и итератора, 
+в котором равенство указателей `pBegin` и `pEnd` обозначает достижение конца последовательности, должен возвращать `true`.
+
+- OutputIteratorType
+Тип выходного итератора, добавляет символы в результирующую строку/контейнер символов.
+
+</arg-list>
+
+**Примечание**. Попытка вывода объекта фильтра как значение вызовет ошибку (исключение), или будет 
+проигнорирована, в зависимости от режима игнорирования ошибок.
+
+### Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} input_iterator_sample_methods.cpp
+
+
+## Тип фильтра FormatValueFilter
+
+Специализация базового фильтра `BasicFormatValueFilter` для UTF-8 строк: 
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} marty_format_types.h#FormatValueFilter
+
+
+## Стандартные фильтры
+
+Стандартные фильтры располагаются в пространстве имён `marty::format::filters`.
+
+Стандартные фильтры:
+
+<arg-list title="Тип|Описание">
+
+- XmlTextFilter
+производит преобразование символов, которые недопустимы в тексте `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.
+
+- XmlAttrFilter
+производит преобразование символов, которые недопустимы в атрибутах `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.
+
+- SqlValueFilter
+производит преобразование символов, которые недопустимы в значениях в тексте `SQL`-запросов.
+
+</arg-list>
+
+**Примечание**. В текущий момент стандартные фильтры не реализованы (**NOT_IMPLEMENTED**).
+
+
 ## marty::format::FormatArgumentVariant - Variant-тип аргумента
 
 Стандартный тип аргумента на базе `std::variant`.

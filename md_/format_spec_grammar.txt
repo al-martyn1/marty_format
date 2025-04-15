@@ -1,10 +1,17 @@
-format_spec    ::= [options][width][grouping]["." precision][frac_grouping]["L"][type]
-options        ::= [[fill]align][sign]["z"]["!"]["#"]["0"]
-fill           ::= <any character>
-align          ::= "<" | ">" | "=" | "^"
-sign           ::= "+" | "-" | " "
-width          ::= digit+
-grouping       ::= "," | "_" | "'"
-frac_grouping  ::= "," | "_" | "'"
-precision      ::= digit+
-type           ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
+format_spec     ::= [options][width][grouping]["." precision][frac_grouping]["L"][type][filters]
+options         ::= [[fill]align][sign]["z"]["!"]["#"]["0"]
+fill            ::= <any character> | "{" argId "}"
+align           ::= "<" | ">" | "=" | "^"
+sign            ::= "+" | "-" | " "
+width           ::= digit+ | "{" argId "}"
+grouping        ::= "," | "_" | "'"
+frac_grouping   ::= "," | "_" | "'"
+precision       ::= digit+ | "{" argId "}"
+type            ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
+filters         ::= filter+
+filter          ::= "|" argId
+arg_id          ::= arg_index | arg_name
+arg_index       ::= digit+
+arg_name        ::= identifier
+identifier      ::= identifier_char [identifier_char | digit "."]+
+identifier_char ::= "_" | "a"-"z" | "A"-"Z"
