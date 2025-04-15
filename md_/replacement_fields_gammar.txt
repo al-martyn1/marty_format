@@ -2,5 +2,7 @@ replacement_field ::= "{" [arg_id] ["!" conversion] [":" format_spec] "}"
 arg_id            ::= arg_index | arg_name
 arg_index         ::= digit+
 arg_name          ::= identifier
+identifier        ::= identifier_char [identifier_char | digit "."]+
+identifier_char   ::= "_" | "a"-"z" | "A"-"Z"
 conversion        ::= "r" | "s" | "a"
 format_spec       ::= format_spec_expr

@@ -22,6 +22,8 @@
 #include <unordered_map>
 #include <map>
 #include <initializer_list>
+#include <typeinfo>
+
 
 
 /*
@@ -1171,6 +1173,11 @@ template<typename StringType> inline StringType martyFormatSimpleConvertToString
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const wchar_t *str)      { return martyFormatSimpleConvertToString<StringType>(marty::utf::string_from_wstring(str?std::wstring(str):std::wstring()).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(const marty::Decimal &d) { return martyFormatSimpleConvertToString<StringType>(to_string(d).c_str()); }
 
+template<typename StringType> inline StringType martyFormatSimpleConvertToString(FormatValueFilter f)
+{ 
+    return martyFormatSimpleConvertToString<StringType>("filter: ") + martyFormatSimpleConvertToString<StringType>(typeid(f).name());
+}
+
 //----------------------------------------------------------------------------
 
 
@@ -1272,6 +1279,15 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, co
 {
     MARTY_ARG_USED(formattingOptions);
     return martyFormatSimpleConvertToString<StringType>(d);
+}
+
+//----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType=std::string >
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, FormatValueFilter filter)
+{
+    MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(filter);
+    throw filter_as_value_error("invalid filter usage: filter used as value");
 }
 
 //----------------------------------------------------------------------------

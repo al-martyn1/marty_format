@@ -15,8 +15,10 @@
 #include "utils.h"
 //namespace marty_utf {
 
+#include <functional>
 #include <string>
 #include <variant>
+
 
 // #include "marty_format/marty_format.h"
 // marty::format::
@@ -115,6 +117,17 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
 //----------------------------------------------------------------------------
 
 
+// https://ru.wikipedia.org/wiki/Functional_(C%2B%2B)
+
+//#! BasicFormatValueFilter
+template<typename InputIteratorType, typename OutputIteratorType>
+using BasicFormatValueFilter = std::function<void(InputIteratorType, InputIteratorType, OutputIteratorType)>;
+//#!
+
+//#! FormatValueFilter
+using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>, marty::utf::UtfOutputIterator<char> >;
+//#!
+
 
 //----------------------------------------------------------------------------
 //#! FormatArgumentVariant
@@ -139,6 +152,7 @@ using FormatArgumentVariant =
                 , std::string
                 , std::wstring
                 , marty::Decimal
+                , FormatValueFilter
                 >;
 //#!
 //----------------------------------------------------------------------------
