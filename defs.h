@@ -1,5 +1,5 @@
 /*! \file
-    \brief DEfinitions for marty_utf
+    \brief Definitions for marty_format
  */
 
 
