@@ -4,8 +4,9 @@
  */
 #pragma once
 
-#include "enums.h"
 #include "defs.h"
+#include "enums.h"
+#include "exceptions.h"
 
 // 
 #include "marty_utf/utf.h"
@@ -27,6 +28,18 @@ namespace format{
 
 
 using utf32_char_t = marty::utf::utf32_char_t;
+
+// Немножко оптимизируем, и делаем индексы поменьше размером
+// чтобы структура FormattingOptions была не такая жирная.
+// Даже для больших компов может быть польза,
+// а уж во встройке - однозначно
+
+using arg_idx_t = std::uint16_t;
+constexpr static const arg_idx_t arg_idx_npos = arg_idx_t(-1);
+
+// А не может ли поле быть шириной больше 65535?
+// Усекаем молча или генерируем исключение?
+using width_t   = std::uint16_t ; // For fieldWidth and precision
 
 
 //! Параметры форматирования
