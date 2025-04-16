@@ -37,6 +37,9 @@ using utf32_char_t = marty::utf::utf32_char_t;
 using arg_idx_t = std::uint16_t;
 constexpr static const arg_idx_t arg_idx_npos = arg_idx_t(-1);
 
+// У нас максимально до восьми фильтров
+using filter_idx_t = std::uint8_t;
+
 // А не может ли поле быть шириной больше 65535?
 // Усекаем молча или генерируем исключение?
 using width_t   = std::uint16_t ; // For fieldWidth and precision
