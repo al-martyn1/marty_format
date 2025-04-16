@@ -3,3 +3,7 @@
 - `Python`: Описание форматной строки - Format String Syntax - https://docs.python.org/3/library/string.html#format-string-syntax
 - `C++`: `std::format` - https://en.cppreference.com/w/cpp/utility/format/format
 - `C++`: `Standard format specification` - https://en.cppreference.com/w/cpp/utility/format/spec
+
+#// TODO: изучить вопрос про форматирование в питоне поподробнее
+#// накидос тут - https://rsdn.org/forum/cpp.applied/8922171.1
+#// https://docs.python.org/3/reference/lexical_analysis.html#f-strings
