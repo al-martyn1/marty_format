@@ -10,7 +10,9 @@
 
     InputIterator() : m_ptr(0), m_ptrEnd(0) {}
 
-    InputIterator(const char* b, const char* e) : m_ptr(const_pointer_type(b)), m_ptrEnd(const_pointer_type(e)) {}
+    InputIterator(const char* b, const char* e)
+    : m_ptr(const_pointer_type(b)), m_ptrEnd(const_pointer_type(e))
+    {}
 
     bool isIteratorEnd() const
     {
