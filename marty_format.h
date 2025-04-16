@@ -4,10 +4,10 @@
  */
 #pragma once
 
-#include "marty_format_types.h"
-#include "exceptions.h"
-#include "utils.h"
 #include "defs.h"
+#include "exceptions.h"
+#include "marty_format_types.h"
+#include "utils.h"
 
 //
 #include <exception>
@@ -21,8 +21,9 @@
 #include <vector>
 #include <unordered_map>
 #include <map>
-#include <initializer_list>
 #include <typeinfo>
+#include <initializer_list>
+#include<iterator>
 
 
 
@@ -717,28 +718,27 @@ struct ContainerValueTypeDeducer< ContainerType
     using value_type = typename ContainerType::value_type;
 };
 
+//----------------------------------------------------------------------------
 
 
 
 //----------------------------------------------------------------------------
 template<typename ContainerType, typename ConditionType=void>
-struct MartyFormatValueGetter;
+struct MartyFormatValueIndexGetter;
 
 //----------------------------------------------------------------------------
 // Версия для контейнеров, у которых есть find как по строке, так и по индексу (find_by_pos), а элементы имеют second_type и соотв поле second
 template<typename ContainerType>
-struct MartyFormatValueGetter< ContainerType
-                             , typename std::enable_if< utils::has_string_find<ContainerType>::value 
-                                                     && utils::has_find_by_pos<ContainerType>::value
-                                                     && utils::has_end<ContainerType>::value // Сравнивать с результатом find
-                                                     && utils::has_second_type<typename ContainerType::value_type>::value
-                                                     // && is_range<ContainerType>::value
-                                                      >::type
-                             >
+struct MartyFormatValueIndexGetter< ContainerType
+                                  , typename std::enable_if< utils::has_string_find<ContainerType>::value 
+                                                          && utils::has_find_by_pos<ContainerType>::value
+                                                          && utils::has_end<ContainerType>::value // Сравнивать с результатом find
+                                                          && utils::has_second_type<typename ContainerType::value_type>::value
+                                                          // && is_range<ContainerType>::value
+                                                           >::type
+                                  >
 {
-    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
-
-    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
     {
         std::size_t szIdx = std::size_t(-1);
 
@@ -757,40 +757,31 @@ struct MartyFormatValueGetter< ContainerType
             {}
         }
         
-        if (szIdx!=std::size_t(-1))
-        {
-            auto it = container.find_by_pos(szIdx);
-            if (it==container.end())
-                throw argid_out_of_range("integer argId is out of range");
 
-            return it->second;
-        }
+        if (szIdx!=std::size_t(-1))
+            return szIdx;
 
         auto it = container.find(argId);
         if (it==container.end())
-            throw argid_not_found("string argId not found");
+            return std::size_t(-1);
 
-        return it->second;
+        return std::size_t(std::distance(container.begin(), it));
     }
-
-}; // struct MartyFormatValueGetter
-
+};
 
 //----------------------------------------------------------------------------
 // Версия для контейнеров, у которых есть find как по строке, так и по индексу (find_by_pos), а элементы не имеют second_type
 template<typename ContainerType>
-struct MartyFormatValueGetter< ContainerType
-                             , typename std::enable_if< utils::has_string_find<ContainerType>::value 
-                                                     && utils::has_find_by_pos<ContainerType>::value
-                                                     && utils::has_end<ContainerType>::value // Сравнивать с результатом find
-                                                     && !utils::has_second_type<typename ContainerType::value_type>::value
-                                                     // && is_range<ContainerType>::value
-                                                      >::type
-                             >
+struct MartyFormatValueIndexGetter< ContainerType
+                                  , typename std::enable_if< utils::has_string_find<ContainerType>::value 
+                                                          && utils::has_find_by_pos<ContainerType>::value
+                                                          && utils::has_end<ContainerType>::value // Сравнивать с результатом find
+                                                          && !utils::has_second_type<typename ContainerType::value_type>::value
+                                                          // && is_range<ContainerType>::value
+                                                           >::type
+                                  >
 {
-    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
-
-    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
     {
         std::size_t szIdx = std::size_t(-1);
 
@@ -810,178 +801,242 @@ struct MartyFormatValueGetter< ContainerType
         }
 
         if (szIdx!=std::size_t(-1))
-        {
-            auto it = container.find_by_pos(szIdx);
-            if (it==container.end())
-                throw argid_out_of_range("integer argId is out of range");
+            return szIdx;
 
-            return *it;
-        }
+        // {
+        //     // auto it = container.find_by_pos(szIdx);
+        //     // if (it==container.end())
+        //     //     throw argid_out_of_range("integer argId is out of range");
+        //     //  
+        //     // return std::size_t(std::distance(container.begin(), it));
+        // }
 
         auto it = container.find(argId);
         if (it==container.end())
-            throw argid_not_found("string argId not found");
+            return std::size_t(-1);
 
+        return std::size_t(std::distance(container.begin(), it));
+    }
+};
+
+//----------------------------------------------------------------------------
+// Версия для std::map<std::string, ...> и совместимых контейнеров
+template<typename ContainerType>
+struct MartyFormatValueIndexGetter< ContainerType
+                                  , typename std::enable_if< utils::has_string_find<ContainerType>::value
+                                                          && utils::is_range<ContainerType>::value
+                                                          && utils::has_size<ContainerType>::value
+                                                          && utils::has_second_type<typename ContainerType::value_type>::value
+                                                           >::type
+                                  >
+{
+    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    {
+        std::size_t szIdx = std::size_t(-1);
+
+        argId = utils::trim_copy(argId);
+        if (argId.empty())
+        {
+            szIdx = idxDefault++;
+        }
+        else
+        {
+            try
+            {
+                szIdx = std::size_t(std::stoul(argId, 0, 10));
+            }
+            catch(...)
+            {}
+        }
+
+        if (szIdx!=std::size_t(-1))
+            return szIdx;
+
+        // {
+        //     if (szIdx>=container.size())
+        //         throw argid_out_of_range("integer argId is out of range");
+        //  
+        //     auto it = container.begin();
+        //     // advance(it, std::ptrdiff_t(szIdx));
+        //  
+        //     return it->second;
+        // }
+
+        auto it = container.find(argId);
+        if (it==container.end())
+            return std::size_t(-1);
+            //throw argid_not_found("string argId not found");
+
+        return std::size_t(std::distance(container.begin(), it));
+    }
+};
+
+//----------------------------------------------------------------------------
+// Версия для std::vector< std::pair<...> > и совместимых контейнеров
+template<typename ContainerType>
+struct MartyFormatValueIndexGetter< ContainerType
+                                  , typename std::enable_if< !utils::has_string_find<ContainerType>::value
+                                                          && utils::is_range<ContainerType>::value
+                                                          && !utils::has_find_by_pos<ContainerType>::value
+                                                          && utils::has_first_type <typename ContainerType::value_type>::value
+                                                          && utils::has_second_type<typename ContainerType::value_type>::value
+                                                           >::type
+                                  >
+{
+    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    {
+        std::size_t szIdx = std::size_t(-1);
+
+        argId = utils::trim_copy(argId);
+        if (argId.empty())
+        {
+            szIdx = idxDefault++;
+        }
+        else
+        {
+            try
+            {
+                szIdx = std::size_t(std::stoul(argId, 0, 10));
+            }
+            catch(...)
+            {}
+        }
+
+        if (szIdx!=std::size_t(-1))
+            return szIdx;
+
+        // {
+        //     if (szIdx>=container.size())
+        //         throw argid_out_of_range("integer argId is out of range");
+        //  
+        //     auto it = container.begin();
+        //     advance(it, std::ptrdiff_t(szIdx));
+        //  
+        //     return it->second;
+        // }
+
+        for(const auto &kv : container)
+        {
+            ++szIdx;
+            if (kv.first==argId)
+                return szIdx;
+                //return kv.second;
+        }
+
+        //throw argid_not_found("string argId not found");
+        return std::size_t(-1);
+    }
+};
+
+//----------------------------------------------------------------------------
+// Версия для std::vector< ... > и совместимых контейнеров
+template<typename ContainerType>
+struct MartyFormatValueIndexGetter< ContainerType
+                                  , typename std::enable_if< utils::is_range<ContainerType>::value
+                                                          && !utils::has_find_by_pos<ContainerType>::value
+                                                          && !utils::has_first_type <typename ContainerType::value_type>::value
+                                                          && !utils::has_second_type<typename ContainerType::value_type>::value
+                                                           >::type
+                                  >
+{
+    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    {
+        MARTY_ARG_USED(container);
+
+        std::size_t szIdx = std::size_t(-1);
+
+        argId = utils::trim_copy(argId);
+        if (argId.empty())
+        {
+            szIdx = idxDefault++;
+        }
+        else
+        {
+            try
+            {
+                szIdx = std::size_t(std::stoul(argId, 0, 10));
+            }
+            catch(...)
+            {}
+        }
+
+        if (szIdx!=std::size_t(-1))
+            return szIdx;
+
+        // {
+        //     if (szIdx>=container.size())
+        //         throw argid_out_of_range("integer argId is out of range");
+        //  
+        //     auto it = container.begin();
+        //     advance(it, std::ptrdiff_t(szIdx));
+        //  
+        //     return *it;
+        // }
+
+        // throw named_argid_not_supported("named argIds are not supported");
+
+        return std::size_t(-1);
+    }
+};
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+template<typename ContainerType, typename ConditionType=void>
+struct MartyFormatValueGetter;
+
+//----------------------------------------------------------------------------
+// Версия для контейнеров, у элементов которых есть second_type и мембер second, соответственно
+template<typename ContainerType>
+struct MartyFormatValueGetter< ContainerType
+                             , typename std::enable_if< utils::has_second_type<typename ContainerType::value_type>::value
+                                                      >::type
+                             >
+{
+    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
+
+    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    {
+        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId, idxDefault);
+        if (idx==std::size_t(-1))
+            throw argid_not_found("argId not found");
+        if (idx>=container.size())
+            throw argid_out_of_range("argId is out of range");
+
+        auto it = container.begin();
+        std::advance(it, idx);
+        return it->second;
+    }
+
+}; // struct MartyFormatValueGetter
+
+//----------------------------------------------------------------------------
+// Версия для контейнеров без second_type и мембера second, соответственно
+template<typename ContainerType>
+struct MartyFormatValueGetter< ContainerType
+                             , typename std::enable_if< !utils::has_second_type<typename ContainerType::value_type>::value
+                                                      >::type
+                             >
+{
+    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
+
+    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    {
+        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId, idxDefault);
+        if (idx==std::size_t(-1))
+            throw argid_not_found("argId not found");
+        if (idx>=container.size())
+            throw argid_out_of_range("argId is out of range");
+
+        auto it = container.begin();
+        std::advance(it, idx);
         return *it;
     }
 
 }; // struct MartyFormatValueGetter
 
-
-//----------------------------------------------------------------------------
-// Версия для std::map<std::string, ...> и совместимых контейнеров
-template<typename ContainerType>
-struct MartyFormatValueGetter< ContainerType
-                             , typename std::enable_if< utils::has_string_find<ContainerType>::value
-                                                     && utils::is_range<ContainerType>::value
-                                                     && utils::has_size<ContainerType>::value
-                                                     && utils::has_second_type<typename ContainerType::value_type>::value
-                                                      >::type
-                             >
-{
-    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
-
-    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
-    {
-        std::size_t szIdx = std::size_t(-1);
-
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
-        {
-            szIdx = idxDefault++;
-        }
-        else
-        {
-            try
-            {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
-            }
-            catch(...)
-            {}
-        }
-
-        if (szIdx!=std::size_t(-1))
-        {
-            if (szIdx>=container.size())
-                throw argid_out_of_range("integer argId is out of range");
-
-            auto it = container.begin();
-            advance(it, std::ptrdiff_t(szIdx));
-
-            return it->second;
-        }
-
-        auto it = container.find(argId);
-        if (it==container.end())
-            throw argid_not_found("string argId not found");
-
-        return it->second;
-    }
-
-}; // struct MartyFormatValueGetter
-
-//----------------------------------------------------------------------------
-// Версия для std::vector< std::pair<...> > и совместимых контейнеров
-template<typename ContainerType>
-struct MartyFormatValueGetter< ContainerType
-                             , typename std::enable_if< !utils::has_string_find<ContainerType>::value
-                                                     && utils::is_range<ContainerType>::value
-                                                     && !utils::has_find_by_pos<ContainerType>::value
-                                                     && utils::has_first_type <typename ContainerType::value_type>::value
-                                                     && utils::has_second_type<typename ContainerType::value_type>::value
-                                                      >::type
-                             >
-{
-    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
-
-    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
-    {
-        std::size_t szIdx = std::size_t(-1);
-
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
-        {
-            szIdx = idxDefault++;
-        }
-        else
-        {
-            try
-            {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
-            }
-            catch(...)
-            {}
-        }
-
-        if (szIdx!=std::size_t(-1))
-        {
-            if (szIdx>=container.size())
-                throw argid_out_of_range("integer argId is out of range");
-
-            auto it = container.begin();
-            advance(it, std::ptrdiff_t(szIdx));
-
-            return it->second;
-        }
-
-        for(const auto &kv : container)
-        {
-            if (kv.first==argId)
-                return kv.second;
-        }
-
-        throw argid_not_found("string argId not found");
-    }
-
-}; // struct MartyFormatValueGetter
-
-//----------------------------------------------------------------------------
-// Версия для std::vector< ... > и совместимых контейнеров
-template<typename ContainerType>
-struct MartyFormatValueGetter< ContainerType
-                             , typename std::enable_if< utils::is_range<ContainerType>::value
-                                                     && !utils::has_find_by_pos<ContainerType>::value
-                                                     && !utils::has_first_type <typename ContainerType::value_type>::value
-                                                     && !utils::has_second_type<typename ContainerType::value_type>::value
-                                                      >::type
-                             >
-{
-    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
-
-    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
-    {
-        std::size_t szIdx = std::size_t(-1);
-
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
-        {
-            szIdx = idxDefault++;
-        }
-        else
-        {
-            try
-            {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
-            }
-            catch(...)
-            {}
-        }
-
-        if (szIdx!=std::size_t(-1))
-        {
-            if (szIdx>=container.size())
-                throw argid_out_of_range("integer argId is out of range");
-
-            auto it = container.begin();
-            advance(it, std::ptrdiff_t(szIdx));
-
-            return *it;
-        }
-
-        throw named_argid_not_supported("named argIds are not supported");
-    }
-
-}; // struct MartyFormatValueGetter
 
 //----------------------------------------------------------------------------
 
