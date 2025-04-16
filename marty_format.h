@@ -131,7 +131,7 @@ std::string processFormatStringImpl(const std::string &str, FormatHandler handle
 
     auto optionalError = [&](const std::string &msg)
     {
-        if (ignoreErrors)
+        if (!ignoreErrors)
             throw std::runtime_error(msg);
     };
 
