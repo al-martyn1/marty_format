@@ -66,11 +66,13 @@
 namespace marty{
 namespace format{
 
+// std::size_t (const char* str, FormatIndexType indexType)
 
-template<typename FormatHandler> inline
-std::string processFormatStringImpl(const std::string &str, FormatHandler handler, bool ignoreErrors=true)
+template<typename FormatHandler, typename IndexStringConverter> inline
+std::string processFormatStringImpl(const std::string &str, FormatHandler handler, IndexStringConverter indexStringConverter, bool ignoreErrors=true)
 {
     // UMBA_USED(ignoreErrors);
+    MARTY_ARG_USED(indexStringConverter);
 
     // https://en.cppreference.com/w/cpp/utility/format/spec
     // Based on the format specification in Python - https://docs.python.org/3/library/string.html#formatspec
@@ -730,7 +732,7 @@ struct MartyFormatValueIndexGetter;
 // Версия для контейнеров, у которых есть find как по строке, так и по индексу (find_by_pos), а элементы имеют second_type и соотв поле second
 template<typename ContainerType>
 struct MartyFormatValueIndexGetter< ContainerType
-                                  , typename std::enable_if< utils::has_string_find<ContainerType>::value 
+                                  , typename std::enable_if< utils::has_char_ptr_find<ContainerType>::value 
                                                           && utils::has_find_by_pos<ContainerType>::value
                                                           && utils::has_end<ContainerType>::value // Сравнивать с результатом find
                                                           && utils::has_second_type<typename ContainerType::value_type>::value
@@ -738,12 +740,13 @@ struct MartyFormatValueIndexGetter< ContainerType
                                                            >::type
                                   >
 {
-    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    std::size_t operator()(const ContainerType &container, const char* argIdB, const char* argIdE, std::size_t &idxDefault) const
     {
         std::size_t szIdx = std::size_t(-1);
 
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
+        argIdB = utils::ltrim_copy(argIdB, argIdE);
+        argIdE = utils::rtrim_copy(argIdB, argIdE);
+        if (argIdB==argIdE)
         {
             szIdx = idxDefault++;
         }
@@ -751,7 +754,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         {
             try
             {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
+                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
             }
             catch(...)
             {}
@@ -761,7 +764,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         if (szIdx!=std::size_t(-1))
             return szIdx;
 
-        auto it = container.find(argId);
+        auto it = container.find(typename ContainerType::key_type(argIdB, argIdE));
         if (it==container.end())
             return std::size_t(-1);
 
@@ -773,7 +776,7 @@ struct MartyFormatValueIndexGetter< ContainerType
 // Версия для контейнеров, у которых есть find как по строке, так и по индексу (find_by_pos), а элементы не имеют second_type
 template<typename ContainerType>
 struct MartyFormatValueIndexGetter< ContainerType
-                                  , typename std::enable_if< utils::has_string_find<ContainerType>::value 
+                                  , typename std::enable_if< utils::has_char_ptr_find<ContainerType>::value 
                                                           && utils::has_find_by_pos<ContainerType>::value
                                                           && utils::has_end<ContainerType>::value // Сравнивать с результатом find
                                                           && !utils::has_second_type<typename ContainerType::value_type>::value
@@ -781,12 +784,13 @@ struct MartyFormatValueIndexGetter< ContainerType
                                                            >::type
                                   >
 {
-    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    std::size_t operator()(const ContainerType &container, const char* argIdB, const char* argIdE, std::size_t &idxDefault) const
     {
         std::size_t szIdx = std::size_t(-1);
 
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
+        argIdB = utils::ltrim_copy(argIdB, argIdE);
+        argIdE = utils::rtrim_copy(argIdB, argIdE);
+        if (argIdB==argIdE)
         {
             szIdx = idxDefault++;
         }
@@ -794,7 +798,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         {
             try
             {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
+                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
             }
             catch(...)
             {}
@@ -811,7 +815,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         //     // return std::size_t(std::distance(container.begin(), it));
         // }
 
-        auto it = container.find(argId);
+        auto it = container.find(typename ContainerType::key_type(argIdB, argIdE));
         if (it==container.end())
             return std::size_t(-1);
 
@@ -823,19 +827,20 @@ struct MartyFormatValueIndexGetter< ContainerType
 // Версия для std::map<std::string, ...> и совместимых контейнеров
 template<typename ContainerType>
 struct MartyFormatValueIndexGetter< ContainerType
-                                  , typename std::enable_if< utils::has_string_find<ContainerType>::value
+                                  , typename std::enable_if< utils::has_char_ptr_find<ContainerType>::value
                                                           && utils::is_range<ContainerType>::value
                                                           && utils::has_size<ContainerType>::value
                                                           && utils::has_second_type<typename ContainerType::value_type>::value
                                                            >::type
                                   >
 {
-    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    std::size_t operator()(const ContainerType &container, const char* argIdB, const char* argIdE, std::size_t &idxDefault) const
     {
         std::size_t szIdx = std::size_t(-1);
 
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
+        argIdB = utils::ltrim_copy(argIdB, argIdE);
+        argIdE = utils::rtrim_copy(argIdB, argIdE);
+        if (argIdB==argIdE)
         {
             szIdx = idxDefault++;
         }
@@ -843,7 +848,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         {
             try
             {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
+                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
             }
             catch(...)
             {}
@@ -862,7 +867,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         //     return it->second;
         // }
 
-        auto it = container.find(argId);
+        auto it = container.find(typename ContainerType::key_type(argIdB, argIdE));
         if (it==container.end())
             return std::size_t(-1);
             //throw argid_not_found("string argId not found");
@@ -875,7 +880,7 @@ struct MartyFormatValueIndexGetter< ContainerType
 // Версия для std::vector< std::pair<...> > и совместимых контейнеров
 template<typename ContainerType>
 struct MartyFormatValueIndexGetter< ContainerType
-                                  , typename std::enable_if< !utils::has_string_find<ContainerType>::value
+                                  , typename std::enable_if< !utils::has_char_ptr_find<ContainerType>::value
                                                           && utils::is_range<ContainerType>::value
                                                           && !utils::has_find_by_pos<ContainerType>::value
                                                           && utils::has_first_type <typename ContainerType::value_type>::value
@@ -883,12 +888,13 @@ struct MartyFormatValueIndexGetter< ContainerType
                                                            >::type
                                   >
 {
-    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    std::size_t operator()(const ContainerType &container, const char* argIdB, const char* argIdE, std::size_t &idxDefault) const
     {
         std::size_t szIdx = std::size_t(-1);
 
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
+        argIdB = utils::ltrim_copy(argIdB, argIdE);
+        argIdE = utils::rtrim_copy(argIdB, argIdE);
+        if (argIdB==argIdE)
         {
             szIdx = idxDefault++;
         }
@@ -896,7 +902,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         {
             try
             {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
+                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
             }
             catch(...)
             {}
@@ -915,10 +921,12 @@ struct MartyFormatValueIndexGetter< ContainerType
         //     return it->second;
         // }
 
+        using value_type = typename ContainerType::value_type;
+
         for(const auto &kv : container)
         {
             ++szIdx;
-            if (kv.first==argId)
+            if (kv.first==typename value_type::first_type(argIdB, argIdE))
                 return szIdx;
                 //return kv.second;
         }
@@ -939,14 +947,15 @@ struct MartyFormatValueIndexGetter< ContainerType
                                                            >::type
                                   >
 {
-    std::size_t operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    std::size_t operator()(const ContainerType &container, const char* argIdB, const char* argIdE, std::size_t &idxDefault) const
     {
         MARTY_ARG_USED(container);
 
         std::size_t szIdx = std::size_t(-1);
 
-        argId = utils::trim_copy(argId);
-        if (argId.empty())
+        argIdB = utils::ltrim_copy(argIdB, argIdE);
+        argIdE = utils::rtrim_copy(argIdB, argIdE);
+        if (argIdB==argIdE)
         {
             szIdx = idxDefault++;
         }
@@ -954,7 +963,7 @@ struct MartyFormatValueIndexGetter< ContainerType
         {
             try
             {
-                szIdx = std::size_t(std::stoul(argId, 0, 10));
+                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
             }
             catch(...)
             {}
@@ -999,7 +1008,7 @@ struct MartyFormatValueGetter< ContainerType
 
     const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
     {
-        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId, idxDefault);
+        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId.data(), argId.data()+std::ptrdiff_t(argId.size()), idxDefault);
         if (idx==std::size_t(-1))
             throw argid_not_found("argId not found");
         if (idx>=container.size())
@@ -1024,7 +1033,7 @@ struct MartyFormatValueGetter< ContainerType
 
     const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
     {
-        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId, idxDefault);
+        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId.data(), argId.data()+std::ptrdiff_t(argId.size()), idxDefault);
         if (idx==std::size_t(-1))
             throw argid_not_found("argId not found");
         if (idx>=container.size())
@@ -1146,6 +1155,11 @@ public:
         return m_values.begin() + std::ptrdiff_t(idx);
     }
     
+    const_iterator find(const char* b, const char* e) const
+    {
+        return find(key_type(b, e));
+    }
+
     //#! BasicArgs_FindByPos
     const_iterator find_by_pos(std::size_t idx) const
     //#!
@@ -1448,6 +1462,7 @@ using Args = BasicArgs< FormatArgumentVariant
 template< typename StringType      = std::string
         , typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 StringType formatMessageImpl( const StringType &fmt
                             , const ArgsType   &args
@@ -1458,6 +1473,28 @@ StringType formatMessageImpl( const StringType &fmt
     using ContainerType = ArgsType;
 
     std::size_t argIdx = 0;
+
+    // std::vector<>
+
+// using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>
+//                                                 , marty::utf::UtfOutputIterator<char>
+//                                                 >;
+
+
+
+    auto indexStringConverter = [&](const char* strB, const char* strE, FormatIndexType indexType)
+    {
+        // return std::size_t(0);
+        std::size_t idx = MartyFormatValueIndexGetter<ArgsType>()(args, strB, strE /* argId */ , argIdx);
+
+        if (indexType==FormatIndexType::filterRef)
+        {
+            // Надо проверить, является ли аргумент фильтром, и вообще, был ли он найден
+            // если это фильтр, пытаемся его скопировать в вектор фильтров
+        }
+
+        return idx;
+    };
 
 
     auto formatHandler = [&](marty::format::FormattingOptions formattingOptions)
@@ -1569,7 +1606,7 @@ StringType formatMessageImpl( const StringType &fmt
 
     };
 
-    return processFormatStringImpl(fmt, formatHandler, (formattingFlags&FormattingFlags::ignoreFormatStringErrors)!=0);
+    return processFormatStringImpl(fmt, formatHandler, indexStringConverter, (formattingFlags&FormattingFlags::ignoreFormatStringErrors)!=0);
 }
 
 //----------------------------------------------------------------------------

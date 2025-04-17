@@ -35,10 +35,10 @@ using utf32_char_t = marty::utf::utf32_char_t;
 // а уж во встройке - однозначно
 
 using arg_idx_t = std::uint16_t;
-constexpr static const arg_idx_t arg_idx_npos = arg_idx_t(-1);
+constexpr static const inline arg_idx_t arg_idx_npos = arg_idx_t(-1);
 
 // У нас максимально до восьми фильтров
-using filter_idx_t = std::uint8_t;
+// constexpr static const arg_idx_t filter_index_flag_predefined = 0x8000u;
 
 // А не может ли поле быть шириной больше 65535?
 // Усекаем молча или генерируем исключение?
@@ -48,6 +48,8 @@ using width_t   = std::uint16_t ; // For fieldWidth and precision
 //! Параметры форматирования
 struct FormattingOptions
 {
+    constexpr static const inline arg_idx_t MaxFilters = 8u;
+
     std::string             argId;
     std::string             fillRef;
     std::string             fieldWidthRef;
@@ -67,6 +69,9 @@ struct FormattingOptions
     char                    typeChar       = 0;   // Символ типа, 0 - auto
 
     FormattingFlags         formattingFlags = FormattingFlags::none; // Копируем сюда аргумент функции форматирования, чтобы не таскать отдельно
+
+    std::size_t             numFilters     = 0;
+    arg_idx_t               filters[MaxFilters];
 
 }; // struct FormattingOptions
 
@@ -137,10 +142,10 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
 
 //#! BasicFormatValueFilter
 template<typename InputIteratorType, typename OutputIteratorType>
-using BasicFormatValueFilter = std::function< void( InputIteratorType  // begin
-                                                  , InputIteratorType  // end
-                                                  , OutputIteratorType
-                                                  )
+using BasicFormatValueFilter = std::function< OutputIteratorType( InputIteratorType  // begin
+                                                                , InputIteratorType  // end
+                                                                , OutputIteratorType
+                                                                )
                                             >;
 //#!
 
@@ -151,13 +156,124 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 //#!
 
 //----------------------------------------------------------------------------
+struct StdNoneFilter
+{
+    marty::utf::UtfOutputIterator<char>
+    operator()( marty::utf::UtfInputIterator<char>  b
+              , marty::utf::UtfInputIterator<char>  e
+              , marty::utf::UtfOutputIterator<char> it
+              ) const
+    {
+        for(; b!=e; ++b)
+            *it++ = *b;
+        return it;
+    }
+
+};
+
+//----------------------------------------------------------------------------
+struct StdXmlHtmlFilter
+{
+    marty::utf::UtfOutputIterator<char> copyStr(marty::utf::UtfOutputIterator<char> it, const char *str) const
+    {
+        while(*str)
+            *it++ = (marty::utf::utf32_char_t)*str++;
+
+        return it;
+    }
+
+    marty::utf::UtfOutputIterator<char>
+    operator()( marty::utf::UtfInputIterator<char>  b
+              , marty::utf::UtfInputIterator<char>  e
+              , marty::utf::UtfOutputIterator<char> it
+              ) const
+    {
+        using utfch_t = marty::utf::utf32_char_t;
+
+        for(; b!=e; ++b)
+        {
+            auto ch = *b;
+
+            // &amp;, &lt;, &gt;, &apos;, and &quot;
+            switch(ch)
+            {
+                case utfch_t('&') : it = copyStr(it, "&amp;" ); break;
+                case utfch_t('<') : it = copyStr(it, "&lt;"  ); break;
+                case utfch_t('>') : it = copyStr(it, "&gt;"  ); break;
+                case utfch_t('\''): it = copyStr(it, "&apos;"); break;
+                case utfch_t('\"'): it = copyStr(it, "&quot;"); break;
+                default:
+                    *it++ = ch;
+            }
+        }
+
+        return it;
+    }
+
+};
+
+//----------------------------------------------------------------------------
+struct StdSqlFilter
+{
+    marty::utf::UtfOutputIterator<char>
+    operator()( marty::utf::UtfInputIterator<char>  b
+              , marty::utf::UtfInputIterator<char>  e
+              , marty::utf::UtfOutputIterator<char> it
+              ) const
+    {
+        using utfch_t = marty::utf::utf32_char_t;
+
+        for(; b!=e; ++b)
+        {
+            auto ch = *b;
+            if (ch==utfch_t('\''))
+                *it++ = ch;
+            *it++ = ch;
+        }
+
+        return it;
+    }
+
+};
+
+//----------------------------------------------------------------------------
 //#! makeStandardFormatValueFilter
 template<typename StringType>
-FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName)
+FormatValueFilter makeStandardFormatValueFilter(StringType filterName)
 //#!
 {
+    auto e = enum_deserialize(filterName, StdFilterType::unknown);
+
+    switch(e)
+    {
+        case StdFilterType::none    : return StdNoneFilter();
+
+        case StdFilterType::xml     : [[fallthrough]];
+        case StdFilterType::xmlText : [[fallthrough]];
+        case StdFilterType::xmlAttr : [[fallthrough]];
+        case StdFilterType::html    : [[fallthrough]];
+        case StdFilterType::htmlText: [[fallthrough]];
+        case StdFilterType::htmlAttr: return StdXmlHtmlFilter();
+
+        case StdFilterType::sql     : return StdSqlFilter();
+
+        case StdFilterType::invalid : [[fallthrough]];
+        default: {}
+    }
+
     throw unknown_value_filter("unknown value filter");
 }
+
+//----------------------------------------------------------------------------
+struct StdFilterFactory
+{
+    template<typename StringType>
+    FormatValueFilter operator()(StringType filterName) const
+    {
+        return makeStandardFormatValueFilter(filterName);
+    }
+
+}; // struct StdFilterFactory
 
 //----------------------------------------------------------------------------
 

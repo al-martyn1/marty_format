@@ -22,6 +22,105 @@
 namespace marty{
 namespace format{
 
+//#!FormatIndexType
+enum class FormatIndexType : std::uint32_t
+{
+    unknown        = (std::uint32_t)(-1) /*!<  */,
+    invalid        = (std::uint32_t)(-1) /*!<  */,
+    argId          = 0x00 /*!<  */,
+    fillRef        = 0x01 /*!<  */,
+    widthRef       = 0x02 /*!<  */,
+    precisionRef   = 0x03 /*!<  */,
+    filterRef      = 0x04 /*!<  */
+
+}; // enum 
+//#!
+
+MARTY_CPP_MAKE_ENUM_IS_FLAGS_FOR_NON_FLAGS_ENUM(FormatIndexType)
+
+MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( FormatIndexType, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( FormatIndexType::unknown        , "Unknown"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( FormatIndexType::argId          , "ArgId"        );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( FormatIndexType::fillRef        , "FillRef"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( FormatIndexType::filterRef      , "FilterRef"    );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( FormatIndexType::precisionRef   , "PrecisionRef" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( FormatIndexType::widthRef       , "WidthRef"     );
+MARTY_CPP_ENUM_CLASS_SERIALIZE_END( FormatIndexType, std::map, 1 )
+
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( FormatIndexType, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::unknown        , "unknown"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::unknown        , "invalid"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::argId          , "arg-id"        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::argId          , "arg_id"        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::argId          , "argid"         );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::fillRef        , "fill-ref"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::fillRef        , "fill_ref"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::fillRef        , "fillref"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::filterRef      , "filter-ref"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::filterRef      , "filter_ref"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::filterRef      , "filterref"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::precisionRef   , "precision-ref" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::precisionRef   , "precision_ref" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::precisionRef   , "precisionref"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::widthRef       , "width-ref"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::widthRef       , "width_ref"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( FormatIndexType::widthRef       , "widthref"      );
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( FormatIndexType, std::map, 1 )
+
+
+//#!StdFilterType
+enum class StdFilterType : std::uint32_t
+{
+    unknown    = (std::uint32_t)(-1) /*!<  */,
+    invalid    = (std::uint32_t)(-1) /*!<  */,
+    none       = 0x00 /*!<  */,
+    xml        = 0x01 /*!<  */,
+    xmlText    = 0x02 /*!<  */,
+    xmlAttr    = 0x03 /*!<  */,
+    html       = 0x04 /*!<  */,
+    htmlText   = 0x05 /*!<  */,
+    htmlAttr   = 0x06 /*!<  */,
+    sql        = 0x07 /*!<  */
+
+}; // enum 
+//#!
+
+MARTY_CPP_MAKE_ENUM_IS_FLAGS_FOR_NON_FLAGS_ENUM(StdFilterType)
+
+MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( StdFilterType, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::unknown    , "Unknown"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::htmlAttr   , "HtmlAttr" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::none       , "None"     );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::xml        , "Xml"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::xmlAttr    , "XmlAttr"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::xmlText    , "XmlText"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::html       , "Html"     );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::htmlText   , "HtmlText" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::sql        , "Sql"      );
+MARTY_CPP_ENUM_CLASS_SERIALIZE_END( StdFilterType, std::map, 1 )
+
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( StdFilterType, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::unknown    , "unknown"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::unknown    , "invalid"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlAttr   , "html-attr" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlAttr   , "html_attr" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlAttr   , "htmlattr"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::none       , "none"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xml        , "xml"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlAttr    , "xml-attr"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlAttr    , "xml_attr"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlAttr    , "xmlattr"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlText    , "xml-text"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlText    , "xml_text"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlText    , "xmltext"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::html       , "html"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlText   , "html-text" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlText   , "html_text" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlText   , "htmltext"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::sql        , "sql"       );
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( StdFilterType, std::map, 1 )
+
+
 //#!FormattingOptionsFlags
 enum class FormattingOptionsFlags : std::uint32_t
 {

@@ -1,0 +1,9 @@
+unknown,invalid = -1
+none            = 0
+xml
+xmlText
+xmlAttr
+html
+htmlText
+htmlAttr
+sql

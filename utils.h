@@ -12,6 +12,8 @@
 //namespace marty_utf {
 
 #include <string>
+#include <cstring>
+#include <stdexcept>
 
 
 //----------------------------------------------------------------------------
@@ -41,6 +43,43 @@ int toDigit(utf32_char_t ch)
            ? int(ch-utf32_char_t('0'))
            : -1
            ;
+}
+
+//----------------------------------------------------------------------------
+inline
+constexpr
+int toDigit(char ch)
+{
+    return (ch>='0' && ch<='9')
+           ? int(ch-'0')
+           : -1
+           ;
+}
+
+//----------------------------------------------------------------------------
+inline
+unsigned charRangeToUnsigned(const char *b, const char *e)
+{
+    unsigned res = 0;
+
+    if (b==e)
+        throw std::invalid_argument("charRangeToUnsigned: can't convert empty string");
+
+    for(; b!=e; ++e)
+    {
+        auto d = toDigit(*b);
+        if (d<0)
+            throw std::invalid_argument("charRangeToUnsigned: symbol is not a decomal digit");
+
+        auto newRes = res*10;
+        newRes += unsigned(d);
+        if (newRes<res)
+            throw std::out_of_range("charRangeToUnsigned: value is out of range");
+
+        res = newRes;
+    }
+
+    return res;
 }
 
 //----------------------------------------------------------------------------
@@ -254,6 +293,7 @@ std::size_t ltrim_distance(const SomethingStringLike &str) { return ltrim_distan
 //----------------------------------------------------------------------------
 inline void             ltrim     (std::string      &sv)   { removePrefix(sv, ltrim_distance(sv.begin(), sv.end())); }
 inline std::string      ltrim_copy(std::string       sv)   { ltrim(sv); return sv; }
+inline const char*      ltrim_copy(const char* b, const char* e) { return b + std::ptrdiff_t(ltrim_distance(b, e)); }
 
 //----------------------------------------------------------------------------
 template<typename IteratorType>
@@ -279,6 +319,7 @@ std::size_t rtrim_distance(const SomethingStringLike &str) { return rtrim_distan
 
 inline void             rtrim     (std::string      &sv)   { removeSuffix(sv, rtrim_distance(sv.begin(), sv.end())); }
 inline std::string      rtrim_copy(std::string       sv)   { rtrim(sv); return sv; }
+inline const char*      rtrim_copy(const char* b, const char* e) { return e - std::ptrdiff_t(rtrim_distance(b, e)); }
 
 //----------------------------------------------------------------------------
 inline void             trim      (std::string      &sv)   { ltrim(sv); rtrim(sv); }
@@ -338,6 +379,13 @@ struct has_string_find : std::false_type {};
  
 template<typename T>
 struct has_string_find<T, std::void_t<decltype(std::declval<T>().find(std::string()))>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_char_ptr_find : std::false_type {};
+ 
+template<typename T>
+struct has_char_ptr_find<T, std::void_t<decltype(std::declval<T>().find((const char*)0, (const char*)0))>> : std::true_type {};
 
 //----------------------------------------------------------------------------
 template< typename C, typename = void >
