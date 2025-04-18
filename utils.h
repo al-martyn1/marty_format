@@ -293,7 +293,7 @@ std::size_t ltrim_distance(const SomethingStringLike &str) { return ltrim_distan
 //----------------------------------------------------------------------------
 inline void             ltrim     (std::string      &sv)   { removePrefix(sv, ltrim_distance(sv.begin(), sv.end())); }
 inline std::string      ltrim_copy(std::string       sv)   { ltrim(sv); return sv; }
-inline const char*      ltrim_copy(const char* b, const char* e) { return b + std::ptrdiff_t(ltrim_distance(b, e)); }
+inline const char*      ltrim_copy(const char* b, const char* e) { if (!b) return b; return b + std::ptrdiff_t(ltrim_distance(b, e)); }
 
 //----------------------------------------------------------------------------
 template<typename IteratorType>
@@ -319,7 +319,7 @@ std::size_t rtrim_distance(const SomethingStringLike &str) { return rtrim_distan
 
 inline void             rtrim     (std::string      &sv)   { removeSuffix(sv, rtrim_distance(sv.begin(), sv.end())); }
 inline std::string      rtrim_copy(std::string       sv)   { rtrim(sv); return sv; }
-inline const char*      rtrim_copy(const char* b, const char* e) { return e - std::ptrdiff_t(rtrim_distance(b, e)); }
+inline const char*      rtrim_copy(const char* b, const char* e) { if (!e) return e; return e - std::ptrdiff_t(rtrim_distance(b, e)); }
 
 //----------------------------------------------------------------------------
 inline void             trim      (std::string      &sv)   { ltrim(sv); rtrim(sv); }
@@ -413,6 +413,16 @@ template<typename T> using is_bool = std::is_same<std::decay_t<T>, bool>;
 template<typename T> using is_char = std::is_same<std::decay_t<T>, char>;
 
 //----------------------------------------------------------------------------
+//! Базовый false-тип для детекта наличия типа const_iterator у объекта
+template< typename C, typename = void >
+struct has_const_iterator : std::false_type {};
+
+//! Специализация, тестирующая наличие типа const_iterator у объекта
+template< typename C >
+struct has_const_iterator< C, std::void_t<typename C::const_iterator> > : std::true_type {};
+
+
+//----------------------------------------------------------------------------
 
 
 
@@ -443,6 +453,84 @@ struct DefaultUtfWidthCalculator
 
 }; // struct DefaultUtfWidthCalculator
 //#!
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+template<typename, typename = void>
+struct IsDereferenceableToLvalue_ : std::false_type {};
+
+template<typename T>
+struct IsDereferenceableToLvalue_<T, std::void_t<decltype(&*std::declval<T>())>> : std::true_type {};
+
+template<typename T>
+inline constexpr bool IsDereferenceableToLvalue = IsDereferenceableToLvalue_<T>::value;
+
+template<typename T>
+inline constexpr bool IsPointer = std::is_pointer_v<std::decay_t<T>>;
+
+template<typename CharPointerType>
+const char* rawConstCharPtrFromIterator(CharPointerType* pstr)
+{
+   return reinterpret_cast<const char*>(pstr);
+}
+
+template <typename IteratorType, std::enable_if_t<
+    IsDereferenceableToLvalue<IteratorType>
+    and not IsPointer<IteratorType>
+, int> = 0>
+const char* rawConstCharPtrFromIterator(IteratorType it)
+{
+   return reinterpret_cast<const char*>(&*it);
+}
+
+// template<typename CharType>
+// const char* rawConstCharPtrFromIterator(marty::utf::UtfInputIterator<CharType> it)
+// {
+//     return (const char*)it.rawPtr();
+// }
+//  
+// template<typename CharType>
+// const char* rawConstCharPtrFromIterator(typename std::basic_string<CharType>::iterator it)
+// {
+//     return (const char*)(&*it);
+// }
+//  
+// template<typename CharType>
+// const char* rawConstCharPtrFromIterator(typename std::basic_string<CharType>::const_iterator it)
+// {
+//     return (const char*)(&*it);
+// }
+
+//----------------------------------------------------------------------------
+#if 0
+//std::is_pointer<IntType>::value
+
+template<typename CharPointerType>
+typename std::enable_if< std::is_pointer<CharPointerType>::value, const char* >::type
+rawConstCharPtrFromIterator(CharPointerType pstr)
+{
+    return (const char*)pstr;
+}
+
+//----------------------------------------------------------------------------
+template<typename ContainerType>
+typename std::enable_if< has_const_iterator<ContainerType>::value, const char* >::type
+rawConstCharPtrFromIterator(typename ContainerType::const_iterator it)
+{
+    return (const char*)(&*it);
+}
+#endif
+
+
+//----------------------------------------------------------------------------
+// template<typename ContainerType>
+// const char* rawConstCharPtrFromIterator(typename ContainerType::iterator it)
+// {
+//     return (const char*)(&*it);
+// }
 
 //----------------------------------------------------------------------------
 

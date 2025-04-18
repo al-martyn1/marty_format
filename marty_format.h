@@ -55,9 +55,6 @@
 1) Ширина поля задаётся как NN[.MM], это понятно для плавучки, но вроде для строки это тоже работает.
 Я что-то не понял как.
 
-
-
-
 */
 
 
@@ -68,625 +65,10 @@ namespace format{
 
 // std::size_t (const char* str, FormatIndexType indexType)
 
-template<typename FormatHandler, typename IndexStringConverter> inline
-std::string processFormatStringImpl(const std::string &str, FormatHandler handler, IndexStringConverter indexStringConverter, bool ignoreErrors=true)
-{
-    // UMBA_USED(ignoreErrors);
-    MARTY_ARG_USED(indexStringConverter);
+#include "internal_processFormatStringImpl.h"
 
-    // https://en.cppreference.com/w/cpp/utility/format/spec
-    // Based on the format specification in Python - https://docs.python.org/3/library/string.html#formatspec
-
-    // format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-
-    // '+' - indicates that a sign should be used for both positive as well as negative numbers.
-    // '-' - indicates that a sign should be used only for negative numbers (this is the default behavior).
-    // space - indicates that a leading space should be used on positive numbers, and a minus sign on negative numbers.
-
-    // The '#' option causes the “alternate form” to be used for the conversion. 
-    // The ',' option signals the use of a comma for a thousands separator for floating-point presentation types and for integer presentation type 'd'
-    // he '_' option signals the use of an underscore for a thousands separator for floating-point presentation types and for integer presentation type 'd'. For integer presentation types 'b', 'o', 'x', and 'X', underscores will be inserted every 4 digits. For other presentation types, specifying this option is an error.
-
-    std::string strRes;
-
-    // using namespace marty::format;
-    FormattingOptions formattingOptions;
-
-    auto outIt = marty::utf::UtfOutputIterator<char>(strRes);
-    auto b = marty::utf::UtfInputIterator<char>(str);
-    auto e = marty::utf::UtfInputIterator<char>();
-
-    //State st = State::normalChars;
-
-    using utf32_char_t = marty::utf::utf32_char_t;
-    using utfch_t = marty::utf::utf32_char_t;
-
-    bool parsingFormat = false; // else in processing text mode
-
-    auto doFormat = [&]()
-    {
-        //out << "\n" << formattingOptions << "\n" << umba::omanip::flush;
-
-        auto formatted = handler(formattingOptions);
-        //auto outIt = marty::utf::UtfOutputIterator<char>(strRes);
-        #if 0
-        auto fb = marty::utf::UtfInputIterator<char>(formatted);
-        auto fe = marty::utf::UtfInputIterator<char>();
-        while(fb!=fe)
-        {
-            *outIt++ = *fb++;
-        }
-        #endif
-
-        strRes.append(formatted);
-
-        parsingFormat = false;
-    };
-
-    auto finalizeParsing = [&](const std::string &msg) -> std::string
-    {
-        if (parsingFormat && !ignoreErrors)
-            throw std::runtime_error(msg);
-        if (parsingFormat)
-            doFormat(); // Незакрытую форматную последовательность обрабатываем, как будто она закрыта
-        return strRes;
-    };
-
-    auto optionalError = [&](const std::string &msg)
-    {
-        if (!ignoreErrors)
-            throw std::runtime_error(msg);
-    };
-
-
-    utfch_t ch = 0;
-    if (b!=e)
-        ch = *b;
-
-    auto incB = [&]()
-    {
-        ++b;
-        if (b!=e)
-            ch = *b;
-    };
-
-    // b++;
-
-    std::string possibleFillRef;
-    bool possibleFillRefGot = false;
-
-
-    while(b!=e)
-    {
-
-        // Обычный режим - копируем символы со входа на выход, и ждем управляющие
-        parsingFormat = false;
-        formattingOptions = FormattingOptions{}; // сбрасываем опции форматирования на дефолтные
-        possibleFillRef.clear();
-        possibleFillRefGot = false;
-
-        while(b!=e)
-        {
-            if (ch==utfch_t('{') || ch==utfch_t('}'))
-                break; // Встретили управляющий символ
-
-            *outIt++ = ch;
-            incB();
-        }
-
-
-        {
-            bool bPevOpen = ch==utfch_t('{');
-            incB();
-            if (b==e)
-            {
-                if (bPevOpen)
-                {
-                    parsingFormat = true;
-                    return finalizeParsing("unexpected end reached after format open bracket (incomplete format specification or unfinished escape sequence)");
-                }
-                else
-                {
-                    return finalizeParsing("unexpected end reached after format close bracket (unfinished escape sequence?)");
-                }
-            }
-
-            //bool bOpen = *b==utfch_t('{');
-            if (!bPevOpen) // предыдущая была закрывающей
-            {
-                if (ch==utfch_t('}')) // текущая - тоже закрывающая
-                {
-                    *outIt++ = ch; // Двойную закрывающую преобразуем в одинарную закрывающую
-                    incB();
-                    continue; // Продолжаем обычный разбор
-                }
-
-                // if (!ignoreErrors) // Или не реагируем на такие ошибки?
-                //     throw std::runtime_error("invalid escape sequence");
-
-                // Одинокую закрывающую скобку копируем как есть
-                *outIt++ = utfch_t('}');
-                *outIt++ = ch;
-                incB();
-                continue;
-            }
-            else // предыдущая была открывающей
-            {
-                if (ch==utfch_t('{')) // текущая - тоже открывающая
-                {
-                    *outIt++ = ch; // Двойную открывающую преобразуем в одинарную открывающую
-                    incB();
-                    continue; // Продолжаем обычный разбор
-                }
-
-                if (ch==utfch_t('}')) // текущая - закрывающая - это строка форматирования со ссылкой на аргумент, индекс которого вычисляется автоматически
-                {
-                    incB(); doFormat(); continue;
-                }
-            }
-
-            // предыдущая скобка была открывающей, но второй открывающей скобки не последовало, как и закрывающей, значит, началась форматная строка
-            // *b - уже символ форматной строки
-            parsingFormat = true;
-        }
-
-        // Парсим форматную строку
-
-        // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-        // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
-
-        // В качестве argId позволяем вообще всё
-        // Это позволит использовать именованные параметры
-        // Если argId конвертируется в число - то это числовой позиционный индекс
-        // Если в качестве списка элементов - плоский вектор без имён, то тогда
-        // именованные argId недопустимы
-
-        // **arg_id**
-        {
-            auto argIdOutIt = marty::utf::UtfOutputIterator<char>(formattingOptions.argId);
-            while(b!=e)
-            {
-                if (ch==utfch_t(':') || ch==utfch_t('}') || utils::isFormatConvertMarker(ch))
-                    break;
-                *argIdOutIt++ = ch;
-                incB();
-            }
-
-            if (!formattingOptions.argId.empty())
-                formattingOptions.optionsFlags |= FormattingOptionsFlags::argIdTaken;
-
-        }
-
-        if (b==e) // Дошли до конца
-            return finalizeParsing("unexpected end reached while reading ArgId");
-
-        if (ch==utfch_t('}'))
-        {
-            incB(); doFormat(); continue;
-        }
-
-
-        // **conversion**
-        if (utils::isFormatConvertMarker(ch))
-        {
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading convert option");
-
-            if (utils::isFormatConvertChar(ch))
-            {
-                formattingOptions.convertChar = ch;
-            }
-            else
-            {
-                optionalError("unexpected symbol reached while parsing format spec");
-            }
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading convert option");
-
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-            
-            if (ch!=utfch_t(':'))
-            {
-                optionalError("unexpected symbol reached while parsing format spec");
-            }
-
-        }
-
-    continueFormatParsing:
-
-        incB(); // Пропустили двоеточие
-
-        if (b==e) // Дошли до конца
-            return finalizeParsing("unexpected end reached while waiting for format spec");
-        if (ch==utfch_t('}'))
-        {
-            incB(); doFormat(); continue;
-        }
-
-
-        // **fill**
-        if (!utils::isFormatAnySpecialChar(ch))
-        {
-            formattingOptions.fillChar = ch;
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::fillingTaken;
-
-            incB(); // Идём дальше
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-        else if (ch==utfch_t('{'))
-        {
-            // тут ссылка на аргумент, это либо ссылка на символ заполнения
-            // либо это ссылка на ширину поля
-            //formattingOptions.optionsFlags |= FormattingOptionsFlags::fieldWidthTaken | FormattingOptionsFlags::fieldWidthIndirect;
-            auto fillIdOutIt = marty::utf::UtfOutputIterator<char>(possibleFillRef);
-            possibleFillRefGot = true;
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec (FillRef/WidthRef)");
-            while(b!=e)
-            {
-                if (ch==utfch_t('}'))
-                    break;
-                *fillIdOutIt++ = ch;
-                incB();
-            }
-
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec (FillRef/WidthRef)");
-
-            // Тут у нас закрывающая FillRef скобка
-            incB(); // Пропускаем закрывающую скобку
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-        // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
-
-        // **align** **width**
-        if (utils::isFormatAlignMarker(ch))
-        {
-            formattingOptions.alignment = char(ch); // флаги не нужны - выравнивание задано по умолчанию
-
-            incB(); // Идём дальше
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-
-            if (possibleFillRefGot)
-            {
-                formattingOptions.optionsFlags |= FormattingOptionsFlags::fillingTaken | FormattingOptionsFlags::fillingIndirect;
-                formattingOptions.fillRef = possibleFillRef;
-            }
-        }
-        else if (possibleFillRefGot)
-        {
-            // у нас тут какой-то символ, но не признак выравнивания
-            // а перед этим у нас была ссылка
-            // а ближайшая возможная ссылка - это ссылка на ширину
-
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::fieldWidthTaken | FormattingOptionsFlags::fieldWidthIndirect;
-            formattingOptions.fieldWidthRef = possibleFillRef;
-            goto waitForPrecision;
-        }
-
-
-        // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-        // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
-
-        // **sign**
-        if (utils::isFormatSignMarker(ch) || ch==utfch_t(' '))
-        {
-            switch(ch)
-            {
-                case utfch_t('+'): formattingOptions.optionsFlags |= FormattingOptionsFlags::signPlus ; break;
-                case utfch_t('-'): formattingOptions.optionsFlags |= FormattingOptionsFlags::signMinus; break;
-                case utfch_t(' '): formattingOptions.optionsFlags |= FormattingOptionsFlags::signSpace; break;
-            }
-
-            incB(); // Идём дальше
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-
-        // **z**
-        if (ch==utfch_t('z'))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::signZ;
-
-            incB(); // Идём дальше
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        // **!** caseInvert
-        if (ch==utfch_t('!'))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::caseInvert;
-
-            incB(); // Идём дальше
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        // **#**
-        if (utils::isFormatAlterChar(ch))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::signAlterForm;
-
-            incB(); // Идём дальше
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-        // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
-
-        // **0**
-        if (utils::isFormatDigit(ch, 0, 0))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
-
-            incB(); // Идём дальше
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        // **width**
-        if (utils::isFormatDigit(ch, 1, 9))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::fieldWidthTaken;
-            formattingOptions.fieldWidth   = utils::toDigit(ch);
-
-            incB();
-            while(b!=e && utils::isFormatDigit(ch, 0, 9))
-            {
-                formattingOptions.fieldWidth *= 10;
-                formattingOptions.fieldWidth += utils::toDigit(ch);
-                incB();
-            }
-
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-        else if (ch==utfch_t('{'))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::fieldWidthTaken | FormattingOptionsFlags::fieldWidthIndirect;
-            auto widthIdOutIt = marty::utf::UtfOutputIterator<char>(formattingOptions.fieldWidthRef);
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec (WidthRef)");
-            while(b!=e)
-            {
-                if (ch==utfch_t('}'))
-                    break;
-                *widthIdOutIt++ = ch;
-                incB();
-            }
-
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec (WidthRef)");
-
-            // Тут у нас закрывающая WidthRef скобка
-            incB(); // Пропускаем закрывающую скобку
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-    waitForPrecision:
-
-        // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-        // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
-
-        // **grouping**
-        if (utils::isFormatFormatThousandSep(ch))
-        {
-            formattingOptions.grouppingChar = ch;
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-        // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
-
-        // **precision** start
-        if (utils::isFormatPeriodChar(ch))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::precisionTaken;
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-
-            if (ch==utfch_t('{')) // ref
-            {
-                formattingOptions.optionsFlags |= FormattingOptionsFlags::precisionIndirect;
-                auto precisionIdOutIt = marty::utf::UtfOutputIterator<char>(formattingOptions.precisionRef);
-
-                incB();
-                if (b==e) // Дошли до конца
-                    return finalizeParsing("unexpected end reached while reading format spec (PrecisionRef)");
-
-                while(b!=e)
-                {
-                    if (ch==utfch_t('}'))
-                        break;
-                    *precisionIdOutIt++ = ch;
-                    incB();
-                }
-
-                if (b==e) // Дошли до конца
-                    return finalizeParsing("unexpected end reached while reading format spec (PrecisionRef)");
-
-                incB();
-                if (b==e) // Дошли до конца
-                    return finalizeParsing("unexpected end reached while reading format spec");
-                if (ch==utfch_t('}'))
-                {
-                    incB(); doFormat(); continue;
-                }
-            }
-            else if (utils::isFormatDigit(ch, 0, 9))
-            {
-                formattingOptions.precision = utils::toDigit(ch);
-
-                incB();
-                while(b!=e && utils::isFormatDigit(ch, 0, 9))
-                {
-                    formattingOptions.precision *= 10;
-                    formattingOptions.precision += utils::toDigit(ch);
-                    incB();
-                }
-
-                if (b==e) // Дошли до конца
-                    return finalizeParsing("unexpected end reached while reading format spec");
-                if (ch==utfch_t('}'))
-                {
-                    incB(); doFormat(); continue;
-                }
-            }
-
-        }
-
-        // **fractional_grouping**
-        if (utils::isFormatFormatThousandSep(ch))
-        {
-            if ((formattingOptions.optionsFlags&FormattingOptionsFlags::precisionTaken)==0)
-                optionalError("unexpected symbol reached while parsing format spec");
-
-            formattingOptions.fractionalGrouppingChar = ch;
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-
-        // python_format_spec ::= [[fill]align][sign]["z"]["#"]["0"][width][grouping_option]["." precision][type]
-        // cpp_format_spec    ::= fill-and-align(optional) sign(optional) #(optional) 0(optional) width(optional) precision(optional) L(optional) type(optional)
-
-        if (utils::isFormatLocaleChar(ch))
-        {
-            formattingOptions.optionsFlags |= FormattingOptionsFlags::localeFormatting;
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        if (utils::isFormatTypeChar(ch))
-        {
-            formattingOptions.typeChar = char(ch);
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading format spec");
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-        }
-
-        if (ch==utfch_t('}'))
-        {
-            incB(); doFormat(); continue;
-        }
-
-        optionalError("unexpected symbol reached while parsing format spec");
-
-        // incB();
-        // if (b==e) // Дошли до конца
-        //     return finalizeParsing("unexpected end reached while reading format spec");
-
-        goto continueFormatParsing;
-
-    }
-
-    return strRes;
-
-}
 
 //----------------------------------------------------------------------------
-/*
-
-Что нам нужно?
-
-valueGetter - по индексу в FormattingOptions (или переопределенному) должен возвращать элемент контейнера.
-Принимает ссылку на контейнер, FormattingOptions, и ссылку на значение.
-
-Ссылка на значение какой имеет тип?
-Нам нужен шаблон, который принимает тип контейнера, и содержит value_type вложенный тип.
-Если элемент контейнера - это нечто, содержащее first и second, тогда value_type - это second, иначе
-value_type - это тип самого элемента контейнера.
-
-Предполагается, что в контейнере лежит std::variant.
-
-valueFormatter - свободная функция, принимает FormattingOptions и значение своего типа (int, const char*, float, etc)
-
-*/
 
 
 
@@ -1006,9 +388,8 @@ struct MartyFormatValueGetter< ContainerType
 {
     using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
 
-    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    const value_type& operator()(const ContainerType &container, std::size_t idx) const
     {
-        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId.data(), argId.data()+std::ptrdiff_t(argId.size()), idxDefault);
         if (idx==std::size_t(-1))
             throw argid_not_found("argId not found");
         if (idx>=container.size())
@@ -1017,6 +398,11 @@ struct MartyFormatValueGetter< ContainerType
         auto it = container.begin();
         std::advance(it, idx);
         return it->second;
+    }
+
+    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    {
+        return operator()(container, MartyFormatValueIndexGetter<ContainerType>()(container, argId.data(), argId.data()+std::ptrdiff_t(argId.size()), idxDefault));
     }
 
 }; // struct MartyFormatValueGetter
@@ -1031,9 +417,8 @@ struct MartyFormatValueGetter< ContainerType
 {
     using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
 
-    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    const value_type& operator()(const ContainerType &container, std::size_t idx) const
     {
-        std::size_t idx = MartyFormatValueIndexGetter<ContainerType>()(container, argId.data(), argId.data()+std::ptrdiff_t(argId.size()), idxDefault);
         if (idx==std::size_t(-1))
             throw argid_not_found("argId not found");
         if (idx>=container.size())
@@ -1042,6 +427,11 @@ struct MartyFormatValueGetter< ContainerType
         auto it = container.begin();
         std::advance(it, idx);
         return *it;
+    }
+
+    const value_type& operator()(const ContainerType &container, std::string argId, std::size_t &idxDefault) const
+    {
+        return operator()(container, MartyFormatValueIndexGetter<ContainerType>()(container, argId.data(), argId.data()+std::ptrdiff_t(argId.size()), idxDefault));
     }
 
 }; // struct MartyFormatValueGetter
@@ -1389,7 +779,7 @@ template< typename IntType
 int convertFormatArgumentVariantValueToInt(IntType i)
 {
     MARTY_ARG_USED(i);
-    throw invalid_argument_type("invalid argument type (required any kind of integer)");
+    throw invalid_argument_type("invalid argument type (required any kind of int)");
 }
 
 template<typename VariantType>
@@ -1398,6 +788,45 @@ int convertFormatArgumentVariantToInt(VariantType v)
     return std::visit( [](auto && a) -> int
                        {
                            return convertFormatArgumentVariantValueToInt(a);
+                       }
+                     , v
+                     );
+}
+
+//----------------------------------------------------------------------------
+template< typename IntType
+        , typename std::enable_if< ( std::is_integral<IntType>::value
+                                 && !std::is_pointer<IntType>::value
+                                 && !utils::is_bool<IntType>::value
+                                   )
+                                 , bool
+                                 >::type = true
+        >
+unsigned convertFormatArgumentVariantValueToUnsigned(IntType i)
+{
+    return unsigned(i);
+}
+
+template< typename IntType
+        , typename std::enable_if< ( !std::is_integral<IntType>::value
+                                  || std::is_pointer<IntType>::value
+                                  || utils::is_bool<IntType>::value
+                                   )
+                                 , bool
+                                 >::type = true
+        >
+unsigned convertFormatArgumentVariantValueToUnsigned(IntType i)
+{
+    MARTY_ARG_USED(i);
+    throw invalid_argument_type("invalid argument type (required any kind of unsigned)");
+}
+
+template<typename VariantType>
+unsigned convertFormatArgumentVariantToUnsigned(VariantType v)
+{
+    return std::visit( [](auto && a) -> unsigned
+                       {
+                           return convertFormatArgumentVariantValueToUnsigned(a);
                        }
                      , v
                      );
@@ -1514,7 +943,7 @@ StringType formatMessageImpl( const StringType &fmt
 
         try
         {
-            valToFormat = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.argId, argIdx);
+            valToFormat = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.argIdx);
         }
         catch(const base_error &)
         {
@@ -1530,7 +959,7 @@ StringType formatMessageImpl( const StringType &fmt
             // Filling char задан, и задана ссылкой
             try
             {
-                auto fillingVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.fillRef, argIdx);
+                auto fillingVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.fillIdx);
                 formattingOptions.fillChar = convertFormatArgumentVariantToChar(fillingVal);
             }
             catch(const base_error &)
@@ -1549,8 +978,8 @@ StringType formatMessageImpl( const StringType &fmt
             // Ширина задана, и задана ссылкой
             try
             {
-                auto widthVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.fieldWidthRef, argIdx);
-                formattingOptions.fieldWidth = convertFormatArgumentVariantToInt(widthVal);
+                auto widthVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.width);
+                formattingOptions.width = (width_t)convertFormatArgumentVariantToUnsigned(widthVal);
             }
             catch(const base_error &)
             {
@@ -1568,8 +997,8 @@ StringType formatMessageImpl( const StringType &fmt
             // Точность задана, и задана ссылкой
             try
             {
-                auto precisionVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.precisionRef, argIdx);
-                formattingOptions.precision = convertFormatArgumentVariantToInt(precisionVal);
+                auto precisionVal = MartyFormatValueGetter<ContainerType>()(args, formattingOptions.precision);
+                formattingOptions.precision = (width_t)convertFormatArgumentVariantToUnsigned(precisionVal);
             }
             catch(const base_error &)
             {
@@ -1606,7 +1035,7 @@ StringType formatMessageImpl( const StringType &fmt
 
     };
 
-    return processFormatStringImpl(fmt, formatHandler, indexStringConverter, (formattingFlags&FormattingFlags::ignoreFormatStringErrors)!=0);
+    return processFormatStringImpl<StringType, typename StringType::const_iterator>(fmt.begin(), fmt.end(), formatHandler, indexStringConverter, (formattingFlags&FormattingFlags::ignoreFormatStringErrors)!=0);
 }
 
 //----------------------------------------------------------------------------

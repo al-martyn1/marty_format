@@ -50,16 +50,14 @@ struct FormattingOptions
 {
     constexpr static const inline arg_idx_t MaxFilters = 8u;
 
-    std::string             argId;
-    std::string             fillRef;
-    std::string             fieldWidthRef;
-    std::string             precisionRef;
-
-    // unsigned                argId = 0; // Индекс значения в массиве, начинается с единицы, или 0, если автоматически вычисляется
+    arg_idx_t               argIdx         = arg_idx_t(-1);
+    arg_idx_t               fillIdx        = arg_idx_t(-1);
+    // arg_idx_t               widthIdx       = arg_idx_t(-1);
+    // arg_idx_t               precisionIdx   = arg_idx_t(-1);
 
     FormattingOptionsFlags  optionsFlags   = FormattingOptionsFlags::none;
-    int                     fieldWidth     = 0; // auto
-    int                     precision      = 6; // default precision
+    width_t                 width          = 0; // auto
+    width_t                 precision      = 6; // default precision
 
     utf32_char_t            convertChar    = 0;
     char                    alignment      = '>'; // По левому краю ('<'), по правому краю ('>'), по ширине ('^'). По умолчанию - по правому краю
@@ -85,7 +83,7 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
     if ((opts.optionsFlags&FormattingOptionsFlags::argIdTaken)==0)
         oss << "ArgId    : " << "auto" << "\n";
     else
-        oss << "ArgId    : " << opts.argId << "\n";
+        oss << "ArgId    : " << opts.argIdx << "\n";
 
 
     if ((opts.optionsFlags&FormattingOptionsFlags::fieldWidthTaken)==0)
@@ -93,9 +91,9 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
     else
     {
         if ((opts.optionsFlags&FormattingOptionsFlags::fieldWidthIndirect)==0)
-            oss << "Width    : " << opts.fieldWidth << "\n";
+            oss << "Width    : " << opts.width << "\n";
         else 
-            oss << "WidthId  : " << opts.fieldWidthRef << "\n";
+            oss << "WidthId  : " << opts.width << "\n";
     }
 
 
@@ -106,7 +104,7 @@ StramType& operator<<(StramType& oss, const FormattingOptions opts)
         if ((opts.optionsFlags&FormattingOptionsFlags::precisionIndirect)==0)
             oss << "Precision: " << opts.precision << "\n";
         else
-            oss << "PrecisionId: " << opts.precisionRef << "\n";
+            oss << "PrecisionId: " << opts.precision << "\n";
     }
 
 
