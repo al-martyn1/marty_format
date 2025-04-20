@@ -18,7 +18,10 @@
 
 #include <functional>
 #include <string>
+#include <type_traits>
+#include <tuple>
 #include <variant>
+#include <vector>
 
 
 // #include "marty_format/marty_format.h"
@@ -237,14 +240,16 @@ struct StdSqlFilter
 //----------------------------------------------------------------------------
 //#! makeStandardFormatValueFilter
 template<typename StringType>
-FormatValueFilter makeStandardFormatValueFilter(StringType filterName)
-//#!
+FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNoneReturned=0)
 {
+    if (pNoneReturned)
+        *pNoneReturned = false;
+
     auto e = enum_deserialize(filterName, StdFilterType::unknown);
 
     switch(e)
     {
-        case StdFilterType::none    : return StdNoneFilter();
+        case StdFilterType::none    : break;
 
         case StdFilterType::xml     : [[fallthrough]];
         case StdFilterType::xmlText : [[fallthrough]];
@@ -259,10 +264,18 @@ FormatValueFilter makeStandardFormatValueFilter(StringType filterName)
         default: {}
     }
 
-    throw unknown_value_filter("unknown value filter");
+    if (!pNoneReturned)
+        throw unknown_value_filter("unknown value filter");
+
+    *pNoneReturned = true;
+
+    return StdNoneFilter();
+   
 }
+//#!
 
 //----------------------------------------------------------------------------
+//#! StdFilterFactory
 struct StdFilterFactory
 {
     template<typename StringType>
@@ -271,7 +284,14 @@ struct StdFilterFactory
         return makeStandardFormatValueFilter(filterName);
     }
 
+    template<typename StringType>
+    FormatValueFilter operator()(StringType filterName, bool *pNoneReturned) const
+    {
+        return makeStandardFormatValueFilter(filterName, pNoneReturned);
+    }
+
 }; // struct StdFilterFactory
+//#!
 
 //----------------------------------------------------------------------------
 
@@ -304,6 +324,248 @@ using FormatArgumentVariant =
                 >;
 //#!
 //----------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------
+#if 0
+// Шаблон для проверки, является ли тип специализацией BasicFormatValueFilter
+template<typename>
+struct IsBasicFormatValueFilter : std::false_type {};
+
+template<typename InputIt, typename OutputIt>
+struct IsBasicFormatValueFilter
+    < 
+        std::function<OutputIt(InputIt, InputIt, OutputIt)>
+    > : std::true_type {};
+
+// Удобная обёртка для проверки
+template<typename T>
+inline constexpr bool IsBasicFormatValueFilter_v = 
+    IsBasicFormatValueFilter<T>::value;
+
+//----------------------------------------------------------------------------
+// Определение параметров InputIteratorType и OutputIteratorType
+template<typename>
+struct BasicFormatValueFilterTraits;
+
+template<typename InputIt, typename OutputIt>
+struct BasicFormatValueFilterTraits<
+    std::function<OutputIt(InputIt, InputIt, OutputIt)>
+> {
+    using input_iterator_type  = InputIt;
+    using output_iterator_type = OutputIt;
+};
+
+//----------------------------------------------------------------------------
+// Проверка, содержит ли variant хотя бы один такой тип
+
+template<typename Variant>
+struct VariantContainsBasicFormatValueFilter;
+
+template<typename... Ts>
+struct VariantContainsBasicFormatValueFilter< std::variant<Ts...> >
+    : std::disjunction<IsBasicFormatValueFilter<Ts>...> {};
+
+template<typename Variant>
+inline constexpr bool VariantContainsBasicFormatValueFilter_v =
+    VariantContainsBasicFormatValueFilter<Variant>::value;
+
+//----------------------------------------------------------------------------
+// Получение списка всех BasicFormatValueFilter в variant
+
+template<typename... Ts>
+struct GetBasicFormatValueFilters {
+    using type = decltype(std::tuple_cat(
+        std::conditional_t<
+            IsBasicFormatValueFilter_v<Ts>,
+            std::tuple<Ts>,
+            std::tuple<>
+        >{}...
+    ));
+};
+
+template<typename... Ts>
+using GetBasicFormatValueFilters_t = 
+    typename GetBasicFormatValueFilters<Ts...>::type;
+
+#endif
+//----------------------------------------------------------------------------
+
+
+
+
+//----------------------------------------------------------------------------
+#if 0
+template <typename T>
+struct is_basic_format_value_filter : std::false_type {};
+
+template <typename InputIt, typename OutputIt>
+struct is_basic_format_value_filter<
+    std::function<OutputIt(InputIt, InputIt, OutputIt)>
+> : std::true_type {
+    using input_type = InputIt;
+    using output_type = OutputIt;
+};
+
+template <typename T>
+inline constexpr bool is_basic_format_value_filter_v = 
+    is_basic_format_value_filter<T>::value;
+
+
+
+template <typename Variant>
+struct variant_filter_traits;
+
+template <typename... Ts>
+struct variant_filter_traits<std::variant<Ts...>> {
+    // Проверяем, есть ли хотя бы одна специализация
+    static constexpr bool has_filter = 
+        (is_basic_format_value_filter_v<Ts> || ...);
+
+    // Список параметров (InputIt, OutputIt) для всех специализаций
+    using filters = std::tuple<
+        typename is_basic_format_value_filter<Ts>::input_type,
+        typename is_basic_format_value_filter<Ts>::output_type
+    >...; // Но так нельзя, нужна фильтрация
+
+    // Правильный способ: фильтрация и сбор параметров
+    template <typename T>
+    struct filter_params {
+        using type = std::conditional_t<
+            is_basic_format_value_filter_v<T>,
+            std::tuple<
+                typename is_basic_format_value_filter<T>::input_type,
+                typename is_basic_format_value_filter<T>::output_type
+            >,
+            std::tuple<>
+        >;
+    };
+
+    using filtered_params = decltype(std::tuple_cat(
+        typename filter_params<Ts>::type{}...
+    ));
+};
+
+
+template <typename Variant>
+inline constexpr bool variant_has_filter_v = 
+    variant_filter_traits<Variant>::has_filter;
+
+template <typename Variant>
+using variant_filter_params_t = 
+    typename variant_filter_traits<Variant>::filtered_params;
+#endif
+
+#if 0
+int main() {
+    using MyVariant = std::variant<
+        int,
+        BasicFormatValueFilter<const int*, int*>,
+        double,
+        BasicFormatValueFilter<char*, std::string::iterator>
+    >;
+
+    // Проверка наличия фильтров
+    static_assert(variant_has_filter_v<MyVariant>, "Should have filters");
+
+    // Получение списка параметров
+    using Params = variant_filter_params_t<MyVariant>;
+    static_assert(
+        std::tuple_size_v<Params> == 2, 
+        "Should have two sets of parameters"
+    );
+
+    // Первый фильтр: const int* -> int*
+    using FirstFilterParams = std::tuple_element_t<0, Params>;
+    static_assert(
+        std::is_same_v<std::tuple_element_t<0, FirstFilterParams>, const int*>,
+        "Input type mismatch"
+    );
+    static_assert(
+        std::is_same_v<std::tuple_element_t<1, FirstFilterParams>, int*>,
+        "Output type mismatch"
+    );
+
+    return 0;
+}
+#endif
+
+
+// Метафункция для проверки специализации
+template <typename T>
+struct is_basic_format_value_filter : std::false_type {};
+
+template <typename InputIt, typename OutputIt>
+struct is_basic_format_value_filter<BasicFormatValueFilter<InputIt, OutputIt>> 
+    : std::true_type {
+    using input_type = InputIt;
+    using output_type = OutputIt;
+};
+
+template <typename T>
+constexpr bool is_basic_format_value_filter_v = 
+    is_basic_format_value_filter<T>::value;
+
+// Основная метафункция для variant
+template <typename Variant>
+struct variant_filter_traits;
+
+template <typename... Ts>
+struct variant_filter_traits<std::variant<Ts...>> {
+private:
+    // Поиск первого фильтра в списке типов
+    template <typename... Us>
+    struct find_first_filter;
+    
+    template <typename U, typename... Us>
+    struct find_first_filter<U, Us...> {
+        using type = std::conditional_t<
+            is_basic_format_value_filter_v<U>,
+            U,
+            typename find_first_filter<Us...>::type
+        >;
+    };
+    
+    template <>
+    struct find_first_filter<> {
+        using type = void;
+    };
+    
+    // Получение типов аргументов фильтра
+    template <typename Filter>
+    struct filter_args;
+    
+    template <typename InputIt, typename OutputIt>
+    struct filter_args<BasicFormatValueFilter<InputIt, OutputIt>> {
+        using input_type = InputIt;
+        using output_type = OutputIt;
+        using filter_type = BasicFormatValueFilter<InputIt, OutputIt>;
+    };
+
+public:
+    // Тип первого найденного фильтра
+    using first_filter = typename find_first_filter<Ts...>::type;
+    
+    // Типы аргументов первого фильтра
+    using first_filter_args = filter_args<first_filter>;
+    
+    static constexpr bool has_filter = 
+        !std::is_same_v<first_filter, void>;
+    
+    static void print_info() {
+        if constexpr (has_filter) {
+            std::cout << "First filter type: " 
+                      << typeid(first_filter).name() << "\n";
+            std::cout << "Input type:  " 
+                      << typeid(typename first_filter_args::input_type).name() << "\n";
+            std::cout << "Output type: " 
+                      << typeid(typename first_filter_args::output_type).name() << "\n";
+        } else {
+            std::cout << "No filters found in variant\n";
+        }
+    }
+};
+
 
 
 

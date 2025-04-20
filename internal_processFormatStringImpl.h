@@ -72,6 +72,54 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             // pStrIdBegin = ltrim_copy(pStrIdBegin, pStrIdEnd);
             // pStrIdEnd   = rtrim_copy(pStrIdBegin, pStrIdEnd);
 
+    utfch_t ch = 0;
+    if (b!=e)
+        ch = *b;
+
+    auto incB = [&]()
+    {
+        ++b;
+        if (b!=e)
+            ch = *b;
+    };
+
+    auto readFilters = [&]()
+    {
+        while (b != e)
+        {
+            if (ch != utfch_t('|'))
+                break;
+
+            incB();
+
+            captureRefBegin();
+            while (b != e)
+            {
+                if (ch == utfch_t('|') || ch == utfch_t('}'))
+                    break;
+                incB();
+            }
+            captureRefEnd();
+
+            pStrIdBegin = ltrim_copy(pStrIdBegin, pStrIdEnd);
+            pStrIdEnd = rtrim_copy(pStrIdBegin, pStrIdEnd);
+            if (pStrIdBegin != pStrIdEnd)
+            {
+                std::size_t idx = indexStringConverter(pStrIdBegin, pStrIdEnd, FormatIndexType::filterRef);
+                if (idx != std::size_t(-1))
+                {
+                    // Если больше восьми фильтров в цепочке - лишнее отбрасываем
+                    if (formattingOptions.numFilters < std::size_t(FormattingOptions::MaxFilters - 1u))
+                    {
+                        formattingOptions.filters[std::size_t(formattingOptions.numFilters)] = arg_idx_t(idx);
+                        ++formattingOptions.numFilters;
+                    }
+                }
+            }
+
+            resetStrId();
+        }
+    };
 
 
     auto doFormat = [&]()
@@ -123,18 +171,6 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
     };
 
 
-    utfch_t ch = 0;
-    if (b!=e)
-        ch = *b;
-
-    auto incB = [&]()
-    {
-        ++b;
-        if (b!=e)
-            ch = *b;
-    };
-
-    // b++;
 
     //std::string possibleFillRef;
     bool possibleFillRefGot = false;
@@ -158,6 +194,8 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB();
         }
 
+        if (b==e)
+            return strRes;
 
         {
             bool bPevOpen = ch==utfch_t('{');
@@ -230,7 +268,7 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             captureRefBegin();
             while(b!=e)
             {
-                if (ch==utfch_t(':') || ch==utfch_t('}') || utils::isFormatConvertMarker(ch))
+                if (ch==utfch_t(':') || ch==utfch_t('|') || ch==utfch_t('}') || utils::isFormatConvertMarker(ch))
                     break;
                 incB();
             }
@@ -251,6 +289,14 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
 
         if (b==e) // Дошли до конца
             return finalizeParsing("unexpected end reached while reading ArgId");
+
+        if (ch==utfch_t('|'))
+        {
+            readFilters();
+            if (b==e) // Дошли до конца
+                return finalizeParsing("unexpected end reached while reading ArgId");
+            goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+        }
 
         if (ch==utfch_t('}'))
         {
@@ -278,6 +324,14 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading convert option");
 
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -296,6 +350,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
 
         if (b==e) // Дошли до конца
             return finalizeParsing("unexpected end reached while waiting for format spec");
+
+        if (ch==utfch_t('|'))
+        {
+            readFilters();
+            if (b==e) // Дошли до конца
+                return finalizeParsing("unexpected end reached while reading ArgId");
+            goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+        }
+
         if (ch==utfch_t('}'))
         {
             incB(); doFormat(); continue;
@@ -311,6 +374,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB(); // Идём дальше
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -368,6 +440,14 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
                 return finalizeParsing("unexpected end reached while reading format spec");
             }
 
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 // Так как маркера выравнивания мы тут не дождались, значит, это ширина
@@ -395,6 +475,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB(); // Идём дальше
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -448,6 +537,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB(); // Идём дальше
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -491,6 +589,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB(); // Идём дальше
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -508,6 +615,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB(); // Идём дальше
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -530,6 +646,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
 
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -547,7 +672,7 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             captureRefBegin();
             while(b!=e)
             {
-                if (ch==utfch_t('}'))
+                if (ch==utfch_t('}') || ch==utfch_t('|')) //!!!
                     break;
                 //*widthIdOutIt++ = ch;
                 incB();
@@ -574,6 +699,14 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
                 return finalizeParsing("unexpected end reached while reading format spec");
             }
 
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -593,6 +726,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB();
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -644,6 +786,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
                 incB();
                 if (b==e) // Дошли до конца
                     return finalizeParsing("unexpected end reached while reading format spec");
+
+                if (ch==utfch_t('|'))
+                {
+                    readFilters();
+                    if (b==e) // Дошли до конца
+                        return finalizeParsing("unexpected end reached while reading ArgId");
+                    goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+                }
+        
                 if (ch==utfch_t('}'))
                 {
                     incB(); doFormat(); continue;
@@ -664,6 +815,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
 
                 if (b==e) // Дошли до конца
                     return finalizeParsing("unexpected end reached while reading format spec");
+
+                if (ch==utfch_t('|'))
+                {
+                    readFilters();
+                    if (b==e) // Дошли до конца
+                        return finalizeParsing("unexpected end reached while reading ArgId");
+                    goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+                }
+        
                 if (ch==utfch_t('}'))
                 {
                     incB(); doFormat(); continue;
@@ -683,6 +843,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB();
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -700,6 +869,15 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB();
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
@@ -713,11 +891,31 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             incB();
             if (b==e) // Дошли до конца
                 return finalizeParsing("unexpected end reached while reading format spec");
+
+            if (ch==utfch_t('|'))
+            {
+                readFilters();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading ArgId");
+                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+            }
+    
             if (ch==utfch_t('}'))
             {
                 incB(); doFormat(); continue;
             }
         }
+
+        if (ch==utfch_t('|'))
+        {
+            readFilters();
+            if (b==e) // Дошли до конца
+                return finalizeParsing("unexpected end reached while reading ArgId");
+            goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+        }
+
+
+    waitClosingBrace:
 
         if (ch==utfch_t('}'))
         {

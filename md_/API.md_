@@ -61,13 +61,11 @@
 **Примечание**. В текущий момент стандартные фильтры не реализованы (**NOT_IMPLEMENTED**).
 
 
-## Фабрика стандартных фильтров - makeStandardFormatValueFilter
+## Мейкер стандартных фильтров - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его имени.
 
 #!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilter
-
-В настоящее время фабрика не реализована и выбрасывает исключение на любое переданное имя фильтра (**NOT_IMPLEMENTED**).
 
 Допустимые имена фильтров:
 
@@ -95,6 +93,15 @@
 возвращает экземпляр фильтра для значений `SQL`-запросов.
 
 </arg-list>
+
+
+## Фабрика стандартных фильтров - StdFilterFactory
+
+Используется как значение по умолчанию для шаблонного параметра `FilterFactory`
+в базовой реализации функции форматирования `formatMessageImpl` и в стандартных 
+реализациях `formatMessage`.
+
+#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format_types.h#StdFilterFactory
 
 
 ## marty::format::FormatArgumentVariant - Variant-тип аргумента

@@ -257,11 +257,12 @@ enum class FormattingFlags : std::uint32_t
     ignoreWidthIndirectErrors       = 0x10 /*!< Ignore errors while searching for arguments for width */,
     ignorePrecisionIndirectErrors   = 0x20 /*!< Ignore errors while searching for arguments for precision */,
     ignoreConversionErrors          = 0x40 /*!< Ignore formatting type specifications and allow automatic type conversion */,
-    considerZeroWidthSpaces         = 0x80 /*!< Учитывать пробелы нулевой ширины */,
-    considerCombiningChars          = 0x100 /*!< Учитывать комбинированные символы */,
-    fractionalGroupping             = 0x200 /*!< Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа */,
+    ignoreNotFilterErrors           = 0x80 /*!< Ignore errors - non-filter value used as filter */,
+    considerZeroWidthSpaces         = 0x100 /*!< Учитывать пробелы нулевой ширины */,
+    considerCombiningChars          = 0x200 /*!< Учитывать комбинированные символы */,
+    fractionalGroupping             = 0x400 /*!< Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа */,
     ignoreOptionsIndirectErrors     = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!<  */,
-    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors /*!<  */,
+    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors /*!<  */,
     considerUnicodeFeatures         = considerZeroWidthSpaces | considerCombiningChars /*!<  */,
     all                             = ignoreErrors | considerUnicodeFeatures | fractionalGroupping /*!<  */
 
@@ -280,8 +281,9 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignorePrecisionIndirectErrors   , "IgnorePrecisionIndirectErrors" );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreWidthIndirectErrors       , "IgnoreWidthIndirectErrors"     );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "IgnoreConversionErrors"        );
-    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "ConsiderZeroWidthSpaces"       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "ConsiderCombiningChars"        );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreNotFilterErrors           , "IgnoreNotFilterErrors"         );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "ConsiderZeroWidthSpaces"       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "FractionalGroupping"           );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "IgnoreOptionsIndirectErrors"   );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreErrors                    , "IgnoreErrors"                  );
@@ -314,12 +316,15 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "ignore-conversion-errors"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "ignore_conversion_errors"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "ignoreconversionerrors"           );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider-zero-width-spaces"       );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider_zero_width_spaces"       );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "considerzerowidthspaces"          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "consider-combining-chars"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "considercombiningchars"           );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "consider_combining_chars"         );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreNotFilterErrors           , "ignore-not-filter-errors"         );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreNotFilterErrors           , "ignore_not_filter_errors"         );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreNotFilterErrors           , "ignorenotfiltererrors"            );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider-zero-width-spaces"       );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "consider_zero_width_spaces"       );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "considerzerowidthspaces"          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "fractional-groupping"             );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "fractional_groupping"             );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "fractionalgroupping"              );

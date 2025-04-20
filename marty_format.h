@@ -901,6 +901,28 @@ StringType formatMessageImpl( const StringType &fmt
 {
     using ContainerType = ArgsType;
 
+    using value_type = typename ContainerValueTypeDeducer<ContainerType>::value_type;
+
+    using Traits = variant_filter_traits<FormatArgumentVariant>;
+
+    static_assert((Traits::has_filter), "Args value_type should contain filter functor");
+    using FilterType      = typename Traits::first_filter;
+    using FilterTypeArgs  = typename Traits::first_filter_args;
+
+    using FilterInputIteratorType  = typename FilterTypeArgs::input_type ;
+    using FilterOutputIteratorType = typename FilterTypeArgs::output_type;
+
+    // static_assert(variant_has_filter_v<value_type>, "Should have filters");
+
+    std::vector<FilterType> filters;
+
+    // struct FiltersClearer
+    // {
+    //     FiltersClearer(std::vector<FilterType> &v) : m_v(v) {}
+    //     ~FiltersClearer() { m_v.clear(); }
+    //     std::vector<FilterType> &m_v;
+    // };
+
     std::size_t argIdx = 0;
 
     // std::vector<>
@@ -914,19 +936,55 @@ StringType formatMessageImpl( const StringType &fmt
     auto indexStringConverter = [&](const char* strB, const char* strE, FormatIndexType indexType)
     {
         // return std::size_t(0);
-        std::size_t idx = MartyFormatValueIndexGetter<ArgsType>()(args, strB, strE /* argId */ , argIdx);
+        
 
-        if (indexType==FormatIndexType::filterRef)
+        if (indexType!=FormatIndexType::filterRef)
+        {
+            return MartyFormatValueIndexGetter<ArgsType>()(args, strB, strE /* argId */ , argIdx);
+        }
+        else
         {
             // Надо проверить, является ли аргумент фильтром, и вообще, был ли он найден
             // если это фильтр, пытаемся его скопировать в вектор фильтров
-        }
 
-        return idx;
+            bool isNone = false;
+            auto stdFilter = FilterFactory()(StringType(strB, strE), &isNone);
+            if (!isNone)
+            {
+                std::size_t resIdx = filters.size();
+                filters.emplace_back(stdFilter);
+                return resIdx;
+            }
+
+            //auto userMayBeFilterIdx =  = 
+            std::size_t userMayBeFilterIdx = MartyFormatValueIndexGetter<ArgsType>()(args, strB, strE /* argId */ , argIdx);
+            try
+            {
+                value_type userMayBeFilter = MartyFormatValueGetter<ContainerType>()(args, userMayBeFilterIdx);
+                if (!std::holds_alternative<FilterType>(userMayBeFilter))
+                {
+                    if ((formattingFlags&FormattingFlags::ignoreNotFilterErrors)==0) // Ошибки поиска аргументов не игнорируем
+                        throw value_as_filter_error("not filter argument used as filter");
+                    return std::size_t(-1);
+                }
+
+                std::size_t resIdx = filters.size();
+                filters.emplace_back(std::get<FilterType>(userMayBeFilter));
+                return resIdx;
+                
+            }
+            catch(const base_error &)
+            {
+                if ((formattingFlags&FormattingFlags::ignoreArgumentErrors)==0) // Ошибки поиска аргументов не игнорируем
+                    throw; // Прокидываем исключение выше
+
+                return std::size_t(-1);
+            }
+        }
     };
 
 
-    auto formatHandler = [&](marty::format::FormattingOptions formattingOptions)
+    auto formatHandlerImpl = [&](marty::format::FormattingOptions formattingOptions)
     {
         using value_type = typename ContainerValueTypeDeducer<ArgsType>::value_type;
 
@@ -934,6 +992,8 @@ StringType formatMessageImpl( const StringType &fmt
 
         // typename ContainerType::value_type valToFormat = typename ContainerType::value_type("<ERR>");
         value_type valToFormat = value_type{"<ERR>"};
+
+        // auto filtersClearer = FiltersClearer(filters);
 
         // Если явно задано флагами, что дробную часть надо тоже разделять по разрядам,
         // и разделитель разрядов не задан явно для дробной части
@@ -1035,6 +1095,46 @@ StringType formatMessageImpl( const StringType &fmt
 
     };
 
+    auto formatHandler = [&](marty::format::FormattingOptions formattingOptions)
+    {
+        StringType formattedValue = formatHandlerImpl(formattingOptions);
+
+        // Тут надо добавить вызов цепочки фильтров
+
+        for(std::size_t idxIdx=0; idxIdx!=formattingOptions.numFilters; ++idxIdx)
+        {
+            auto fltIdx = formattingOptions.filters[idxIdx];
+            if (fltIdx>=filters.size()) // Индекс почему-то вылезает за пределы массива
+                continue;
+
+            auto &filter = filters[fltIdx];
+
+            using namespace marty::format::utils;
+
+            auto pFmtStrBegin = rawConstCharPtrFromIterator(formattedValue.data());
+            auto pFmtStrEnd   = pFmtStrBegin;
+            std::advance(pFmtStrEnd, std::ptrdiff_t(formattedValue.size()));
+
+            StringType filteredVal;
+
+            if constexpr (utils::has_ctor_require_two_pointers<FilterInputIteratorType>)
+            {
+                filter(FilterInputIteratorType(pFmtStrBegin, pFmtStrEnd), FilterInputIteratorType(pFmtStrEnd), FilterOutputIteratorType(filteredVal));
+            }
+            else
+            {
+                filter(FilterInputIteratorType(pFmtStrBegin), FilterInputIteratorType(pFmtStrEnd), FilterOutputIteratorType(filteredVal));
+            }
+
+            formattedValue = filteredVal;
+        }
+
+        filters.clear(); // очищаем текущий набор фильтров
+
+        return formattedValue;
+    };
+
+
     return processFormatStringImpl<StringType, typename StringType::const_iterator>(fmt.begin(), fmt.end(), formatHandler, indexStringConverter, (formattingFlags&FormattingFlags::ignoreFormatStringErrors)!=0);
 }
 
@@ -1047,6 +1147,7 @@ StringType formatMessageImpl( const StringType &fmt
 template< typename StringType      = std::string
         , typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 StringType formatMessage( const StringType &fmt
                         , const ArgsType   &args
@@ -1054,13 +1155,14 @@ StringType formatMessage( const StringType &fmt
                         )
 //#!
 {
-    return formatMessageImpl<StringType, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
+    return formatMessageImpl<StringType, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
 //#! formatMessageGenericConstCharPtr
 template< typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 std::string formatMessage( const char *fmt
                          , const ArgsType   &args
@@ -1068,7 +1170,7 @@ std::string formatMessage( const char *fmt
                          )
 //#!
 {
-    return formatMessageImpl<std::string, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
+    return formatMessageImpl<std::string, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
@@ -1081,6 +1183,7 @@ using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
 
 template< typename StringType = std::string
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 StringType formatMessage( const StringType          &fmt
                         , FormatArgumentVariantList &&args
@@ -1089,12 +1192,13 @@ StringType formatMessage( const StringType          &fmt
 //#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
-    return formatMessageImpl<StringType, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
+    return formatMessageImpl<StringType, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
 //#! formatMessageInitializerListConstCharPtr
 template< typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 inline
 std::string formatMessage( const char                *fmt
@@ -1104,7 +1208,7 @@ std::string formatMessage( const char                *fmt
 //#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
-    return formatMessageImpl<std::string, ArgsType, WidthCalculator>(fmt, args, formattingFlags);
+    return formatMessageImpl<std::string, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
 }
 
 

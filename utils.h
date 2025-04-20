@@ -11,10 +11,12 @@
 #include "marty_utf/utf.h"
 //namespace marty_utf {
 
-#include <string>
 #include <cstring>
+#include <functional>
 #include <stdexcept>
-
+#include <string>
+#include <type_traits>
+#include <variant>
 
 //----------------------------------------------------------------------------
 // #include "marty_format/marty_format.h"
@@ -209,8 +211,9 @@ bool isFormatAnySpecialChar(utf32_char_t ch)
     return isFormatAlignMarker(ch) || isFormatSignMarker(ch) || isFormatAlterChar(ch) 
         || isFormatFormatThousandSep(ch) || isFormatPeriodChar(ch) || isFormatLocaleChar(ch)
         || isFormatDigit(ch) || isFormatTypeChar(ch)
-        || ch==utf32_char_t('{')
         || ch==utf32_char_t('z')
+        || ch==utf32_char_t('|')
+        || ch==utf32_char_t('{')
            ;
 }
 
@@ -407,6 +410,16 @@ struct has_operator_string_index : std::false_type {};
  
 template<typename T>
 struct has_operator_string_index<T, std::void_t<decltype(std::declval<T>().operator[](std::string()))>> : std::true_type {};
+
+//----------------------------------------------------------------------------
+template< typename C, typename = void >
+struct has_ctor_require_two_pointers_ : std::false_type {};
+ 
+template<typename T>
+struct has_ctor_require_two_pointers_<T, std::void_t<typename T::ctor_require_two_pointers>> : std::true_type {};
+
+template<typename T>
+inline constexpr bool has_ctor_require_two_pointers = has_ctor_require_two_pointers_<T>::value;
 
 //----------------------------------------------------------------------------
 template<typename T> using is_bool = std::is_same<std::decay_t<T>, bool>;

@@ -18,6 +18,19 @@ int main(int argc, char* argv[])
     (void)(argv);
 
     {
+        //#! UsingFilters
+        // Используем фильтры для вывода в HTML
+        // Используются стандартные встроенные фильтры
+        using namespace marty::format;
+
+        cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
+                             , Args().arg("url", "http://site.com/&q=/'")
+                                     .arg("text", "<Some & text>")
+                             );
+        //#!
+    }
+
+    {
         //#! UsingArgs
         // Автоматически вычисляемый индекс аргумента
         // Ширину и точность (на самом деле макс ширину строки)
