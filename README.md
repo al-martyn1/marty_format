@@ -758,7 +758,8 @@ width           ::= digit+ | &quot;{&quot; argId &quot;}&quot;
 grouping        ::= &quot;,&quot; | &quot;_&quot; | &quot;&apos;&quot;
 frac_grouping   ::= &quot;,&quot; | &quot;_&quot; | &quot;&apos;&quot;
 precision       ::= digit+ | &quot;{&quot; argId &quot;}&quot;
-type            ::= &quot;a&quot; | &quot;A&quot; | &quot;b&quot; | &quot;B&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | &quot;E&quot; | &quot;f&quot; | &quot;F&quot; | &quot;g&quot; | &quot;G&quot; | &quot;n&quot; | &quot;o&quot; | &quot;s&quot; | &quot;x&quot; | &quot;X&quot; | &quot;%&quot;
+type            ::= &quot;a&quot; | &quot;A&quot; | &quot;b&quot; | &quot;B&quot; | &quot;c&quot; | &quot;d&quot; | &quot;e&quot; | &quot;E&quot; | &quot;f&quot; | &quot;F&quot; | &quot;g&quot; | &quot;G&quot; | &quot;n&quot; |
+                    &quot;o&quot; | &quot;p&quot; | &quot;s&quot; | &quot;x&quot; | &quot;X&quot; | &quot;%&quot;
 filters         ::= filter+
 filter          ::= &quot;|&quot; argId
 arg_id          ::= arg_index | arg_name

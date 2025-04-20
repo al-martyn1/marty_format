@@ -320,6 +320,7 @@ using FormatArgumentVariant =
                 , std::string
                 , std::wstring
                 , marty::Decimal
+                , const void*
                 , FormatValueFilter
                 >;
 //#!

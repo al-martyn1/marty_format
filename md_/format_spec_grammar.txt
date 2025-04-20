@@ -7,7 +7,8 @@ width           ::= digit+ | "{" argId "}"
 grouping        ::= "," | "_" | "'"
 frac_grouping   ::= "," | "_" | "'"
 precision       ::= digit+ | "{" argId "}"
-type            ::= "a" | "A" | "b" | "B" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
+type            ::= "a" | "A" | "b" | "B" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | 
+                    "o" | "p" | "s" | "x" | "X" | "%"
 filters         ::= filter+
 filter          ::= "|" argId
 arg_id          ::= arg_index | arg_name
