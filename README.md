@@ -26,7 +26,8 @@
     - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#user-content-пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
   - [Тип фильтра FormatValueFilter](#user-content-тип-фильтра-formatvaluefilter)
   - [Стандартные фильтры](#user-content-стандартные-фильтры)
-  - [Фабрика стандартных фильтров - makeStandardFormatValueFilter](#user-content-фабрика-стандартных-фильтров---makestandardformatvaluefilter)
+  - [Мейкер стандартных фильтров - makeStandardFormatValueFilter](#user-content-мейкер-стандартных-фильтров---makestandardformatvaluefilter)
+  - [Фабрика стандартных фильтров - StdFilterFactory](#user-content-фабрика-стандартных-фильтров---stdfilterfactory)
   - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#user-content-martyformatformatargumentvariant---variant-тип-аргумента)
   - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
     - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
@@ -220,10 +221,10 @@ cout << formatMessage(
 **marty_format_types.h**
 ```cpp
 template<typename InputIteratorType, typename OutputIteratorType>
-using BasicFormatValueFilter = std::function< void( InputIteratorType  // begin
-                                                  , InputIteratorType  // end
-                                                  , OutputIteratorType
-                                                  )
+using BasicFormatValueFilter = std::function< OutputIteratorType( InputIteratorType  // begin
+                                                                , InputIteratorType  // end
+                                                                , OutputIteratorType
+                                                                )
                                             >;
 ```
 
@@ -297,17 +298,46 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 **Примечание**. В текущий момент стандартные фильтры не реализованы (**NOT_IMPLEMENTED**).
 
 
-### Фабрика стандартных фильтров - makeStandardFormatValueFilter
+### Мейкер стандартных фильтров - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его имени.
 
 **marty_format_types.h**
 ```cpp
 template<typename StringType>
-FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName)
-```
+FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNoneReturned=0)
+{
+    if (pNoneReturned)
+        *pNoneReturned = false;
 
-В настоящее время фабрика не реализована и выбрасывает исключение на любое переданное имя фильтра (**NOT_IMPLEMENTED**).
+    auto e = enum_deserialize(filterName, StdFilterType::unknown);
+
+    switch(e)
+    {
+        case StdFilterType::none    : break;
+
+        case StdFilterType::xml     : [[fallthrough]];
+        case StdFilterType::xmlText : [[fallthrough]];
+        case StdFilterType::xmlAttr : [[fallthrough]];
+        case StdFilterType::html    : [[fallthrough]];
+        case StdFilterType::htmlText: [[fallthrough]];
+        case StdFilterType::htmlAttr: return StdXmlHtmlFilter();
+
+        case StdFilterType::sql     : return StdSqlFilter();
+
+        case StdFilterType::invalid : [[fallthrough]];
+        default: {}
+    }
+
+    if (!pNoneReturned)
+        throw unknown_value_filter("unknown value filter");
+
+    *pNoneReturned = true;
+
+    return StdNoneFilter();
+
+}
+```
 
 Допустимые имена фильтров:
 
@@ -322,6 +352,32 @@ FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName)
 |`'html_attr'`|возвращает экземпляр фильтра для атрибутов `HTML`.|
 |`'sql'`|возвращает экземпляр фильтра для значений `SQL`-запросов.|
 
+
+
+### Фабрика стандартных фильтров - StdFilterFactory
+
+Используется как значение по умолчанию для шаблонного параметра `FilterFactory`
+в базовой реализации функции форматирования `formatMessageImpl` и в стандартных 
+реализациях `formatMessage`.
+
+**marty_format_types.h**
+```cpp
+struct StdFilterFactory
+{
+    template<typename StringType>
+    FormatValueFilter operator()(StringType filterName) const
+    {
+        return makeStandardFormatValueFilter(filterName);
+    }
+
+    template<typename StringType>
+    FormatValueFilter operator()(StringType filterName, bool *pNoneReturned) const
+    {
+        return makeStandardFormatValueFilter(filterName, pNoneReturned);
+    }
+
+}; // struct StdFilterFactory
+```
 
 
 ### marty::format::FormatArgumentVariant - Variant-тип аргумента
@@ -481,6 +537,7 @@ using Args = BasicArgs< FormatArgumentVariant
 template< typename StringType      = std::string
         , typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 StringType formatMessageImpl( const StringType &fmt
                             , const ArgsType   &args
@@ -497,6 +554,7 @@ StringType formatMessageImpl( const StringType &fmt
 template< typename StringType      = std::string
         , typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 StringType formatMessage( const StringType &fmt
                         , const ArgsType   &args
@@ -508,6 +566,7 @@ StringType formatMessage( const StringType &fmt
 ```cpp
 template< typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 std::string formatMessage( const char *fmt
                          , const ArgsType   &args
@@ -524,6 +583,7 @@ using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
 
 template< typename StringType = std::string
         , typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 StringType formatMessage( const StringType          &fmt
                         , FormatArgumentVariantList &&args
@@ -534,6 +594,7 @@ StringType formatMessage( const StringType          &fmt
 **marty_format.h**
 ```cpp
 template< typename WidthCalculator = DefaultUtfWidthCalculator
+        , typename FilterFactory   = StdFilterFactory
         >
 inline
 std::string formatMessage( const char                *fmt
@@ -848,5 +909,4 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 Список задач по библиотеке - [TODO](todo.md_).
 
 
-Тестим ссылки - [Возможности библиотеки](#возможности-библиотеки),
-[Возможности библиотеки](#Возможности библиотеки)
+
