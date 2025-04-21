@@ -7,6 +7,7 @@ ignoreFillIndirectErrors           // Ignore errors while searching for argument
 ignoreWidthIndirectErrors          // Ignore errors while searching for arguments for width
 ignorePrecisionIndirectErrors      // Ignore errors while searching for arguments for precision
 ignoreConversionErrors             // Ignore formatting type specifications and allow automatic type conversion
+ignoreTypeMismatchErrors           // Ignore formatting type specification char mismatch errors
 ignoreNotFilterErrors              // Ignore errors - non-filter value used as filter
 
 considerZeroWidthSpaces            // Учитывать пробелы нулевой ширины
@@ -15,7 +16,7 @@ considerCombiningChars             // Учитывать комбинирова�
 fractionalGroupping                // Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа
 
 ignoreOptionsIndirectErrors = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
-ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors
+ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors
 considerUnicodeFeatures     = considerZeroWidthSpaces | considerCombiningChars
 
 all = ignoreErrors | considerUnicodeFeatures | fractionalGroupping

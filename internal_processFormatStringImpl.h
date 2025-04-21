@@ -1,3 +1,5 @@
+#pragma once
+
 
 template<typename ResultStringType, typename CharIterator, typename FormatHandler, typename IndexStringConverter> inline
 ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pCharE, FormatHandler handler, IndexStringConverter indexStringConverter, bool ignoreErrors=true)
@@ -313,7 +315,7 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
 
             if (utils::isFormatConvertChar(ch))
             {
-                formattingOptions.convertChar = ch;
+                formattingOptions.convertChar = (char)ch;
             }
             else
             {

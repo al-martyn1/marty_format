@@ -18,6 +18,9 @@
 #include <type_traits>
 #include <variant>
 
+//
+#include "undef_min_max.h"
+
 //----------------------------------------------------------------------------
 // #include "marty_format/marty_format.h"
 // marty::format::utils::
@@ -444,6 +447,16 @@ struct has_const_iterator< C, std::void_t<typename C::const_iterator> > : std::t
 //#! DefaultUtfWidthCalculator
 struct DefaultUtfWidthCalculator
 {
+
+    std::size_t operator()(marty::utf::unicode_char_t ch) const
+    {
+        // suf - simpleUnicodeFeature
+        if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
+            return 0;
+
+        return 1;
+    }
+
     std::size_t operator()(const char* b, const char* e) const
     {
         auto it    = marty::utf::UtfInputIterator<char>(b, e);
@@ -453,12 +466,7 @@ struct DefaultUtfWidthCalculator
 
         for(; it!=endIt; ++it)
         {
-            auto ch = *it;
-            // suf - simpleUnicodeFeature
-            if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
-                continue;
-
-            ++size;
+            size += operator()(*it);
         }
 
         return size;

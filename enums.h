@@ -257,12 +257,13 @@ enum class FormattingFlags : std::uint32_t
     ignoreWidthIndirectErrors       = 0x10 /*!< Ignore errors while searching for arguments for width */,
     ignorePrecisionIndirectErrors   = 0x20 /*!< Ignore errors while searching for arguments for precision */,
     ignoreConversionErrors          = 0x40 /*!< Ignore formatting type specifications and allow automatic type conversion */,
-    ignoreNotFilterErrors           = 0x80 /*!< Ignore errors - non-filter value used as filter */,
-    considerZeroWidthSpaces         = 0x100 /*!< Учитывать пробелы нулевой ширины */,
-    considerCombiningChars          = 0x200 /*!< Учитывать комбинированные символы */,
-    fractionalGroupping             = 0x400 /*!< Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа */,
+    ignoreTypeMismatchErrors        = 0x80 /*!< Ignore formatting type specification char mismatch errors */,
+    ignoreNotFilterErrors           = 0x100 /*!< Ignore errors - non-filter value used as filter */,
+    considerZeroWidthSpaces         = 0x200 /*!< Учитывать пробелы нулевой ширины */,
+    considerCombiningChars          = 0x400 /*!< Учитывать комбинированные символы */,
+    fractionalGroupping             = 0x800 /*!< Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа */,
     ignoreOptionsIndirectErrors     = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!<  */,
-    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors /*!<  */,
+    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors /*!<  */,
     considerUnicodeFeatures         = considerZeroWidthSpaces | considerCombiningChars /*!<  */,
     all                             = ignoreErrors | considerUnicodeFeatures | fractionalGroupping /*!<  */
 
@@ -281,6 +282,8 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignorePrecisionIndirectErrors   , "IgnorePrecisionIndirectErrors" );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreWidthIndirectErrors       , "IgnoreWidthIndirectErrors"     );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "IgnoreConversionErrors"        );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::all                             , "All"                           );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreTypeMismatchErrors        , "IgnoreTypeMismatchErrors"      );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "ConsiderCombiningChars"        );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreNotFilterErrors           , "IgnoreNotFilterErrors"         );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "ConsiderZeroWidthSpaces"       );
@@ -288,7 +291,6 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "IgnoreOptionsIndirectErrors"   );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreErrors                    , "IgnoreErrors"                  );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "ConsiderUnicodeFeatures"       );
-    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::all                             , "All"                           );
 MARTY_CPP_ENUM_FLAGS_SERIALIZE_END( FormattingFlags, std::map, 1 )
 
 MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
@@ -316,6 +318,10 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "ignore-conversion-errors"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "ignore_conversion_errors"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreConversionErrors          , "ignoreconversionerrors"           );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::all                             , "all"                              );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreTypeMismatchErrors        , "ignore-type-mismatch-errors"      );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreTypeMismatchErrors        , "ignore_type_mismatch_errors"      );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreTypeMismatchErrors        , "ignoretypemismatcherrors"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "consider-combining-chars"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "considercombiningchars"           );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "consider_combining_chars"         );
@@ -337,7 +343,6 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "consider-unicode-features"        );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "consider_unicode_features"        );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "considerunicodefeatures"          );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::all                             , "all"                              );
 MARTY_CPP_ENUM_FLAGS_DESERIALIZE_END( FormattingFlags, std::map, 1 )
 
 MARTY_CPP_ENUM_FLAGS_SERIALIZE_SET(FormattingFlags, std::set)

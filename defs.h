@@ -29,3 +29,4 @@
     #define MARTY_ARG_USED(x)                   (void)(x)
 
 #endif
+

@@ -23,6 +23,9 @@
 #include <variant>
 #include <vector>
 
+//
+#include "undef_min_max.h"
+
 
 // #include "marty_format/marty_format.h"
 // marty::format::
@@ -62,17 +65,17 @@ struct FormattingOptions
     width_t                 width          = 0; // auto
     width_t                 precision      = 6; // default precision
 
-    utf32_char_t            convertChar    = 0;
-    char                    alignment      = '>'; // По левому краю ('<'), по правому краю ('>'), по ширине ('^'). По умолчанию - по правому краю
+    char                    convertChar    = 0;
+    char                    alignment      = 0; // '>'; // По левому краю ('<'), по правому краю ('>'), по ширине ('^'). По умолчанию - по правому краю
     utf32_char_t            fillChar       = utf32_char_t(' '); // Символ заполнения, по умолчанию - пробел.
     utf32_char_t            grouppingChar  = 0; // разделитель разрядов, по умолчанию - 0 (без разделения).
     utf32_char_t            fractionalGrouppingChar = 0; // разделитель разрядов после десятичной точки, по умолчанию - 0 (без разделения).
     char                    typeChar       = 0;   // Символ типа, 0 - auto
 
-    FormattingFlags         formattingFlags = FormattingFlags::none; // Копируем сюда аргумент функции форматирования, чтобы не таскать отдельно
-
     std::size_t             numFilters     = 0;
     arg_idx_t               filters[MaxFilters];
+
+    FormattingFlags         formattingFlags = FormattingFlags::none; // Копируем сюда аргумент функции форматирования, чтобы не таскать отдельно
 
 }; // struct FormattingOptions
 
