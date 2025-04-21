@@ -42,6 +42,7 @@
   - [Грамматика полей замены](#user-content-грамматика-полей-замены)
   - [Преобразование типа аргумента - !conversion](#user-content-преобразование-типа-аргумента---conversion)
   - [Спецификатор формата - format_spec](#user-content-спецификатор-формата---format_spec)
+    - [Символ заполнения fill](#user-content-символ-заполнения-fill)
     - [Маркер выравнивания align](#user-content-маркер-выравнивания-align)
     - [Признак знака sign](#user-content-признак-знака-sign)
   - [Поддерживаемые спецификаторы типа](#user-content-поддерживаемые-спецификаторы-типа)
@@ -107,6 +108,7 @@
 // Автоматически вычисляемый индекс аргумента
 // Ширину и точность (на самом деле макс ширину строки)
 // задаём также аргументами, а не в форматной строке
+using std::cout;
 using namespace marty::format;
 cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
                      , Args().arg(10)
@@ -125,6 +127,7 @@ cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
 ```cpp
 // Автоматически вычисляемый индекс аргумента, используем std::initializer_list
 // Перевод строки отдельно выводим
+using std::cout;
 using namespace marty::format;
 cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
                      , { 10, "Very long string, does not fit into 20 characters"
@@ -139,6 +142,7 @@ cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
 ```cpp
 // Автоматически вычисляемый индекс аргумента, используем std::vector
 // Перевод строки отдельно выводим
+using std::cout;
 using namespace marty::format;
 auto argsVec = std::vector<FormatArgumentVariant>{ 10, "Very long string, "
                       "does not fit into 20 characters", 10, 20, 3.14159 };
@@ -153,6 +157,7 @@ cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
 ```cpp
 // Используем именованные аргументы,
 // перемешали порядок аргументов, по сравнению с предыдущим примером
+using std::cout;
 using namespace marty::format;
 cout << formatMessage(
     "Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
@@ -173,6 +178,7 @@ cout << formatMessage(
 // Используем std::vector вместо marty::format::Args
 // Тут поиск по имени не такой эффективный, простым перебором, но тоже работает
 // Готовим вектор заранее
+using std::cout;
 using namespace marty::format;
 auto argsVec = std::vector< std::pair<std::string, FormatArgumentVariant> >
                { {"str", "Very long string, does not fit into 20 characters"}
@@ -191,6 +197,7 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
 // Используем именованные аргументы
 // Задаём конвертацию значения (но в текущий момент она игнорируется)
 // Символ заполнения передаём аргументом
+using std::cout;
 using namespace marty::format;
 cout << formatMessage(
     "Integer number: {int:d}, string: {str!s:{fill}<{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
@@ -616,6 +623,16 @@ std::string formatMessage( const char                *fmt
 ```cpp
 struct DefaultUtfWidthCalculator
 {
+
+    std::size_t operator()(marty::utf::unicode_char_t ch) const
+    {
+        // suf - simpleUnicodeFeature
+        if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
+            return 0;
+
+        return 1;
+    }
+
     std::size_t operator()(const char* b, const char* e) const
     {
         auto it    = marty::utf::UtfInputIterator<char>(b, e);
@@ -625,12 +642,7 @@ struct DefaultUtfWidthCalculator
 
         for(; it!=endIt; ++it)
         {
-            auto ch = *it;
-            // suf - simpleUnicodeFeature
-            if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
-                continue;
-
-            ++size;
+            size += operator()(*it);
         }
 
         return size;
@@ -795,6 +807,57 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 
 **Примечание**. Поддержка фильтров в форматной строке в данный момент не реализавана (**NOT_IMPLEMENTED**). Попытка 
 использовать фильтры вызовет ошибку на этапе разбора форматной строки.
+
+
+#### Символ заполнения fill
+
+В качестве символов заполнения (`fill`) запрещены символы `'a'`-`'z'` и `'A'`-`'Z'`, а также цифровые символы `'0'`-`'9'`.
+
+Прочие запрещённые символы:
+
+<arg-list value-style=backtick-quote title=Запрещённый символ|Описание/причина запрещения использования>
+
+-<
+Выравнивание по левому краю.
+
+->
+Выравнивание по правому краю.
+
+-^
+Выравнивание по середине.
+
+-=
+Выравнивание по чисел по ширине.
+
+-+
+Символ знака `'+'` для отображения числовых значений.
+
+--
+Символ знака `'-'` для отображения числовых значений.
+
+- `space`
+Символ `' '` (`space`/`пробел`) для отображения числовых значений. Символ `' '` (`space`/`пробел`) используется для
+выравнивания по умолчанию, явное указание данного символа не требуется.
+
+-'
+Символ группировки разрядов чисел (`apos`).
+
+-_
+Символ группировки разрядов чисел (`underscore`).
+
+-,
+Символ группировки разрядов чисел (`comma`).
+
+-|
+Символ последовательности фильтров  (`pipe`)  (`broken vertical bar`), используется при задании последовательности фильтров.
+
+-%
+Символ вывода числа в виде процентов.
+
+-?
+Символ вывода строки в виде `escape`-последовательности.
+
+</arg-list>
 
 
 #### Маркер выравнивания align
