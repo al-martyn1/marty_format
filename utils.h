@@ -480,6 +480,7 @@ struct DefaultUtfWidthCalculator
 
 
 //----------------------------------------------------------------------------
+// (c) rg45
 template<typename, typename = void>
 struct IsDereferenceableToLvalue_ : std::false_type {};
 
@@ -506,52 +507,6 @@ const char* rawConstCharPtrFromIterator(IteratorType it)
 {
    return reinterpret_cast<const char*>(&*it);
 }
-
-// template<typename CharType>
-// const char* rawConstCharPtrFromIterator(marty::utf::UtfInputIterator<CharType> it)
-// {
-//     return (const char*)it.rawPtr();
-// }
-//  
-// template<typename CharType>
-// const char* rawConstCharPtrFromIterator(typename std::basic_string<CharType>::iterator it)
-// {
-//     return (const char*)(&*it);
-// }
-//  
-// template<typename CharType>
-// const char* rawConstCharPtrFromIterator(typename std::basic_string<CharType>::const_iterator it)
-// {
-//     return (const char*)(&*it);
-// }
-
-//----------------------------------------------------------------------------
-#if 0
-//std::is_pointer<IntType>::value
-
-template<typename CharPointerType>
-typename std::enable_if< std::is_pointer<CharPointerType>::value, const char* >::type
-rawConstCharPtrFromIterator(CharPointerType pstr)
-{
-    return (const char*)pstr;
-}
-
-//----------------------------------------------------------------------------
-template<typename ContainerType>
-typename std::enable_if< has_const_iterator<ContainerType>::value, const char* >::type
-rawConstCharPtrFromIterator(typename ContainerType::const_iterator it)
-{
-    return (const char*)(&*it);
-}
-#endif
-
-
-//----------------------------------------------------------------------------
-// template<typename ContainerType>
-// const char* rawConstCharPtrFromIterator(typename ContainerType::iterator it)
-// {
-//     return (const char*)(&*it);
-// }
 
 //----------------------------------------------------------------------------
 

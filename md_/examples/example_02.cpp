@@ -36,6 +36,29 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    cout << "//#! UsingArgs\n";
+    {
+        //#! UsingArgs
+        // Автоматически вычисляемый индекс аргумента
+        // Ширину и точность (на самом деле макс ширину строки)
+        // задаём также аргументами, а не в форматной строке
+        using std::cout;
+        using namespace marty::format;
+        cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
+                             , Args().arg(10)
+                                     .arg("Very long string, does not fit into "
+                                          "20 characters")
+                                     .arg(10) // задаём ширину поля
+                                     .arg(20) // это точность (для чисел), но для строк
+                                              // это максимальная ширина поля
+                                     .arg(3.14159)
+                             );
+        //#!
+    }
+    cout << "\n\n\n" << std::flush;
+
+    //----------------------------------------------------------------------------
+
     cout << "//#! StringWidthPrecision01\n";
     {
         //#! StringWidthPrecision01
@@ -72,6 +95,13 @@ int main(int argc, char* argv[])
                                "{alname:{anamew}} aligned: |{strL20:!<{w1}.{p1}}|\n"
                                "{arname:{anamew}} aligned: |{strL20:!>{w1}.{p1}}|\n"
                                "{acname:{anamew}} aligned: |{strL20:!^{w1}.{p1}}|\n"
+                               "//---\n"
+                               "Align: indirect, Width (I): {w1}, precision (I): {p1}\n"
+                               "str: |{strL20}|\n"
+                               "{adname:{anamew}} aligned: |{strL20:!{w1}.{p1}}|\n"
+                               "{alname:{anamew}} aligned: |{strL20:!{al}{w1}.{p1}}|\n"
+                               "{arname:{anamew}} aligned: |{strL20:!{ar}{w1}.{p1}}|\n"
+                               "{acname:{anamew}} aligned: |{strL20:!{ac}{w1}.{p1}}|\n"
                                // "//---\n"
                              , Args().arg("anamew", 8)            // alignment name width
                                      .arg("adname", "Default")    // name for default alignment
@@ -80,6 +110,7 @@ int main(int argc, char* argv[])
                                      .arg("acname", "Center")     // name for center alignment
                                      //---
                                      .arg("w1", 16).arg("p1", 13) // indirect width & precision #1
+                                     .arg("al", '<').arg("ar", '>').arg("ac", '^') // indirect align
                                      //---
                                      .arg("strL20", "String larger than 20")
                                      .arg("strS19", "Str smaler than 19")
@@ -102,28 +133,6 @@ int main(int argc, char* argv[])
         cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
                              , Args().arg("url" , "http://site.com/&q=/'")
                                      .arg("text", "<Some & text>")
-                             );
-        //#!
-    }
-    cout << "\n\n\n" << std::flush;
-
-    //----------------------------------------------------------------------------
-
-    {
-        //#! UsingArgs
-        // Автоматически вычисляемый индекс аргумента
-        // Ширину и точность (на самом деле макс ширину строки)
-        // задаём также аргументами, а не в форматной строке
-        using std::cout;
-        using namespace marty::format;
-        cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
-                             , Args().arg(10)
-                                     .arg("Very long string, does not fit into "
-                                          "20 characters")
-                                     .arg(10) // задаём ширину поля
-                                     .arg(20) // это точность (для чисел), но для строк
-                                              // это максимальная ширина поля
-                                     .arg(3.14159)
                              );
         //#!
     }
