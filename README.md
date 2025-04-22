@@ -27,6 +27,7 @@
   - [Используем marty::format::Args с именоваными параметрами](#user-content-используем-martyformatargs-с-именоваными-параметрами)
   - [Используем std::vector с парами std::pair<std::string, FormatArgumentVariant>](#user-content-используем-stdvector-с-парами-stdpairstdstring-formatargumentvariant)
   - [Задаём конвертацию аргумента, также символ заполнения передаём аргументом](#user-content-задаём-конвертацию-аргумента-также-символ-заполнения-передаём-аргументом)
+  - [Используем фильтры для вывода в HTML](#user-content-используем-фильтры-для-вывода-в-html)
   - [Вывод строк с различной шириной и точностью](#user-content-вывод-строк-с-различной-шириной-и-точностью)
   - [Вывод булевых значений](#user-content-вывод-булевых-значений)
 - [API библиотеки](#user-content-api-библиотеки)
@@ -135,10 +136,7 @@
 Все примеры используют стандартный тип аргумента `marty::format::FormatArgumentVariant`.
 При необходимости пользователь может создать свой аналогичный тип и использовать его.
 
-
 ### Используем std::initializer_list
-
-**Код:**
 
 ```cpp
 using std::cout;
@@ -159,8 +157,6 @@ Integer number: 10, string: Very long string, do, Pi: 3.141590
 
 ### Используем std::vector
 
-**Код:**
-
 ```cpp
 using std::cout;
 using namespace marty::format;
@@ -180,7 +176,10 @@ Integer number: 10, string: Very long string, do, Pi: 3.141590
 
 ### Используем marty::format::Args
 
-**Код:**
+- Автоматически вычисляемый индекс аргумента
+- Ширину и точность (на самом деле макс ширину строки)
+  задаём также аргументами, а не в форматной строке
+
 
 ```cpp
 using std::cout;
@@ -204,8 +203,6 @@ Integer number: 10, string: Very long string, do, Pi: 3.141590
 
 
 ### Используем marty::format::Args с именоваными параметрами
-
-**Код:**
 
 ```cpp
 using std::cout;
@@ -234,8 +231,6 @@ Integer number: 10, string: Very long string, do, Pi: 3.141590
 аналогично использованию `marty::format::Args`,
 но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
 
-**Код:**
-
 ```cpp
 using std::cout;
 using namespace marty::format;
@@ -259,8 +254,6 @@ Integer number: 10, string: Very long string, do, Pi: 3.141590
 
 ### Задаём конвертацию аргумента, также символ заполнения передаём аргументом
 
-**Код:**
-
 ```cpp
 using std::cout;
 using namespace marty::format;
@@ -283,16 +276,31 @@ Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
 
-### Вывод строк с различной шириной и точностью
-
-При выводе используем как непосредственное задание символа выравнивания, ширины и точности, так и косвенное.
-
-**Код:**
+### Используем фильтры для вывода в HTML
 
 ```cpp
 using std::cout;
 using namespace marty::format;
+cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
+                     , Args().arg("url" , "http://site.com/&q=/'")
+                             .arg("text", "<Some & text>")
+                     );
+```
 
+**Вывод:**
+
+```txt
+<a href="http://site.com/&amp;q=/&apos;">&lt;Some &amp; text&gt;</a>
+```
+
+
+### Вывод строк с различной шириной и точностью
+
+При выводе используем как непосредственное задание символа выравнивания, ширины и точности, так и косвенное.
+
+```cpp
+using std::cout;
+using namespace marty::format;
 cout << formatMessage( //---
                        "Alignment names explicitly taken\n"
                        "Width: 20, precision: 13, explicit fill chars\n"
@@ -323,13 +331,6 @@ cout << formatMessage( //---
                        "{alname:{anamew}} aligned: |{strL20:*<{w1}.{p1}}|\n"
                        "{arname:{anamew}} aligned: |{strL20:*>{w1}.{p1}}|\n"
                        "{acname:{anamew}} aligned: |{strL20:*^{w1}.{p1}}|\n"
-                       "//---\n"
-                       "Align: indirect, Width (I): {w1}, precision (I): {p1}\n"
-                       "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:*{al}{w1}.{p1}}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:*{ar}{w1}.{p1}}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:*{ac}{w1}.{p1}}|\n"
                        // "//---\n"
                      , Args().arg("anamew", 8)            // alignment name width
                              .arg("adname", "Default")    // name for default alignment
@@ -338,7 +339,6 @@ cout << formatMessage( //---
                              .arg("acname", "Center")     // name for center alignment
                              //---
                              .arg("w1", 16).arg("p1", 13) // indirect width & precision #1
-                             .arg("al", '<').arg("ar", '>').arg("ac", '^') // indirect align
                              //---
                              .arg("strL20", "String larger than 20")
                              .arg("strS19", "Str smaler than 19")
@@ -379,21 +379,12 @@ Default  aligned: |String larger***|
 Left     aligned: |String larger***|
 Right    aligned: |***String larger|
 Center   aligned: |*String larger**|
-//---
-Align: indirect, Width (I): 16, precision (I): 13
-str: |String larger than 20|
-Default  aligned: |String larger***|
-Left     aligned: |String larger than 20.13}|
-Right    aligned: |String larger than 20.13}|
-Center   aligned: |String larger than 20.13}|
 ```
 
 
 ### Вывод булевых значений
 
 Также выводим целые числа как булевы значения.
-
-**Код:**
 
 ```cpp
 using std::cout;
@@ -453,7 +444,6 @@ Int as bool string, (using spec-Y): YES, NO, as native: -1, 0
 Int as bool string, (using spec-t): true, false, as native: -1, 0
 Int as bool string, (using spec-T): TRUE, FALSE, as native: -1, 0
 ```
-
 
 
 
@@ -1068,10 +1058,12 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 |`space`|Символ `' '` (`space`/`пробел`) для отображения числовых значений. Символ `' '` (`space`/`пробел`) для выравнивания используется по умолчанию, явное указание данного символа не требуется.|
 |`'''`|Символ группировки разрядов чисел - апостроф (`apos`).|
 |`'_'`|Символ группировки разрядов чисел - подчеркивание (`underscore`).|
-|`comma`|Символ группировки разрядов чисел запятая (`','`).|
+|`'`'`, `'`'`|Символ группировки разрядов чисел запятая (`','`).|
 |`'\\|'`|Символ последовательности фильтров  (`pipe`)  (`broken vertical bar`), используется при задании последовательности фильтров.|
 |`'%'`|Символ вывода числа в виде процентов.|
 |`'?'`|Символ вывода строки в виде `escape`-последовательности.|
+|`'#'`|Символ `альтернативного` режима.|
+|`'!'`|Символ инверсии регистра.|
 
 
 
