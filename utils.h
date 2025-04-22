@@ -571,6 +571,32 @@ const char* rawConstCharPtrFromIterator(IteratorType it)
 
 
 //----------------------------------------------------------------------------
+template < typename T
+         , std::enable_if_t< std::is_integral_v<T> and not std::is_signed_v<T>, int> = 0
+         >
+constexpr
+std::make_unsigned_t<T> toUnsignedAbs(T t)
+{
+   using UT = std::make_unsigned_t<T>;
+   return static_cast<UT>(t);
+}
+
+template < typename T
+         , std::enable_if_t< std::is_integral_v<T> and std::is_signed_v<T>, int> = 0
+         >
+constexpr
+std::make_unsigned_t<T> toUnsignedAbs(T t)
+{
+   using UT = std::make_unsigned_t<T>;
+   // return static_cast<UT>(t);
+   return (t<0) ? static_cast<UT>(static_cast<T>(-(t + static_cast<T>(1))) + static_cast<T>(1)) : (static_cast<UT>(t));
+}
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
 
 } // namespace utils
 } // namespace format

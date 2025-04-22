@@ -17,6 +17,8 @@ precisionTaken
 precisionIndirect
 grouppingTaken
 caseInvert
+internalSigned
+internalNegative
 
 fieldWidthIndirectTaken  = fieldWidthTaken | fieldWidthIndirect
 precisionIndirectTaken   = precisionTaken | precisionIndirect

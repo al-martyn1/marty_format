@@ -59,7 +59,7 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
+StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
 {
     if (formattingOptions.typeChar=='t' || formattingOptions.typeChar=='T' || formattingOptions.typeChar=='y' || formattingOptions.typeChar=='Y')
         return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (v==0 ? false : true) );
@@ -71,14 +71,19 @@ StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions,
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
+StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
 {
-    if (formattingOptions.typeChar=='t' || formattingOptions.typeChar=='T' || formattingOptions.typeChar=='y' || formattingOptions.typeChar=='Y')
-        return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (v==0 ? false : true) );
+    FormattingOptions fc = formattingOptions;
 
-    MARTY_ARG_USED(formattingOptions);
-    MARTY_ARG_USED(valSize);
-    return martyFormatSimpleConvertToString<StringType>(v);
+    fc.optionsFlags |= FormattingOptionsFlags::internalSigned;
+
+    if (v<0)
+    {
+        fc.optionsFlags |= FormattingOptionsFlags::internalNegative;
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, utils::toUnsignedAbs(v), valSize);
+    }
+
+    return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, utils::toUnsignedAbs(v), valSize);
 }
 
 //----------------------------------------------------------------------------

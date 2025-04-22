@@ -55,7 +55,7 @@ using width_t   = std::uint16_t ; // For fieldWidth and precision
 //! Параметры форматирования
 struct FormattingOptions
 {
-    constexpr static const inline arg_idx_t MaxFilters = 8u;
+    constexpr static const inline arg_idx_t MaxFilters = 4u;
 
     arg_idx_t               argIdx         = arg_idx_t(-1);
     arg_idx_t               fillIdx        = arg_idx_t(-1);
