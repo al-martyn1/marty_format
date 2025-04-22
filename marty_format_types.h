@@ -521,8 +521,10 @@ struct variant_filter_traits<std::variant<Ts...>> {
 private:
     // Поиск первого фильтра в списке типов
     template <typename... Us>
-    struct find_first_filter;
-    
+    struct find_first_filter {
+        using type = void; // Базовый случай для пустого списка
+    };
+
     template <typename U, typename... Us>
     struct find_first_filter<U, Us...> {
         using type = std::conditional_t<
@@ -530,11 +532,6 @@ private:
             U,
             typename find_first_filter<Us...>::type
         >;
-    };
-    
-    template <>
-    struct find_first_filter<> {
-        using type = void;
     };
     
     // Получение типов аргументов фильтра

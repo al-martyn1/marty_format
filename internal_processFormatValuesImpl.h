@@ -51,13 +51,46 @@ template<typename StringType> inline StringType martyFormatSimpleConvertToString
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType >
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bool b);
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType, typename IntType >
+StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
+{
+    if (formattingOptions.typeChar=='t' || formattingOptions.typeChar=='T' || formattingOptions.typeChar=='y' || formattingOptions.typeChar=='Y')
+        return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (v==0 ? false : true) );
+
+    MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(valSize);
+    return martyFormatSimpleConvertToString<StringType>(v);
+}
+
+//----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType, typename IntType >
+StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
+{
+    if (formattingOptions.typeChar=='t' || formattingOptions.typeChar=='T' || formattingOptions.typeChar=='y' || formattingOptions.typeChar=='Y')
+        return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (v==0 ? false : true) );
+
+    MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(valSize);
+    return martyFormatSimpleConvertToString<StringType>(v);
+}
+
+//----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType >
 StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str)
 {
-    // MARTY_ARG_USED(formattingOptions);
+    // Extraction
+    auto optionsFlags  = formattingOptions.optionsFlags;
+    auto typeChar      = formattingOptions.typeChar;
+    auto alignmentChar = formattingOptions.alignment;
 
-    auto optionsFlags = formattingOptions.optionsFlags;
-
-    auto typeChar = formattingOptions.typeChar;
+    // Adaption
     if (!typeChar)
         typeChar = 's';
 
@@ -67,7 +100,6 @@ StringType martyFormatValueFormatString(const FormattingOptions &formattingOptio
             throw mismatch_format_type("invalid format type for string argument");
     }
 
-    auto alignmentChar = formattingOptions.alignment;
     if (alignmentChar==0 || alignmentChar=='=')
         alignmentChar = '<';
 
@@ -152,21 +184,63 @@ StringType martyFormatValueFormatString(const FormattingOptions &formattingOptio
 }
 
 //----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
+template< typename WidthCalculator, typename StringType >
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bool b)
 {
-    MARTY_ARG_USED(formattingOptions);
-    MARTY_ARG_USED(valSize);
-    return martyFormatSimpleConvertToString<StringType>(v);
-}
+    FormattingOptions fc = formattingOptions;
 
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
-{
-    MARTY_ARG_USED(formattingOptions);
-    MARTY_ARG_USED(valSize);
-    return martyFormatSimpleConvertToString<StringType>(v);
+    try_again:
+
+    if (fc.typeChar==0 || fc.typeChar=='s' || fc.typeChar=='S' || fc.typeChar=='t' || fc.typeChar=='T' || fc.typeChar=='y' || fc.typeChar=='Y')
+    {
+        bool bBaseUpper = (fc.typeChar=='S' || fc.typeChar=='T' || fc.typeChar=='Y');
+        bool yesNo      = (fc.typeChar=='y' || fc.typeChar=='Y');
+        std::string boolStr = b ? (yesNo?"yes":"true") : (yesNo?"no":"false");
+
+        if (bBaseUpper)
+        {
+            // Верхний регистр
+            utils::toupper(boolStr);
+
+            // Если установлена опция caseInvert, то меняем регистр первому символу - получаем странное tRUE/fALSE, но кому-то может понравится
+            if ((fc.optionsFlags&FormattingOptionsFlags::caseInvert)!=0)
+                boolStr[0] = utils::tolower(boolStr[0]);
+        }
+        else
+        {
+            // Регистр уже нижний
+            // Если установлена опция caseInvert, то меняем регистр первому символу - получаем True/False
+            if ((fc.optionsFlags&FormattingOptionsFlags::caseInvert)!=0)
+                boolStr[0] = utils::toupper(boolStr[0]);
+        }
+
+        // Меняем на явный 's' для передачи в функцию форматирования строки, она не понимает 'S'/'t'/'T'/'y'/'Y'
+        fc.typeChar = 's';
+
+        if ((fc.optionsFlags&FormattingOptionsFlags::signAlterForm)!=0) // '#'
+        {
+            // AlterForm для bool задаёт формат с отображением единственного символа f/F/t/T/y/Y/n/N
+            fc.optionsFlags |= FormattingOptionsFlags::precisionTaken; // Устанавливаем флаг, что precision установлено
+            // Задаём precision в единицу, а форматирование строк само уже знает, что с этим делать
+            fc.precision = 1;
+        }
+
+        return martyFormatValueFormatString<WidthCalculator, StringType>(fc, boolStr);
+    }
+    else if (fc.typeChar=='b' || fc.typeChar=='B' || fc.typeChar=='d' || fc.typeChar=='o' || fc.typeChar=='x' || fc.typeChar=='X')
+    {
+        // Форматируем как байт
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, (unsigned char)(b?1u:0u), 1u);
+    }
+
+    if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)!=0)
+        throw mismatch_format_type("invalid format type for bool argument");
+
+    fc.typeChar = 's';
+
+    goto try_again;
+
+    //return martyFormatSimpleConvertToString<StringType>(b);
 }
 
 //----------------------------------------------------------------------------
@@ -180,19 +254,6 @@ StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOption
 //----------------------------------------------------------------------------
 
 
-
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType=std::string >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bool b)
-{
-
-// The available bool presentation types are:
-//  
-// none, s: Copies textual representation (true or false, or the locale-specific form) to the output.
-// b, B, d, o, x, X: Uses integer presentation types with the value static_cast<unsigned char>(value).
-    MARTY_ARG_USED(formattingOptions);
-    return martyFormatSimpleConvertToString<StringType>(b);
-}
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType=std::string >

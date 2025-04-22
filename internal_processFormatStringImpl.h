@@ -287,6 +287,47 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             }
 
             resetStrId();
+
+            // **conversion**
+            if (utils::isFormatConvertMarker(ch))
+            {
+                incB();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading convert option");
+    
+                if (utils::isFormatConvertChar(ch))
+                {
+                    formattingOptions.convertChar = (char)ch;
+                }
+                else
+                {
+                    optionalError("unexpected symbol reached while parsing format spec");
+                }
+    
+                incB();
+                if (b==e) // Дошли до конца
+                    return finalizeParsing("unexpected end reached while reading convert option");
+    
+                if (ch==utfch_t('|'))
+                {
+                    readFilters();
+                    if (b==e) // Дошли до конца
+                        return finalizeParsing("unexpected end reached while reading ArgId");
+                    goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
+                }
+    
+                if (ch==utfch_t('}'))
+                {
+                    incB(); doFormat(); continue;
+                }
+                
+                if (ch!=utfch_t(':'))
+                {
+                    optionalError("unexpected symbol reached while parsing format spec");
+                }
+    
+            }
+
         }
 
         if (b==e) // Дошли до конца
@@ -306,45 +347,6 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
         }
 
 
-        // **conversion**
-        if (utils::isFormatConvertMarker(ch))
-        {
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading convert option");
-
-            if (utils::isFormatConvertChar(ch))
-            {
-                formattingOptions.convertChar = (char)ch;
-            }
-            else
-            {
-                optionalError("unexpected symbol reached while parsing format spec");
-            }
-
-            incB();
-            if (b==e) // Дошли до конца
-                return finalizeParsing("unexpected end reached while reading convert option");
-
-            if (ch==utfch_t('|'))
-            {
-                readFilters();
-                if (b==e) // Дошли до конца
-                    return finalizeParsing("unexpected end reached while reading ArgId");
-                goto waitClosingBrace; // Всё, у нас тут может быть только завершение форматного поля
-            }
-
-            if (ch==utfch_t('}'))
-            {
-                incB(); doFormat(); continue;
-            }
-            
-            if (ch!=utfch_t(':'))
-            {
-                optionalError("unexpected symbol reached while parsing format spec");
-            }
-
-        }
 
     continueFormatParsing:
 

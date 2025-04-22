@@ -200,10 +200,31 @@ inline
 constexpr
 bool isFormatTypeChar(utf32_char_t ch)
 {
-    return ch==utf32_char_t('?') || ch==utf32_char_t('s') || ch==utf32_char_t('b') || ch==utf32_char_t('B') || ch==utf32_char_t('c')
-        || ch==utf32_char_t('d') || ch==utf32_char_t('o') || ch==utf32_char_t('x') || ch==utf32_char_t('X') || ch==utf32_char_t('a')
-        || ch==utf32_char_t('A') || ch==utf32_char_t('e') || ch==utf32_char_t('E') || ch==utf32_char_t('f') || ch==utf32_char_t('F')
-        || ch==utf32_char_t('g') || ch==utf32_char_t('G') || ch==utf32_char_t('n') || ch==utf32_char_t('%');
+    return ch==utf32_char_t('?')
+        || ch==utf32_char_t('s')
+        || ch==utf32_char_t('S') 
+        || ch==utf32_char_t('b')
+        || ch==utf32_char_t('B')
+        || ch==utf32_char_t('c')
+        || ch==utf32_char_t('d')
+        || ch==utf32_char_t('o')
+        || ch==utf32_char_t('x')
+        || ch==utf32_char_t('X')
+        || ch==utf32_char_t('a')
+        || ch==utf32_char_t('A')
+        || ch==utf32_char_t('e')
+        || ch==utf32_char_t('E')
+        || ch==utf32_char_t('f')
+        || ch==utf32_char_t('F')
+        || ch==utf32_char_t('g')
+        || ch==utf32_char_t('G')
+        || ch==utf32_char_t('n')
+        || ch==utf32_char_t('t')
+        || ch==utf32_char_t('T')
+        || ch==utf32_char_t('y')
+        || ch==utf32_char_t('Y')
+        || ch==utf32_char_t('%')
+    ;
 }
 
 //----------------------------------------------------------------------------
@@ -211,9 +232,15 @@ inline
 constexpr
 bool isFormatAnySpecialChar(utf32_char_t ch)
 {
-    return isFormatAlignMarker(ch) || isFormatSignMarker(ch) || isFormatAlterChar(ch) 
-        || isFormatFormatThousandSep(ch) || isFormatPeriodChar(ch) || isFormatLocaleChar(ch)
-        || isFormatDigit(ch) || isFormatTypeChar(ch)
+    return isFormatAlignMarker(ch)
+        || isFormatSignMarker(ch)
+        || isFormatConvertMarker(ch)
+        || isFormatAlterChar(ch)
+        || isFormatFormatThousandSep(ch)
+        || isFormatPeriodChar(ch)
+        || isFormatLocaleChar(ch)
+        || isFormatDigit(ch)
+        || isFormatTypeChar(ch)
         || ch==utf32_char_t('z')
         || ch==utf32_char_t('|')
         || ch==utf32_char_t('{')
@@ -246,6 +273,37 @@ std::string tolower_copy(std::string s)
     for(auto &ch : s)
     {
         ch = tolower(ch);
+    }
+
+    return s;
+}
+
+//----------------------------------------------------------------------------
+inline
+char toupper(char ch)
+{
+    if (ch>='a' && ch<='z')
+        ch = ch - 'a' + 'A';
+    return ch;
+}
+
+//----------------------------------------------------------------------------
+inline
+void toupper(std::string &s)
+{
+    for(auto &ch : s)
+    {
+        ch = toupper(ch);
+    }
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string toupper_copy(std::string s)
+{
+    for(auto &ch : s)
+    {
+        ch = toupper(ch);
     }
 
     return s;

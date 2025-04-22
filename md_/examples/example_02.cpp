@@ -36,12 +36,29 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    #if 0
+    cout << "//#! FormattingBoolTest\n";
+    {
+        //#! FormattingBoolTest
+        using std::cout;
+        using namespace marty::format;
+        cout << formatMessage( "{:!s}, {:!s}\n"
+                             , Args().arg(true)
+                                     .arg(false)
+                             );
+        //#!
+    }
+    cout << "\n\n\n" << std::flush;
+    #endif
+
+    //----------------------------------------------------------------------------
+
     cout << "//#! UsingArgs\n";
     {
-        //#! UsingArgs
         // Автоматически вычисляемый индекс аргумента
         // Ширину и точность (на самом деле макс ширину строки)
         // задаём также аргументами, а не в форматной строке
+        //#! UsingArgs
         using std::cout;
         using namespace marty::format;
         cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
@@ -91,17 +108,17 @@ int main(int argc, char* argv[])
                                "//---\n"
                                "Width (I): {w1}, precision (I): {p1}\n"
                                "str: |{strL20}|\n"
-                               "{adname:{anamew}} aligned: |{strL20:!{w1}.{p1}}|\n"
-                               "{alname:{anamew}} aligned: |{strL20:!<{w1}.{p1}}|\n"
-                               "{arname:{anamew}} aligned: |{strL20:!>{w1}.{p1}}|\n"
-                               "{acname:{anamew}} aligned: |{strL20:!^{w1}.{p1}}|\n"
+                               "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
+                               "{alname:{anamew}} aligned: |{strL20:*<{w1}.{p1}}|\n"
+                               "{arname:{anamew}} aligned: |{strL20:*>{w1}.{p1}}|\n"
+                               "{acname:{anamew}} aligned: |{strL20:*^{w1}.{p1}}|\n"
                                "//---\n"
                                "Align: indirect, Width (I): {w1}, precision (I): {p1}\n"
                                "str: |{strL20}|\n"
-                               "{adname:{anamew}} aligned: |{strL20:!{w1}.{p1}}|\n"
-                               "{alname:{anamew}} aligned: |{strL20:!{al}{w1}.{p1}}|\n"
-                               "{arname:{anamew}} aligned: |{strL20:!{ar}{w1}.{p1}}|\n"
-                               "{acname:{anamew}} aligned: |{strL20:!{ac}{w1}.{p1}}|\n"
+                               "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
+                               "{alname:{anamew}} aligned: |{strL20:*{al}{w1}.{p1}}|\n"
+                               "{arname:{anamew}} aligned: |{strL20:*{ar}{w1}.{p1}}|\n"
+                               "{acname:{anamew}} aligned: |{strL20:*{ac}{w1}.{p1}}|\n"
                                // "//---\n"
                              , Args().arg("anamew", 8)            // alignment name width
                                      .arg("adname", "Default")    // name for default alignment
@@ -123,10 +140,50 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    cout << "//#! FormattingBool\n";
+    {
+        // Примеры форматирования bool
+        //#! FormattingBool
+        using std::cout;
+        using namespace marty::format;
+        cout << formatMessage( "Bool as string, true : {bt:s}, false: {bf:s}\n"
+                               "Bool as string, upper case: {bt:S}, {bf:S}\n"
+                               "Bool as string, mixed case (first char upper): {bt:!s}, {bf:!}\n"
+                               "Bool as string, mixed case (first char lower): {bt:!S}, {bf:!S}\n"
+                               "Bool as string, single char (using precision): {bt:.1S}, {bf:.1S}\n"
+                               "Bool as string, (using spec-t): {bt:t}, {bf:t}\n"
+                               "Bool as string, (using spec-T): {bt:T}, {bf:T}\n"
+                               "Bool as string, (using spec-y): {bt:y}, {bf:y}\n"
+                               "Bool as string, (using spec-Y): {bt:Y}, {bf:Y}\n"
+                               "Bool as string, (using spec-t#): {bt:#t}, {bf:#t}\n"
+                               "Bool as string, (using spec-T#): {bt:#T}, {bf:#T}\n"
+                               "Bool as string, (using spec-y#): {bt:#y}, {bf:#y}\n"
+                               "Bool as string, (using spec-Y#): {bt:#Y}, {bf:#Y}\n"
+                               "Unsigned as bool string, (using spec-y#): {ut:#y}, {uf:#y}, as native: {ut:d}, {uf:d}\n"
+                               "Unsigned as bool string, (using spec-Y#): {ut:#Y}, {uf:#Y}, as native: {ut:d}, {uf:d}\n"
+                               "Unsigned as bool string, (using spec-t#): {ut:#t}, {uf:#t}, as native: {ut:d}, {uf:d}\n"
+                               "Unsigned as bool string, (using spec-T#): {ut:#T}, {uf:#T}, as native: {ut:d}, {uf:d}\n"
+                               "Int as bool string, (using spec-y): {st:y}, {sf:y}, as native: {st:d}, {sf:d}\n"
+                               "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
+                               "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
+                               "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
+                             , Args().arg("bt", true)
+                                     .arg("bf", false)
+                                     .arg("ut", 1u)
+                                     .arg("uf", 0u)
+                                     .arg("st", -1)
+                                     .arg("sf",  0)
+                             );
+        //#!
+    }
+    cout << "\n\n\n" << std::flush;
+
+    //----------------------------------------------------------------------------
+
     cout << "//#! UsingHtmlFilters\n";
     {
-        //#! UsingHtmlFilters
         // Используем стандартные встроенные фильтры для вывода в HTML
+        //#! UsingHtmlFilters
         using std::cout;
         using namespace marty::format;
 
@@ -140,10 +197,11 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    cout << "//#! UsingInitializerList\n";
     {
-        //#! UsingInitializerList
         // Автоматически вычисляемый индекс аргумента, используем std::initializer_list
         // Перевод строки отдельно выводим
+        //#! UsingInitializerList
         using std::cout;
         using namespace marty::format;
         cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
@@ -157,10 +215,11 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    cout << "//#! UsingFlatVector\n";
     {
-        //#! UsingFlatVector
         // Автоматически вычисляемый индекс аргумента, используем std::vector
         // Перевод строки отдельно выводим
+        //#! UsingFlatVector
         using std::cout;
         using namespace marty::format;
         auto argsVec = std::vector<FormatArgumentVariant>{ 10, "Very long string, "
@@ -174,10 +233,11 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    cout << "//#! UsingNamedArgs\n";
     {
-        //#! UsingNamedArgs
         // Используем именованные аргументы,
         // перемешали порядок аргументов, по сравнению с предыдущим примером
+        //#! UsingNamedArgs
         using std::cout;
         using namespace marty::format;
         cout << formatMessage(
@@ -195,11 +255,12 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    cout << "//#! UsingVectorOfNameValuePairs\n";
     {
-        //#! UsingVectorOfNameValuePairs
         // Используем std::vector вместо marty::format::Args
         // Тут поиск по имени не такой эффективный, простым перебором, но тоже работает
         // Готовим вектор заранее
+        //#! UsingVectorOfNameValuePairs
         using std::cout;
         using namespace marty::format;
         auto argsVec = std::vector< std::pair<std::string, FormatArgumentVariant> >
@@ -217,11 +278,12 @@ int main(int argc, char* argv[])
 
     //----------------------------------------------------------------------------
 
+    cout << "//#! UsingFillRefAndConvert\n";
     {
-        //#! UsingFillRefAndConvert
         // Используем именованные аргументы
         // Задаём конвертацию значения (но в текущий момент она игнорируется)
         // Символ заполнения передаём аргументом
+        //#! UsingFillRefAndConvert
         using std::cout;
         using namespace marty::format;
         cout << formatMessage(
