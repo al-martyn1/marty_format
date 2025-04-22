@@ -21,6 +21,14 @@
 - [Зависимости](#user-content-зависимости)
 - [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
 - [Примеры использования](#user-content-примеры-использования)
+  - [Используем std::initializer_list](#user-content-используем-stdinitializer_list)
+  - [Используем std::vector](#user-content-используем-stdvector)
+  - [Используем marty::format::Args](#user-content-используем-martyformatargs)
+  - [Используем marty::format::Args с именоваными параметрами](#user-content-используем-martyformatargs-с-именоваными-параметрами)
+  - [Используем std::vector с парами std::pair<std::string, FormatArgumentVariant>](#user-content-используем-stdvector-с-парами-stdpairstdstring-formatargumentvariant)
+  - [Задаём конвертацию аргумента, также символ заполнения передаём аргументом](#user-content-задаём-конвертацию-аргумента-также-символ-заполнения-передаём-аргументом)
+  - [Вывод строк с различной шириной и точностью](#user-content-вывод-строк-с-различной-шириной-и-точностью)
+  - [Вывод булевых значений](#user-content-вывод-булевых-значений)
 - [API библиотеки](#user-content-api-библиотеки)
   - [Обобщённый тип фильтра BasicFormatValueFilter](#user-content-обобщённый-тип-фильтра-basicformatvaluefilter)
     - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#user-content-пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
@@ -124,7 +132,55 @@
 
 ## Примеры использования
 
-Используем `marty::format::Args`
+Все примеры используют стандартный тип аргумента `marty::format::FormatArgumentVariant`.
+При необходимости пользователь может создать свой аналогичный тип и использовать его.
+
+
+### Используем std::initializer_list
+
+**Код:**
+
+```cpp
+using std::cout;
+using namespace marty::format;
+cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
+                     , { 10, "Very long string, does not fit into 20 characters"
+                       , 10, 20, 3.14159
+                       }
+                     ) << "\n";
+```
+
+**Вывод:**
+
+```txt
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+```
+
+
+### Используем std::vector
+
+**Код:**
+
+```cpp
+using std::cout;
+using namespace marty::format;
+auto argsVec = std::vector<FormatArgumentVariant>{ 10, "Very long string, "
+                      "does not fit into 20 characters", 10, 20, 3.14159 };
+cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
+                     , argsVec
+                     ) << "\n";
+```
+
+**Вывод:**
+
+```txt
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+```
+
+
+### Используем marty::format::Args
+
+**Код:**
 
 ```cpp
 using std::cout;
@@ -140,34 +196,16 @@ cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
                      );
 ```
 
+**Вывод:**
 
-Используем `std::initializer_list<marty::format::FormatArgumentVariant>`
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
-                     , { 10, "Very long string, does not fit into 20 characters"
-                       , 10, 20, 3.14159
-                       }
-                     ) << "\n";
+```txt
+Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
 
-Используем `std::vector<marty::format::FormatArgumentVariant>`
+### Используем marty::format::Args с именоваными параметрами
 
-```cpp
-using std::cout;
-using namespace marty::format;
-auto argsVec = std::vector<FormatArgumentVariant>{ 10, "Very long string, "
-                      "does not fit into 20 characters", 10, 20, 3.14159 };
-cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
-                     , argsVec
-                     ) << "\n";
-```
-
-
-Используем `marty::format::Args` с именоваными параметрами
+**Код:**
 
 ```cpp
 using std::cout;
@@ -183,9 +221,20 @@ cout << formatMessage(
      );
 ```
 
+**Вывод:**
 
-Используем `std::vector< std::pair<std::string, marty::format::FormatArgumentVariant> >` - аналогично использованию `marty::format::Args`,
+```txt
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+```
+
+
+### Используем std::vector с парами std::pair<std::string, FormatArgumentVariant>
+
+Использование вектора с парами, шде первый элемент строка, а второй - `marty::format::FormatArgumentVariant` 
+аналогично использованию `marty::format::Args`,
 но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
+
+**Код:**
 
 ```cpp
 using std::cout;
@@ -201,7 +250,16 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
                       "Pi: {Pi:f}\n", argsVec);
 ```
 
-Задаём конвертацию аргумента, также символ заполнения передаём аргументом:
+**Вывод:**
+
+```txt
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+```
+
+
+### Задаём конвертацию аргумента, также символ заполнения передаём аргументом
+
+**Код:**
 
 ```cpp
 using std::cout;
@@ -217,6 +275,185 @@ cout << formatMessage(
              .arg("int", 10)
      );
 ```
+
+**Вывод:**
+
+```txt
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+```
+
+
+### Вывод строк с различной шириной и точностью
+
+При выводе используем как непосредственное задание символа выравнивания, ширины и точности, так и косвенное.
+
+**Код:**
+
+```cpp
+using std::cout;
+using namespace marty::format;
+
+cout << formatMessage( //---
+                       "Alignment names explicitly taken\n"
+                       "Width: 20, precision: 13, explicit fill chars\n"
+                       "str: |{strL20}|\n"
+                       "Default  aligned: |{strL20:*20.13}|\n"
+                       "Left     aligned: |{strL20:*<20.13}|\n"
+                       "Right    aligned: |{strL20:*>20.13}|\n"
+                       "Center   aligned: |{strL20:*^20.13}|\n"
+                       "//---\n"
+                       "Alignment names indirect taken\n"
+                       "Width: 20, precision: 13, explicit fill chars\n"
+                       "str: |{strL20}|\n"
+                       "{adname:{anamew}} aligned: |{strL20:*20.13}|\n"
+                       "{alname:{anamew}} aligned: |{strL20:*<20.13}|\n"
+                       "{arname:{anamew}} aligned: |{strL20:*>20.13}|\n"
+                       "{acname:{anamew}} aligned: |{strL20:*^20.13}|\n"
+                       "//---\n"
+                       "Width: 18, precision: 9, default fill char\n"
+                       "str: |{strL20}|\n"
+                       "{adname:{anamew}} aligned: |{strL20:20.9}|\n"
+                       "{alname:{anamew}} aligned: |{strL20:<20.9}|\n"
+                       "{arname:{anamew}} aligned: |{strL20:>20.9}|\n"
+                       "{acname:{anamew}} aligned: |{strL20:^20.9}|\n"
+                       "//---\n"
+                       "Width (I): {w1}, precision (I): {p1}\n"
+                       "str: |{strL20}|\n"
+                       "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
+                       "{alname:{anamew}} aligned: |{strL20:*<{w1}.{p1}}|\n"
+                       "{arname:{anamew}} aligned: |{strL20:*>{w1}.{p1}}|\n"
+                       "{acname:{anamew}} aligned: |{strL20:*^{w1}.{p1}}|\n"
+                       "//---\n"
+                       "Align: indirect, Width (I): {w1}, precision (I): {p1}\n"
+                       "str: |{strL20}|\n"
+                       "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
+                       "{alname:{anamew}} aligned: |{strL20:*{al}{w1}.{p1}}|\n"
+                       "{arname:{anamew}} aligned: |{strL20:*{ar}{w1}.{p1}}|\n"
+                       "{acname:{anamew}} aligned: |{strL20:*{ac}{w1}.{p1}}|\n"
+                       // "//---\n"
+                     , Args().arg("anamew", 8)            // alignment name width
+                             .arg("adname", "Default")    // name for default alignment
+                             .arg("alname", "Left")       // name for left alignment
+                             .arg("arname", "Right")      // name for right alignment
+                             .arg("acname", "Center")     // name for center alignment
+                             //---
+                             .arg("w1", 16).arg("p1", 13) // indirect width & precision #1
+                             .arg("al", '<').arg("ar", '>').arg("ac", '^') // indirect align
+                             //---
+                             .arg("strL20", "String larger than 20")
+                             .arg("strS19", "Str smaler than 19")
+                             .arg("str<4" , "S<4")
+                             .arg("str>5" , "Str > 5")
+                     );
+```
+
+**Вывод:**
+
+```txt
+Alignment names explicitly taken
+Width: 20, precision: 13, explicit fill chars
+str: |String larger than 20|
+Default  aligned: |String larger*******|
+Left     aligned: |String larger*******|
+Right    aligned: |*******String larger|
+Center   aligned: |***String larger****|
+//---
+Alignment names indirect taken
+Width: 20, precision: 13, explicit fill chars
+str: |String larger than 20|
+Default  aligned: |String larger*******|
+Left     aligned: |String larger*******|
+Right    aligned: |*******String larger|
+Center   aligned: |***String larger****|
+//---
+Width: 18, precision: 9, default fill char
+str: |String larger than 20|
+Default  aligned: |String la           |
+Left     aligned: |String la           |
+Right    aligned: |           String la|
+Center   aligned: |     String la      |
+//---
+Width (I): 16, precision (I): 13
+str: |String larger than 20|
+Default  aligned: |String larger***|
+Left     aligned: |String larger***|
+Right    aligned: |***String larger|
+Center   aligned: |*String larger**|
+//---
+Align: indirect, Width (I): 16, precision (I): 13
+str: |String larger than 20|
+Default  aligned: |String larger***|
+Left     aligned: |String larger than 20.13}|
+Right    aligned: |String larger than 20.13}|
+Center   aligned: |String larger than 20.13}|
+```
+
+
+### Вывод булевых значений
+
+Также выводим целые числа как булевы значения.
+
+**Код:**
+
+```cpp
+using std::cout;
+using namespace marty::format;
+cout << formatMessage( "Bool as string, true : {bt:s}, false: {bf:s}\n"
+                       "Bool as string, upper case: {bt:S}, {bf:S}\n"
+                       "Bool as string, mixed case (first char upper): {bt:!s}, {bf:!}\n"
+                       "Bool as string, mixed case (first char lower): {bt:!S}, {bf:!S}\n"
+                       "Bool as string, single char (using precision): {bt:.1S}, {bf:.1S}\n"
+                       "Bool as string, (using spec-t): {bt:t}, {bf:t}\n"
+                       "Bool as string, (using spec-T): {bt:T}, {bf:T}\n"
+                       "Bool as string, (using spec-y): {bt:y}, {bf:y}\n"
+                       "Bool as string, (using spec-Y): {bt:Y}, {bf:Y}\n"
+                       "Bool as string, (using spec-t#): {bt:#t}, {bf:#t}\n"
+                       "Bool as string, (using spec-T#): {bt:#T}, {bf:#T}\n"
+                       "Bool as string, (using spec-y#): {bt:#y}, {bf:#y}\n"
+                       "Bool as string, (using spec-Y#): {bt:#Y}, {bf:#Y}\n"
+                       "Unsigned as bool string, (using spec-y#): {ut:#y}, {uf:#y}, as native: {ut:d}, {uf:d}\n"
+                       "Unsigned as bool string, (using spec-Y#): {ut:#Y}, {uf:#Y}, as native: {ut:d}, {uf:d}\n"
+                       "Unsigned as bool string, (using spec-t#): {ut:#t}, {uf:#t}, as native: {ut:d}, {uf:d}\n"
+                       "Unsigned as bool string, (using spec-T#): {ut:#T}, {uf:#T}, as native: {ut:d}, {uf:d}\n"
+                       "Int as bool string, (using spec-y): {st:y}, {sf:y}, as native: {st:d}, {sf:d}\n"
+                       "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
+                       "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
+                       "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
+                     , Args().arg("bt", true)
+                             .arg("bf", false)
+                             .arg("ut", 1u)
+                             .arg("uf", 0u)
+                             .arg("st", -1)
+                             .arg("sf",  0)
+                     );
+```
+
+**Вывод:**
+
+```txt
+Bool as string, true : true, false: false
+Bool as string, upper case: TRUE, FALSE
+Bool as string, mixed case (first char upper): True, False
+Bool as string, mixed case (first char lower): tRUE, fALSE
+Bool as string, single char (using precision): T, F
+Bool as string, (using spec-t): true, false
+Bool as string, (using spec-T): TRUE, FALSE
+Bool as string, (using spec-y): yes, no
+Bool as string, (using spec-Y): YES, NO
+Bool as string, (using spec-t#): t, f
+Bool as string, (using spec-T#): T, F
+Bool as string, (using spec-y#): y, n
+Bool as string, (using spec-Y#): Y, N
+Unsigned as bool string, (using spec-y#): y, n, as native: 1, 0
+Unsigned as bool string, (using spec-Y#): Y, N, as native: 1, 0
+Unsigned as bool string, (using spec-t#): t, f, as native: 1, 0
+Unsigned as bool string, (using spec-T#): T, F, as native: 1, 0
+Int as bool string, (using spec-y): yes, no, as native: -1, 0
+Int as bool string, (using spec-Y): YES, NO, as native: -1, 0
+Int as bool string, (using spec-t): true, false, as native: -1, 0
+Int as bool string, (using spec-T): TRUE, FALSE, as native: -1, 0
+```
+
 
 
 

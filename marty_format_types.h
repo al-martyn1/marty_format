@@ -22,6 +22,7 @@
 #include <tuple>
 #include <variant>
 #include <vector>
+#include <memory>
 
 //
 #include "undef_min_max.h"
@@ -295,6 +296,34 @@ struct StdFilterFactory
 
 }; // struct StdFilterFactory
 //#!
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+#if 0
+struct ConvertibleToStringImplBase
+{
+    virtual ~ConvertibleToStringImplBase() {}
+    virtual std::string convertToString() const = 0;
+
+}; // struct ConvertibleToStringImplBase
+
+//----------------------------------------------------------------------------
+
+template <typename T>
+struct ConvertibleToStringImpl : ConvertibleToStringImplBase
+{
+    T func;
+    explicit ConvertibleToStringImpl(T f) : func(std::move(f)) {}
+    void operator()() const override { func(); }
+    std::unique_ptr<CallableBase> clone() const override {
+        return std::make_unique<CallableImpl>(*this);
+    }
+};
+#endif
+
 
 //----------------------------------------------------------------------------
 

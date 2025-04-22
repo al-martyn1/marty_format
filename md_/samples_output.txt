@@ -1,0 +1,100 @@
+//#! UsingArgs
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+//#!
+
+
+//#! StringWidthPrecision01
+Alignment names explicitly taken
+Width: 20, precision: 13, explicit fill chars
+str: |String larger than 20|
+Default  aligned: |String larger*******|
+Left     aligned: |String larger*******|
+Right    aligned: |*******String larger|
+Center   aligned: |***String larger****|
+//---
+Alignment names indirect taken
+Width: 20, precision: 13, explicit fill chars
+str: |String larger than 20|
+Default  aligned: |String larger*******|
+Left     aligned: |String larger*******|
+Right    aligned: |*******String larger|
+Center   aligned: |***String larger****|
+//---
+Width: 18, precision: 9, default fill char
+str: |String larger than 20|
+Default  aligned: |String la           |
+Left     aligned: |String la           |
+Right    aligned: |           String la|
+Center   aligned: |     String la      |
+//---
+Width (I): 16, precision (I): 13
+str: |String larger than 20|
+Default  aligned: |String larger***|
+Left     aligned: |String larger***|
+Right    aligned: |***String larger|
+Center   aligned: |*String larger**|
+//---
+Align: indirect, Width (I): 16, precision (I): 13
+str: |String larger than 20|
+Default  aligned: |String larger***|
+Left     aligned: |String larger than 20.13}|
+Right    aligned: |String larger than 20.13}|
+Center   aligned: |String larger than 20.13}|
+//#!
+
+
+//#! FormattingBool
+Bool as string, true : true, false: false
+Bool as string, upper case: TRUE, FALSE
+Bool as string, mixed case (first char upper): True, False
+Bool as string, mixed case (first char lower): tRUE, fALSE
+Bool as string, single char (using precision): T, F
+Bool as string, (using spec-t): true, false
+Bool as string, (using spec-T): TRUE, FALSE
+Bool as string, (using spec-y): yes, no
+Bool as string, (using spec-Y): YES, NO
+Bool as string, (using spec-t#): t, f
+Bool as string, (using spec-T#): T, F
+Bool as string, (using spec-y#): y, n
+Bool as string, (using spec-Y#): Y, N
+Unsigned as bool string, (using spec-y#): y, n, as native: 1, 0
+Unsigned as bool string, (using spec-Y#): Y, N, as native: 1, 0
+Unsigned as bool string, (using spec-t#): t, f, as native: 1, 0
+Unsigned as bool string, (using spec-T#): T, F, as native: 1, 0
+Int as bool string, (using spec-y): yes, no, as native: -1, 0
+Int as bool string, (using spec-Y): YES, NO, as native: -1, 0
+Int as bool string, (using spec-t): true, false, as native: -1, 0
+Int as bool string, (using spec-T): TRUE, FALSE, as native: -1, 0
+//#!
+
+
+//#! UsingHtmlFilters
+<a href="http://site.com/&amp;q=/&apos;">&lt;Some &amp; text&gt;</a>
+//#!
+
+
+//#! UsingInitializerList
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+//#!
+
+
+//#! UsingFlatVector
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+//#!
+
+
+//#! UsingNamedArgs
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+//#!
+
+
+//#! UsingVectorOfNameValuePairs
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+//#!
+
+
+//#! UsingFillRefAndConvert
+Integer number: 10, string: Very long string, do, Pi: 3.141590
+//#!
+
+
