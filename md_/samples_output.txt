@@ -50,14 +50,14 @@ Bool as string, (using spec-t#): t, f
 Bool as string, (using spec-T#): T, F
 Bool as string, (using spec-y#): y, n
 Bool as string, (using spec-Y#): Y, N
-Unsigned as bool string, (using spec-y#): y, n, as native: 1, 0
-Unsigned as bool string, (using spec-Y#): Y, N, as native: 1, 0
-Unsigned as bool string, (using spec-t#): t, f, as native: 1, 0
-Unsigned as bool string, (using spec-T#): T, F, as native: 1, 0
-Int as bool string, (using spec-y): yes, no, as native: -1, 0
-Int as bool string, (using spec-Y): YES, NO, as native: -1, 0
-Int as bool string, (using spec-t): true, false, as native: -1, 0
-Int as bool string, (using spec-T): TRUE, FALSE, as native: -1, 0
+Unsigned as bool string, (using spec-y#): y, n, as native: 42, 0
+Unsigned as bool string, (using spec-Y#): Y, N, as native: 42, 0
+Unsigned as bool string, (using spec-t#): t, f, as native: 42, 0
+Unsigned as bool string, (using spec-T#): T, F, as native: 42, 0
+Int as bool string, (using spec-y): yes, no, as native: 42, 0
+Int as bool string, (using spec-Y): YES, NO, as native: 42, 0
+Int as bool string, (using spec-t): true, false, as native: 42, 0
+Int as bool string, (using spec-T): TRUE, FALSE, as native: 42, 0
 //#!
 
 

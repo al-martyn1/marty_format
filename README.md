@@ -410,12 +410,9 @@ cout << formatMessage( "Bool as string, true : {bt:s}, false: {bf:s}\n"
                        "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
                        "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
                        "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
-                     , Args().arg("bt", true)
-                             .arg("bf", false)
-                             .arg("ut", 1u)
-                             .arg("uf", 0u)
-                             .arg("st", -1)
-                             .arg("sf",  0)
+                     , Args().arg("bt", true).arg("bf", false)
+                             .arg("ut", 42u) .arg("uf", 0u)
+                             .arg("st", -42) .arg("sf", 0)
                      );
 ```
 
@@ -435,14 +432,14 @@ Bool as string, (using spec-t#): t, f
 Bool as string, (using spec-T#): T, F
 Bool as string, (using spec-y#): y, n
 Bool as string, (using spec-Y#): Y, N
-Unsigned as bool string, (using spec-y#): y, n, as native: 1, 0
-Unsigned as bool string, (using spec-Y#): Y, N, as native: 1, 0
-Unsigned as bool string, (using spec-t#): t, f, as native: 1, 0
-Unsigned as bool string, (using spec-T#): T, F, as native: 1, 0
-Int as bool string, (using spec-y): yes, no, as native: -1, 0
-Int as bool string, (using spec-Y): YES, NO, as native: -1, 0
-Int as bool string, (using spec-t): true, false, as native: -1, 0
-Int as bool string, (using spec-T): TRUE, FALSE, as native: -1, 0
+Unsigned as bool string, (using spec-y#): y, n, as native: 42, 0
+Unsigned as bool string, (using spec-Y#): Y, N, as native: 42, 0
+Unsigned as bool string, (using spec-t#): t, f, as native: 42, 0
+Unsigned as bool string, (using spec-T#): T, F, as native: 42, 0
+Int as bool string, (using spec-y): yes, no, as native: 42, 0
+Int as bool string, (using spec-Y): YES, NO, as native: 42, 0
+Int as bool string, (using spec-t): true, false, as native: 42, 0
+Int as bool string, (using spec-T): TRUE, FALSE, as native: 42, 0
 ```
 
 

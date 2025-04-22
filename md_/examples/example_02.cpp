@@ -181,12 +181,9 @@ int main(int argc, char* argv[])
                                "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
                                "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
                                "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
-                             , Args().arg("bt", true)
-                                     .arg("bf", false)
-                                     .arg("ut", 1u)
-                                     .arg("uf", 0u)
-                                     .arg("st", -1)
-                                     .arg("sf",  0)
+                             , Args().arg("bt", true).arg("bf", false)
+                                     .arg("ut", 42u) .arg("uf", 0u)
+                                     .arg("st", -42) .arg("sf", 0)
                              );
         //#!
     }
