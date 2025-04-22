@@ -18,6 +18,29 @@ int main(int argc, char* argv[])
     (void)(argv);
 
     #if 0
+    // Indirect align not supported
+    cout << "//#! StringWidthPrecisionTest01\n";
+    {
+        //#! StringWidthPrecisionTest01
+        using std::cout;
+        using namespace marty::format;
+        cout << formatMessage( //---
+                               "{s1:*{al}{w1}.{p1}}\n"
+                               "{s1:*{ar}{w1}.{p1}}\n"
+                               "{s1:*{ac}{w1}.{p1}}\n"
+                               // "//---\n"
+                             , Args()//---
+                                     .arg("w1", 16).arg("p1", 13) // indirect width & precision #1
+                                     .arg("al", '<').arg("ar", '>').arg("ac", '^') // indirect align
+                                     //---
+                                     .arg("s1", "String larger than 20")
+                             );
+        //#!
+    }
+    cout << "//#!\n\n\n" << std::flush;
+    #endif
+
+    #if 0
     {
         using std::cout;
         using namespace marty::format;
@@ -81,7 +104,6 @@ int main(int argc, char* argv[])
         //#! StringWidthPrecision01
         using std::cout;
         using namespace marty::format;
-
         cout << formatMessage( //---
                                "Alignment names explicitly taken\n"
                                "Width: 20, precision: 13, explicit fill chars\n"
@@ -112,13 +134,6 @@ int main(int argc, char* argv[])
                                "{alname:{anamew}} aligned: |{strL20:*<{w1}.{p1}}|\n"
                                "{arname:{anamew}} aligned: |{strL20:*>{w1}.{p1}}|\n"
                                "{acname:{anamew}} aligned: |{strL20:*^{w1}.{p1}}|\n"
-                               "//---\n"
-                               "Align: indirect, Width (I): {w1}, precision (I): {p1}\n"
-                               "str: |{strL20}|\n"
-                               "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
-                               "{alname:{anamew}} aligned: |{strL20:*{al}{w1}.{p1}}|\n"
-                               "{arname:{anamew}} aligned: |{strL20:*{ar}{w1}.{p1}}|\n"
-                               "{acname:{anamew}} aligned: |{strL20:*{ac}{w1}.{p1}}|\n"
                                // "//---\n"
                              , Args().arg("anamew", 8)            // alignment name width
                                      .arg("adname", "Default")    // name for default alignment
@@ -127,7 +142,6 @@ int main(int argc, char* argv[])
                                      .arg("acname", "Center")     // name for center alignment
                                      //---
                                      .arg("w1", 16).arg("p1", 13) // indirect width & precision #1
-                                     .arg("al", '<').arg("ar", '>').arg("ac", '^') // indirect align
                                      //---
                                      .arg("strL20", "String larger than 20")
                                      .arg("strS19", "Str smaler than 19")
@@ -186,7 +200,6 @@ int main(int argc, char* argv[])
         //#! UsingHtmlFilters
         using std::cout;
         using namespace marty::format;
-
         cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
                              , Args().arg("url" , "http://site.com/&q=/'")
                                      .arg("text", "<Some & text>")
