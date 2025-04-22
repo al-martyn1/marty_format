@@ -154,7 +154,7 @@ cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
 
 **Вывод:**
 
-```txt
+```
 Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
@@ -173,7 +173,7 @@ cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
 
 **Вывод:**
 
-```txt
+```
 Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
@@ -201,7 +201,7 @@ cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
 
 **Вывод:**
 
-```txt
+```
 Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
@@ -224,7 +224,7 @@ cout << formatMessage(
 
 **Вывод:**
 
-```txt
+```
 Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
@@ -251,7 +251,7 @@ cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s},
 
 **Вывод:**
 
-```txt
+```
 Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
@@ -275,7 +275,7 @@ cout << formatMessage(
 
 **Вывод:**
 
-```txt
+```
 Integer number: 10, string: Very long string, do, Pi: 3.141590
 ```
 
@@ -293,7 +293,7 @@ cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
 
 **Вывод:**
 
-```txt
+```
 <a href="http://site.com/&amp;q=/&apos;">&lt;Some &amp; text&gt;</a>
 ```
 
@@ -353,7 +353,7 @@ cout << formatMessage( //---
 
 **Вывод:**
 
-```txt
+```
 Alignment names explicitly taken
 Width: 20, precision: 13, explicit fill chars
 str: |String larger than 20|
@@ -422,7 +422,7 @@ cout << formatMessage( "Bool as string, true : {bt:s}, false: {bf:s}\n"
 
 **Вывод:**
 
-```txt
+```
 Bool as string, true : true, false: false
 Bool as string, upper case: TRUE, FALSE
 Bool as string, mixed case (first char upper): True, False
