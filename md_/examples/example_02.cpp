@@ -116,10 +116,10 @@ int main(int argc, char* argv[])
                                "Alignment names indirect taken\n"
                                "Width: 20, precision: 13, explicit fill chars\n"
                                "str: |{strL20}|\n"
-                               "{adname:{anamew}} aligned: |{strL20:*20.13}|\n"
-                               "{alname:{anamew}} aligned: |{strL20:*<20.13}|\n"
-                               "{arname:{anamew}} aligned: |{strL20:*>20.13}|\n"
-                               "{acname:{anamew}} aligned: |{strL20:*^20.13}|\n"
+                               "{adname:{anamew}} aligned: |{strL20:$20.13}|\n"
+                               "{alname:{anamew}} aligned: |{strL20:$<20.13}|\n"
+                               "{arname:{anamew}} aligned: |{strL20:$>20.13}|\n"
+                               "{acname:{anamew}} aligned: |{strL20:$^20.13}|\n"
                                "//---\n"
                                "Width: 18, precision: 9, default fill char\n"
                                "str: |{strL20}|\n"
@@ -130,10 +130,10 @@ int main(int argc, char* argv[])
                                "//---\n"
                                "Width (I): {w1}, precision (I): {p1}\n"
                                "str: |{strL20}|\n"
-                               "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
-                               "{alname:{anamew}} aligned: |{strL20:*<{w1}.{p1}}|\n"
-                               "{arname:{anamew}} aligned: |{strL20:*>{w1}.{p1}}|\n"
-                               "{acname:{anamew}} aligned: |{strL20:*^{w1}.{p1}}|\n"
+                               "{adname:{anamew}} aligned: |{strL20:@{w1}.{p1}}|\n"
+                               "{alname:{anamew}} aligned: |{strL20:@<{w1}.{p1}}|\n"
+                               "{arname:{anamew}} aligned: |{strL20:@>{w1}.{p1}}|\n"
+                               "{acname:{anamew}} aligned: |{strL20:@^{w1}.{p1}}|\n"
                                // "//---\n"
                              , Args().arg("anamew", 8)            // alignment name width
                                      .arg("adname", "Default")    // name for default alignment
@@ -145,8 +145,8 @@ int main(int argc, char* argv[])
                                      //---
                                      .arg("strL20", "String larger than 20")
                                      .arg("strS19", "Str smaler than 19")
-                                     .arg("str<4" , "S<4")
-                                     .arg("str>5" , "Str > 5")
+                                     .arg("strS4" , "S<4")
+                                     .arg("strL5" , "Str > 5")
                              );
         //#!
     }

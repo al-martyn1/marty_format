@@ -8,7 +8,7 @@
 
 Фильтрация производится после форматирования поля.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format_types.h#BasicFormatValueFilter
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicFormatValueFilter
 
 Параметры шаблона:
 
@@ -36,7 +36,7 @@
 
 Специализация базового фильтра `BasicFormatValueFilter` для UTF-8 строк: 
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format_types.h#FormatValueFilter
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#FormatValueFilter
 
 
 ## Стандартные фильтры
@@ -58,14 +58,12 @@
 
 </arg-list>
 
-**Примечание**. В текущий момент стандартные фильтры не реализованы (**NOT_IMPLEMENTED**).
-
 
 ## Мейкер стандартных фильтров - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его имени.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilter
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilter
 
 Допустимые имена фильтров:
 
@@ -101,7 +99,7 @@
 в базовой реализации функции форматирования `formatMessageImpl` и в стандартных 
 реализациях `formatMessage`.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format_types.h#StdFilterFactory
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#StdFilterFactory
 
 
 ## marty::format::FormatArgumentVariant - Variant-тип аргумента
@@ -111,7 +109,7 @@
 Это стандартный тип `marty::format::FormatArgumentVariant`. Пользователь библиотеки может определить
 свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format_types.h#FormatArgumentVariant
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#FormatArgumentVariant
 
 
 ## marty::format::BasicArgs
@@ -142,7 +140,7 @@
 Контейнер типа `marty::format::BasicArgs` предоставляет как метод `find` по имени, так и метод 
 `find_by_pos(std::size_t)` для "поиска" по индексу.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#BasicArgs
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs
 
 
 ### Конструктор marty::format::BasicArgs
@@ -153,7 +151,7 @@
 Игнорирование регистра именованных аргументов производится путём приведения имён
 к нижнему регистру, и работает только для имён, содержащих символы из базовой таблицы ASCII.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#BasicArgsCtor
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgsCtor
 
 
 ### Методы marty::format::BasicArgs::arg
@@ -162,23 +160,23 @@
 и возвращает ссылку на объект `marty::format::BasicArgs` для того, чтобы можно было делать цепочки вызовов.
 
 Добавляет безымянный аргумент:
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_T
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_T
 
 Добавляет именованный аргумент, имя задаётся параметром типа `const char*`:
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_CharK_T
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_CharK_T
 
 Добавляет именованный аргумент, имя задаётся параметром типа ключа в `map`, хранящей индексы именованных аргументов:
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_KeyK_T
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_KeyK_T
 
 Добавляет безымянный аргумент типа int со значением `0`:
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_empty
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_empty
 
 
 ## marty::format::Args
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#Args
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#Args
 
 #!insert{fail,doc,raise=-1} FormattingFlags.md_
 
@@ -189,7 +187,7 @@
 Пользователь библиотеки может создать свой собственный variant-тип аргумента, добавив
 свои собственные типы, и, используя данную функцию, сделать свою кастомизированную функцию форматирования.
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#BasicImpl
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicImpl
 
 #/*
 template< typename StringType      = std::string
@@ -205,14 +203,14 @@ StringType formatMessageImpl( const StringType &fmt
 
 ## marty::format::formatMessage - аргументы передаются в generic-контейнере
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#formatMessageGeneric
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#formatMessageGenericConstCharPtr
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageGeneric
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageGenericConstCharPtr
 
 
 ## marty::format::formatMessage - аргументы передаются в виде std::initializer_list
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerList
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerListConstCharPtr
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerList
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerListConstCharPtr
 
 
 ## Базовая реализация функтора вычисления отображаемой ширины строки 
@@ -221,9 +219,9 @@ StringType formatMessageImpl( const StringType &fmt
 `marty::utf` с префиксом `suf` - `simpleUnicodeFeature`. В текущий момент поддерживается
 детект пробелов нулевой ширины по кодам символов и детект комбинируемых диакретиков (по диапазонам символов).
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} utils.h#DefaultUtfWidthCalculator
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} utils.h#DefaultUtfWidthCalculator
 
-#!insert{trim,nolineno,noKeepCutTags,filename,no-path,no-filename-line-no} marty_format.h#DefaultUtfWidthCalculator
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#DefaultUtfWidthCalculator
 
 
 

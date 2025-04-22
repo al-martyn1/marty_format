@@ -317,10 +317,10 @@ cout << formatMessage( //---
                        "Alignment names indirect taken\n"
                        "Width: 20, precision: 13, explicit fill chars\n"
                        "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:*20.13}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:*<20.13}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:*>20.13}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:*^20.13}|\n"
+                       "{adname:{anamew}} aligned: |{strL20:$20.13}|\n"
+                       "{alname:{anamew}} aligned: |{strL20:$<20.13}|\n"
+                       "{arname:{anamew}} aligned: |{strL20:$>20.13}|\n"
+                       "{acname:{anamew}} aligned: |{strL20:$^20.13}|\n"
                        "//---\n"
                        "Width: 18, precision: 9, default fill char\n"
                        "str: |{strL20}|\n"
@@ -331,10 +331,10 @@ cout << formatMessage( //---
                        "//---\n"
                        "Width (I): {w1}, precision (I): {p1}\n"
                        "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:*{w1}.{p1}}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:*<{w1}.{p1}}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:*>{w1}.{p1}}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:*^{w1}.{p1}}|\n"
+                       "{adname:{anamew}} aligned: |{strL20:@{w1}.{p1}}|\n"
+                       "{alname:{anamew}} aligned: |{strL20:@<{w1}.{p1}}|\n"
+                       "{arname:{anamew}} aligned: |{strL20:@>{w1}.{p1}}|\n"
+                       "{acname:{anamew}} aligned: |{strL20:@^{w1}.{p1}}|\n"
                        // "//---\n"
                      , Args().arg("anamew", 8)            // alignment name width
                              .arg("adname", "Default")    // name for default alignment
@@ -346,8 +346,8 @@ cout << formatMessage( //---
                              //---
                              .arg("strL20", "String larger than 20")
                              .arg("strS19", "Str smaler than 19")
-                             .arg("str<4" , "S<4")
-                             .arg("str>5" , "Str > 5")
+                             .arg("strS4" , "S<4")
+                             .arg("strL5" , "Str > 5")
                      );
 ```
 
@@ -365,10 +365,10 @@ Center   aligned: |***String larger****|
 Alignment names indirect taken
 Width: 20, precision: 13, explicit fill chars
 str: |String larger than 20|
-Default  aligned: |String larger*******|
-Left     aligned: |String larger*******|
-Right    aligned: |*******String larger|
-Center   aligned: |***String larger****|
+Default  aligned: |String larger$$$$$$$|
+Left     aligned: |String larger$$$$$$$|
+Right    aligned: |$$$$$$$String larger|
+Center   aligned: |$$$String larger$$$$|
 //---
 Width: 18, precision: 9, default fill char
 str: |String larger than 20|
@@ -379,10 +379,10 @@ Center   aligned: |     String la      |
 //---
 Width (I): 16, precision (I): 13
 str: |String larger than 20|
-Default  aligned: |String larger***|
-Left     aligned: |String larger***|
-Right    aligned: |***String larger|
-Center   aligned: |*String larger**|
+Default  aligned: |String larger@@@|
+Left     aligned: |String larger@@@|
+Right    aligned: |@@@String larger|
+Center   aligned: |@String larger@@|
 ```
 
 
@@ -461,7 +461,6 @@ Int as bool string, (using spec-T): TRUE, FALSE, as native: 42, 0
 
 Фильтрация производится после форматирования поля.
 
-**marty_format_types.h**
 ```cpp
 template<typename InputIteratorType, typename OutputIteratorType>
 using BasicFormatValueFilter = std::function< OutputIteratorType( InputIteratorType  // begin
@@ -516,7 +515,6 @@ const char* m_ptrEnd  = 0;
 
 Специализация базового фильтра `BasicFormatValueFilter` для UTF-8 строк: 
 
-**marty_format_types.h**
 ```cpp
 using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>
                                                 , marty::utf::UtfOutputIterator<char>
@@ -538,14 +536,11 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 |**SqlValueFilter**|производит преобразование символов, которые недопустимы в значениях в тексте `SQL`-запросов.|
 
 
-**Примечание**. В текущий момент стандартные фильтры не реализованы (**NOT_IMPLEMENTED**).
-
 
 ### Мейкер стандартных фильтров - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его имени.
 
-**marty_format_types.h**
 ```cpp
 template<typename StringType>
 FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNoneReturned=0)
@@ -603,7 +598,6 @@ FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNo
 в базовой реализации функции форматирования `formatMessageImpl` и в стандартных 
 реализациях `formatMessage`.
 
-**marty_format_types.h**
 ```cpp
 struct StdFilterFactory
 {
@@ -630,7 +624,6 @@ struct StdFilterFactory
 Это стандартный тип `marty::format::FormatArgumentVariant`. Пользователь библиотеки может определить
 свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
 
-**marty_format_types.h**
 ```cpp
 using FormatArgumentVariant =
     std::variant< bool
@@ -674,7 +667,6 @@ using FormatArgumentVariant =
 Контейнер типа `marty::format::BasicArgs` предоставляет как метод `find` по имени, так и метод 
 `find_by_pos(std::size_t)` для "поиска" по индексу.
 
-**marty_format.h**
 ```cpp
 template< typename ArgumentVariantType=FormatArgumentVariant
         , typename VectorType=std::vector<ArgumentVariantType>
@@ -692,7 +684,6 @@ class BasicArgs
 Игнорирование регистра именованных аргументов производится путём приведения имён
 к нижнему регистру, и работает только для имён, содержащих символы из базовой таблицы ASCII.
 
-**marty_format.h**
 ```cpp
 BasicArgs(bool caseIgnore=true)
 : m_caseIgnore(caseIgnore)
@@ -707,28 +698,24 @@ BasicArgs(bool caseIgnore=true)
 
 Добавляет безымянный аргумент:
 
-**marty_format.h**
 ```cpp
 template<typename T> BasicArgs& arg(T t)
 ```
 
 Добавляет именованный аргумент, имя задаётся параметром типа `const char*`:
 
-**marty_format.h**
 ```cpp
 template<typename T> BasicArgs& arg(const char* k, T t)
 ```
 
 Добавляет именованный аргумент, имя задаётся параметром типа ключа в `map`, хранящей индексы именованных аргументов:
 
-**marty_format.h**
 ```cpp
 template<typename T> BasicArgs& arg(const key_type &k, T t)
 ```
 
 Добавляет безымянный аргумент типа int со значением `0`:
 
-**marty_format.h**
 ```cpp
 BasicArgs& arg()
 ```
@@ -738,7 +725,6 @@ BasicArgs& arg()
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
 
-**marty_format.h**
 ```cpp
 using Args = BasicArgs< FormatArgumentVariant
                       , std::vector<FormatArgumentVariant>
@@ -776,7 +762,6 @@ using Args = BasicArgs< FormatArgumentVariant
 Пользователь библиотеки может создать свой собственный variant-тип аргумента, добавив
 свои собственные типы, и, используя данную функцию, сделать свою кастомизированную функцию форматирования.
 
-**marty_format.h**
 ```cpp
 template< typename StringType      = std::string
         , typename ArgsType        = Args
@@ -793,7 +778,6 @@ StringType formatMessageImpl( const StringType &fmt
 
 ### marty::format::formatMessage - аргументы передаются в generic-контейнере
 
-**marty_format.h**
 ```cpp
 template< typename StringType      = std::string
         , typename ArgsType        = Args
@@ -806,7 +790,6 @@ StringType formatMessage( const StringType &fmt
                         )
 ```
 
-**marty_format.h**
 ```cpp
 template< typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
@@ -821,7 +804,6 @@ std::string formatMessage( const char *fmt
 
 ### marty::format::formatMessage - аргументы передаются в виде std::initializer_list
 
-**marty_format.h**
 ```cpp
 using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
 
@@ -835,7 +817,6 @@ StringType formatMessage( const StringType          &fmt
                         )
 ```
 
-**marty_format.h**
 ```cpp
 template< typename WidthCalculator = DefaultUtfWidthCalculator
         , typename FilterFactory   = StdFilterFactory
@@ -854,7 +835,6 @@ std::string formatMessage( const char                *fmt
 `marty::utf` с префиксом `suf` - `simpleUnicodeFeature`. В текущий момент поддерживается
 детект пробелов нулевой ширины по кодам символов и детект комбинируемых диакретиков (по диапазонам символов).
 
-**utils.h**
 ```cpp
 struct DefaultUtfWidthCalculator
 {
@@ -886,7 +866,6 @@ struct DefaultUtfWidthCalculator
 }; // struct DefaultUtfWidthCalculator
 ```
 
-**marty_format.h**
 ```cpp
 using DefaultUtfWidthCalculator = utils::DefaultUtfWidthCalculator;
 ```
@@ -1066,6 +1045,11 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 |`'#'`|Символ `альтернативного` режима.|
 |`'!'`|Символ инверсии регистра.|
 
+
+В текущий момент допустимыми `ASCII`-символами заполнения являются: 
+`space`/`пробел` (используется по умолчанию),
+а так же символы `'$'`, `'&'`, `'*'`, `';'`, `'@'` и `'~'`.
+Также можно использовать любые `UNICODE`-символы.
 
 
 #### Маркер выравнивания align
