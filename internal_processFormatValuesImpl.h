@@ -19,6 +19,11 @@ template< typename WidthCalculator, typename StringType >
 StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str);
 
 //----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType, typename IntType >
+StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, IntType v, size_t valSize);
+
+//----------------------------------------------------------------------------
+
 
 
 
@@ -65,17 +70,23 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormatPointer(const FormattingOptions &formattingOptions, unsigned long long p, bool formatNativePtr=false)
+StringType martyFormatValueFormatPointer(FormattingOptions formattingOptions, std::uintptr_t p, bool formatNativePtr=false)
 {
-    MARTY_ARG_USED(formattingOptions);
     MARTY_ARG_USED(formatNativePtr);
+
+    if (formattingOptions.typeChar!='p' && formattingOptions.typeChar!='P')
+        formattingOptions.typeChar = 'P';
+    formattingOptions.width = 0; // Форматируем по ширине целиком по размеру типа
+    formattingOptions.alignment = '=';
+    formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
+
     // Надо обдумать, как форматировать сегментный адрес
-    return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)(p)).c_str());
+    return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, p, sizeof(std::uintptr_t));
 }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
+StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, IntType v, size_t valSize)
 {
     //MARTY_ARG_USED(valSize);
 
@@ -83,7 +94,32 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
         return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (v==0 ? false : true) );
 
     if (formattingOptions.typeChar=='p' || formattingOptions.typeChar=='P')
-        return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, (unsigned long long)v);
+    {
+        formattingOptions.typeChar = (formattingOptions.typeChar=='p') ? 'x' : 'X';
+        formattingOptions.width = 0; // Форматируем по ширине целиком по размеру типа
+        formattingOptions.alignment = '=';
+        formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
+        //return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, (unsigned long long)v);
+
+        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalSigned)!=0)
+        {
+            // Нам упало из обработчика знаковых чисел, надо обратно переделать в знаковый, поменять знак, и потом сбиткастить в беззнаковый
+
+            if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
+            {
+                // Нам упало не просто знаковое, но отрицательное знаковое
+                // Делаем обратное преобразование
+                using SignedT = std::make_signed_t<IntType>;
+                SignedT signedValueAbs = utils::toSignedCast(v);
+                SignedT signedValue    = -signedValueAbs;
+                v = utils::toUnsignedCast(signedValue);
+            }
+
+            // Сбрасываем все признаки бывшей знаковости
+            formattingOptions.optionsFlags &= ~FormattingOptionsFlags::internalSigned;
+            formattingOptions.optionsFlags &= ~FormattingOptionsFlags::internalNegative;
+        }
+    }
 
     auto typeChar = formattingOptions.typeChar;
 
@@ -308,10 +344,10 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
     {
         std::reverse(numStr.begin(), numStr.end());
 
-        FormattingOptions fc = formattingOptions;
-        fc.typeChar = 's';
-        fc.optionsFlags &= ~FormattingOptionsFlags::precisionTaken;
-        fc.precision = 0;
+        //FormattingOptions fc = formattingOptions;
+        formattingOptions.typeChar = 's';
+        formattingOptions.optionsFlags &= ~FormattingOptionsFlags::precisionTaken;
+        formattingOptions.precision = 0;
 
         std::string tmpStr;
         if (signChar)
@@ -328,7 +364,7 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
         if (doPercent)
             tmpStr.append(1u, '%');
 
-        return martyFormatValueFormatString<WidthCalculator, StringType>(fc, tmpStr);
+        return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, tmpStr);
     }
 
     width_t extraWidth = 0;
@@ -452,6 +488,11 @@ StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions,
     if ( (formattingOptions.optionsFlags&FormattingOptionsFlags::bitCast)!=0
       && (formattingOptions.typeChar=='b' || formattingOptions.typeChar=='B' || formattingOptions.typeChar=='x' || formattingOptions.typeChar=='X' || formattingOptions.typeChar=='h' || formattingOptions.typeChar=='H')
        )
+    {
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, utils::toUnsignedCast(v), valSize);
+    }
+
+    if (formattingOptions.typeChar=='p' || formattingOptions.typeChar=='P')
     {
         return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, utils::toUnsignedCast(v), valSize);
     }
@@ -654,8 +695,7 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, ch
 template< typename WidthCalculator, typename StringType=std::string >
 StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const void* ptr)
 {
-    MARTY_ARG_USED(formattingOptions);
-    return martyFormatSimpleConvertToString<StringType>(ptr);
+    return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, std::uintptr_t(ptr), true  /* formatNativePtr */);
 }
 
 //----------------------------------------------------------------------------

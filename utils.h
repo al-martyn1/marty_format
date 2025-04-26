@@ -311,6 +311,8 @@ bool isFormatTypeChar(utf32_char_t ch)
         || ch==utf32_char_t('y')
         || ch==utf32_char_t('Y')
         || ch==utf32_char_t('%')
+        || ch==utf32_char_t('p')
+        || ch==utf32_char_t('P')
     ;
 }
 
@@ -844,6 +846,17 @@ constexpr
 std::make_unsigned_t<T> toUnsignedCast(T t)
 {
    using UT = std::make_unsigned_t<T>;
+   return static_cast<UT>(t);
+}
+
+//----------------------------------------------------------------------------
+template < typename T
+         , std::enable_if_t< std::is_integral_v<T>, int> = 0
+         >
+constexpr
+std::make_signed_t<T> toSignedCast(T t)
+{
+   using UT = std::make_signed_t<T>;
    return static_cast<UT>(t);
 }
 
