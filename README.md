@@ -30,6 +30,7 @@
   - [Используем фильтры для вывода в HTML](#user-content-используем-фильтры-для-вывода-в-html)
   - [Вывод строк с различной шириной и точностью](#user-content-вывод-строк-с-различной-шириной-и-точностью)
   - [Вывод булевых значений](#user-content-вывод-булевых-значений)
+  - [Вывод целых чисел](#user-content-вывод-целых-чисел)
 - [API библиотеки](#user-content-api-библиотеки)
   - [Обобщённый тип фильтра BasicFormatValueFilter](#user-content-обобщённый-тип-фильтра-basicformatvaluefilter)
     - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#user-content-пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
@@ -85,7 +86,8 @@
      Форматирование производится как для спецификатора `'d'`;
    - `'L'` - опция форматирования (`C++`) - форматирование с учетом системной локали (поддерживается в форматной строке, но не используется).
      Форматирование производится с учетом заданного спецификатора типа;
-   - `'='` - признак выравнивания по ширине. При использовании данного типа выравнивания знак числа отделяется от числа `'fill'`-символом;
+   - `'='` - признак выравнивания по ширине. При использовании данного типа выравнивания знак числа отделяется от числа `'fill'`-символом,
+     если не указан ведущий `'0'` при задании ширины, во втором случае заполнение производится нулями;
    - Разделители разрядов в форматной строке (`Python`);
 
 3. Поддержка именованных аргументов для `C++` при использовании соответствующих контейнеров для аргументов.
@@ -462,6 +464,12 @@ Int as bool string, (using spec-Y): YES, NO, as native: 42, 0
 Int as bool string, (using spec-t): true, false, as native: 42, 0
 Int as bool string, (using spec-T): TRUE, FALSE, as native: 42, 0
 ```
+
+
+### Вывод целых чисел
+
+!!! File not found in: F:\_github\umba-tools\marty_hex_test, F:\_github\umba-tools\marty_hex_test\src, F:\_github\umba-tools\marty_hex_test\_libs\marty_format, F:\_github\umba-tools\marty_hex_test\_libs\marty_format\md_
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/integer_format_sampes
 
 
 

@@ -97,6 +97,12 @@
 #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingBool
 
 
+#//---------
+## Вывод целых чисел
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/integer_format_sampes
+
+
 #// #//---------
 #// ## Используем 
 #//
