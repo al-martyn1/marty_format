@@ -17,6 +17,7 @@ precisionTaken
 precisionIndirect
 grouppingTaken
 caseInvert
+bitCast
 internalSigned
 internalNegative
 

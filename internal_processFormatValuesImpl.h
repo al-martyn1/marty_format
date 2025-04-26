@@ -15,11 +15,18 @@ StringType martyFormatSimpleConvertToString(const std::string &str)
 }
 
 //----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType >
+StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str);
+
+//----------------------------------------------------------------------------
 
 
 
 //----------------------------------------------------------------------------
+// Данный шаблон объявлен в utils.h, чтобы компилятор видел хоть какую-то реализацию функции
+// martyFormatSimpleConvertToString
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(bool b)                  { return StringType(b ? "true" : "false" ); }
+//
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(char ch)                 { return StringType(1, ch); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned char      i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
 template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed char        i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
@@ -56,25 +63,389 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
 //----------------------------------------------------------------------------
 
 
+//----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType >
+StringType martyFormatValueFormatPointer(const FormattingOptions &formattingOptions, unsigned long long p, bool formatNativePtr=false)
+{
+    MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(formatNativePtr);
+    // Надо обдумать, как форматировать сегментный адрес
+    return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)(p)).c_str());
+}
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
 {
+    //MARTY_ARG_USED(valSize);
+
     if (formattingOptions.typeChar=='t' || formattingOptions.typeChar=='T' || formattingOptions.typeChar=='y' || formattingOptions.typeChar=='Y')
         return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (v==0 ? false : true) );
 
-    MARTY_ARG_USED(formattingOptions);
-    MARTY_ARG_USED(valSize);
-    return martyFormatSimpleConvertToString<StringType>(v);
+    if (formattingOptions.typeChar=='p' || formattingOptions.typeChar=='P')
+        return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, (unsigned long long)v);
+
+    auto typeChar = formattingOptions.typeChar;
+
+    if (typeChar==0)
+        typeChar = 'd';
+
+    const bool doPercent = (typeChar=='%');
+    if (typeChar=='%')
+        typeChar = 'd';
+
+    bool localeFormattingOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::localeFormatting)!=0); // L option char - C++
+    const bool useLocale = (typeChar=='n') || localeFormattingOpt;
+    if (typeChar=='n')
+        typeChar = 'd';
+
+    if (typeChar!='b' && typeChar!='B' && typeChar!='d' && typeChar!='o' && typeChar!='O' && typeChar!='x' && typeChar!='X' && typeChar!='h' && typeChar!='H')
+    {
+        // type            ::= "a" | "A" | "b" | "B" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | 
+        //                     "o" | "p" | "s" | "S" | "t" | "T" | "x" | "X" | "y" | "Y" | "%"
+        if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)==0)
+            throw mismatch_format_type("invalid format type for int/unsigned argument");
+
+        typeChar = 'd';
+    }
+
+    // Максимальная длина разделителя разрядов - 16 символов
+    std::array<marty::utf::utf32_char_t, 16> groupSepRaw = { 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u }; 
+    //const char fracSep[2]  = { 0, 0 }; // не нужно для целых
+
+    const bool grouppingTakenOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::grouppingTaken)!=0);
+    bool grouppingTaken = false;
+    if (grouppingTakenOpt || localeFormattingOpt)
+    {
+        grouppingTaken = true;
+
+        // if (grouppingTakenOpt)
+        {
+            groupSepRaw[0] = formattingOptions.grouppingChar;
+            if (groupSepRaw[0]==0)
+            {
+                if (typeChar=='b' || typeChar=='B' || typeChar=='o'  || typeChar=='O' || typeChar=='x' || typeChar=='X' || typeChar=='h' || typeChar=='H')
+                    groupSepRaw[0] = marty::utf::utf32_char_t('_');
+                else
+                    groupSepRaw[0] = marty::utf::utf32_char_t('\'');
+            }
+        }
+        // else // localeFormattingOpt
+        // {
+        //     // TODO: !!! Извлечь разделитель разрядов из системы
+        // }
+    }
+
+    std::string grpSepStr;
+    {
+        auto outIt = marty::utf::UtfOutputIterator<char>(grpSepStr);
+        for(auto uch : groupSepRaw)
+        {
+            if (!uch)
+                break;
+            *outIt++ = uch;
+        }
+    }
+
+    const bool isNumberUpper = (formattingOptions.typeChar=='B' || formattingOptions.typeChar=='O' || formattingOptions.typeChar=='X' || formattingOptions.typeChar=='H');
+    const bool caseInvert    = ((formattingOptions.optionsFlags&FormattingOptionsFlags::caseInvert)!=0);
+    /* case    bInvert    prefix
+        0         0          0
+        0         1          1
+        1         0          1
+        1         1          0
+
+        XOR (!=)
+    */
+    const bool prefixUpper = (isNumberUpper != caseInvert);
+    std::size_t grpSize = 3;
+    IntType base = 10u;
+    auto fillChar = formattingOptions.fillChar;
+    //utf32_char_t  = 
+
+    //const bool prefixOptional = (typeChar=='o'); // Если префикс опциональный и первая цифра - 0, то префикс не добавляется
+    std::string prefixStr;
+    std::string postfixStr;
+
+    // bBdoxX
+    if (typeChar=='b' || typeChar=='B')
+    {
+        grpSize = 4;
+        base    = 2u;
+        prefixStr.assign(prefixUpper?"0B":"0b");
+        //if (!fillChar)
+        //    fillChar = marty::utf::utf32_char_t('0');
+    }
+    else if (typeChar=='d')
+    {
+        // if (!fillChar)
+        //     fillChar = marty::utf::utf32_char_t('0');
+    }
+    else if (typeChar=='o')
+    {
+        grpSize = 3;
+        base    = 8u;
+        prefixStr.assign(1, '0');
+        // if (!fillChar)
+        //     fillChar = marty::utf::utf32_char_t('0');
+    }
+    else if (typeChar=='x' || typeChar=='X')
+    {
+        grpSize = 4;
+        base    = 16u;
+        prefixStr.assign(prefixUpper?"0X":"0x");
+        // if (!fillChar)
+        //     fillChar = marty::utf::utf32_char_t('0');
+    }
+    else if (typeChar=='h' || typeChar=='H')
+    {
+        grpSize = 4;
+        base    = 16u;
+        postfixStr.assign(prefixUpper?"H":"h");
+        // if (!fillChar)
+        //     fillChar = marty::utf::utf32_char_t('0');
+    }
+
+    if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signAlterForm)==0)
+    {
+        prefixStr.clear(); // Очищаем префикс - "альтернативная" форма не задана
+        postfixStr.clear();
+    }
+
+    auto alignment = formattingOptions.alignment;
+    if (alignment==0)
+    {
+        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signZero)==0)
+            alignment = '<';
+        else
+            alignment = '=';
+    }
+
+    if (fillChar<32 || WidthCalculator()(fillChar)<1)
+        fillChar = utf32_char_t(' ');
+
+
+    std::string numStr;
+    {
+        auto vTmp = v; // На всякий случай делаем копию, вдруг оригинальное число ещё пригодится
+        for(; vTmp; vTmp/=base)
+        {
+            numStr.append(1, utils::digitToChar(int(vTmp % base), int(base)));
+        }
+
+        if (numStr.empty())
+            numStr.assign(1, '0');
+    }
+
+
+    char signChar = 0; // No sign
+
+    //FormattingOptionsFlags signOpt = FormattingOptionsFlags::signMinus; // (this is the default behavior)
+    // Sign, #, and 0
+    // The sign option can be one of following:
+    // +: Indicates that a sign should be used for both non-negative and negative numbers. The + sign is inserted before the output value for non-negative numbers.
+    // -: Indicates that a sign should be used for negative numbers only (this is the default behavior).
+    // space: Indicates that a leading space should be used for non-negative numbers, and a minus sign for negative numbers.
+    // Negative zero is treated as a negative number.
+    if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signPlus)!=0)
+    {
+        // signOpt = FormattingOptionsFlags::signPlus;
+        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
+            signChar = '-';
+        else
+            signChar = '+';
+    }
+    else if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signSpace)!=0)
+    {
+        // signOpt = FormattingOptionsFlags::signSpace;
+        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
+            signChar = '-';
+        else
+            signChar = ' ';
+    }
+    else // FormattingOptionsFlags::signMinus
+    {
+        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
+            signChar = '-';
+    }
+
+
+    std::reverse(grpSepStr.begin(), grpSepStr.end()); // делаем реверс разделителя, потом будет обратный реверс
+
+    width_t grpSepLen = width_t(WidthCalculator()(grpSepStr.data(), grpSepStr.size()));
+    width_t numStrLen     = width_t(numStr.size()); // число цифровых символов в строке
+    width_t numStrFullLen = width_t(numStr.size()); // число символов вместе с сепараторами
+    {
+        std::string tmpStr;
+        for(width_t i=0u; i!=numStrLen; ++i)
+        {
+            if (i && (i%grpSize)==0)
+            {
+                tmpStr.append(grpSepStr);
+                numStrFullLen += grpSepLen;
+            }
+            tmpStr.append(1, numStr[i]);
+        }
+
+        swap(numStr, tmpStr);
+    }
+
+    // Шестнадцатиричные числа по умолчанию форматируются как в питоне с символом '='
+    // - заполнение вставляется между знаком и/или префиксом, при этом, если задан '0'
+    // первым символом ширины поля, то идёт заполнение нулём до знака или префикса.
+    // Если '0' не задан, то форматирует по правому краю.
+
+    // Мы сделаем немного по другому. Если задано выравнивание по ширине ('='),
+    // то если задан '0', то дополняем им до нужной ширины до вставки префикса и знака.
+    // Если '0' не задан, то префикс, если есть, добавляем вплотную к отформатированному числу,
+    // затем добиваем символом заполнения, потом добавляем знак.
+
+    // Во всех других случаях форматируем минимально компактно, потом выводим с выравниванием, как строку.
+
+    if (alignment!='=')
+    {
+        std::reverse(numStr.begin(), numStr.end());
+
+        FormattingOptions fc = formattingOptions;
+        fc.typeChar = 's';
+        fc.optionsFlags &= FormattingOptionsFlags::precisionTaken;
+        fc.precision = 0;
+
+        std::string tmpStr;
+        if (signChar)
+            tmpStr.append(1u, signChar);
+
+        if (!prefixStr.empty())
+            tmpStr.append(prefixStr);
+
+        tmpStr.append(numStr);
+
+        if (!postfixStr.empty())
+            tmpStr.append(postfixStr);
+
+        if (doPercent)
+            tmpStr.append(1u, '%');
+
+        return martyFormatValueFormatString<WidthCalculator, StringType>(fc, tmpStr);
+    }
+
+    width_t extraWidth = 0;
+
+    if (signChar!=0)
+        extraWidth += width_t(1u);
+
+    if (!prefixStr.empty())
+        extraWidth += width_t(prefixStr.size());
+
+    if (!postfixStr.empty())
+        extraWidth += width_t(postfixStr.size());
+
+    if (doPercent)
+        extraWidth += width_t(1u);
+
+
+    // signZero
+    // numStrFullLen += width_t(grpSepLen);
+    auto restWidth = formattingOptions.width;
+    if (restWidth>=numStrFullLen)
+        restWidth -= numStrFullLen;
+    else
+        restWidth = 0;
+
+    if (restWidth>=extraWidth)
+        restWidth -= extraWidth;
+    else
+        restWidth = 0;
+
+    
+    if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signZero)==0)
+    {
+        // Заполняем при помощи fillChar после добавления префикса, но до добавления знака
+
+        // if (restWidth>=numStr.size())
+        //     restWidth -= width_t(numStr.size());
+        // else
+        //     restWidth = 0;
+
+        std::reverse(numStr.begin(), numStr.end());
+
+        std::string fillStr;
+        auto outIt = marty::utf::UtfOutputIterator<char>(fillStr);
+        for(; restWidth; --restWidth)
+            *outIt++ = fillChar;
+
+        return StringType((std::string((signChar==0 ? 0u : 1u), signChar) + fillStr + prefixStr + numStr + postfixStr + std::string((doPercent==0 ? 0u : 1u), '%')).c_str());
+    }    
+
+    // signZero установлен
+
+    if (formattingOptions.width!=0 || (base!=2 && base!=16 )) 
+    {
+        while(restWidth!=0)
+        {
+            if (numStrLen && (numStrLen%grpSize)==0)
+            {
+                //numStr.append(grpSepStr);
+                //numStrFullLen += width_t(grpSepStr.size());
+                if (restWidth>=grpSepLen)
+                {
+                    numStr.append(grpSepStr);
+                    restWidth -= grpSepLen;
+                }
+            }
+    
+            numStr.append(1, '0');
+            restWidth -= width_t(1);
+            ++numStrLen;
+        }
+    }
+    else // Если было что-то типа 0x00X в форматной строке, то количество символов равно размеру типа
+    {
+        width_t totalRequiredWidth = 0;
+        if (base==2)
+            totalRequiredWidth = width_t(valSize*8u);
+        else
+            totalRequiredWidth = width_t(valSize*2u);
+
+        while(numStrLen<totalRequiredWidth)
+        {
+            if (numStrLen && (numStrLen%grpSize)==0)
+            {
+                //numStr.append(grpSepStr);
+                //numStrFullLen += width_t(grpSepStr.size());
+                //if (restWidth>=grpSepLen)
+                {
+                    numStr.append(grpSepStr);
+                    restWidth -= grpSepLen;
+                }
+            }
+    
+            numStr.append(1, '0');
+            restWidth -= width_t(1);
+            ++numStrLen;
+        }
+    }
+
+    std::reverse(numStr.begin(), numStr.end());
+
+    return StringType((std::string((signChar==0 ? 0u : 1u), signChar) + prefixStr + numStr + postfixStr + std::string((doPercent==0 ? 0u : 1u), '%')).c_str());
+
 }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
 {
-    FormattingOptions fc = formattingOptions;
+    // Надо добавить форматный символ ~ - который делает битовый каст к беззнаковому
+    // // шестнадцатиричное и двоичные числа битово кастим и отображаем как беззнаковые
+    if ( (formattingOptions.optionsFlags&FormattingOptionsFlags::bitCast)!=0
+      && (formattingOptions.typeChar=='b' || formattingOptions.typeChar=='B' || formattingOptions.typeChar=='x' || formattingOptions.typeChar=='X' || formattingOptions.typeChar=='h' || formattingOptions.typeChar=='H')
+       )
+    {
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, utils::toUnsignedCast(v), valSize);
+    }
 
+    FormattingOptions fc = formattingOptions;
     fc.optionsFlags |= FormattingOptionsFlags::internalSigned;
 
     if (v<0)
@@ -101,7 +472,7 @@ StringType martyFormatValueFormatString(const FormattingOptions &formattingOptio
 
     if (typeChar!='s' && typeChar!='?')
     {
-        if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)!=0)
+        if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)==0)
             throw mismatch_format_type("invalid format type for string argument");
     }
 
@@ -185,7 +556,7 @@ StringType martyFormatValueFormatString(const FormattingOptions &formattingOptio
     for(; resWidth<fmtWidth; ++resWidth)
         *outIt++ = fillChar; // заполнение справа, fillChar у нас не нулевой ширины, ранее было вычислено, поэтому resWidth инкрементим безусловно
 
-    return strRes;
+    return StringType(strRes.c_str());
 }
 
 //----------------------------------------------------------------------------
@@ -238,7 +609,7 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
         return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, (unsigned char)(b?1u:0u), 1u);
     }
 
-    if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)!=0)
+    if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)==0)
         throw mismatch_format_type("invalid format type for bool argument");
 
     fc.typeChar = 's';

@@ -1,0 +1,12 @@
+cout << "\n"
+"#include <cassert>\n"
+"#include <format>\n"
+"#include <string>\n"
+"#include <iostream>\n"
+"#include <array>\n"
+"\n\n"
+"using std::format;\n"
+"using std::cout;\n"
+"\n"
+"int main()\n"
+"{\n";

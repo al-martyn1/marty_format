@@ -10,6 +10,8 @@
 #include "utils.h"
 
 //
+#include <algorithm>
+#include <array>
 #include <exception>
 #include <stdexcept>
 #include <type_traits>
@@ -445,155 +447,6 @@ struct MartyFormatValueGetter< ContainerType
 
 
 //----------------------------------------------------------------------------
-//#! BasicArgs
-template< typename ArgumentVariantType=FormatArgumentVariant
-        , typename VectorType=std::vector<ArgumentVariantType>
-        , typename MapType=std::unordered_map<std::string, std::size_t>
-        >
-class BasicArgs
-//#!
-{
-
-public:
-
-    using value_type  = ArgumentVariantType;
-    using vector_type = VectorType;
-    using map_type    = MapType;
-
-    using size_type               = typename vector_type::size_type             ;
-    using difference_type         = typename vector_type::difference_type       ;
-    using reference               = typename vector_type::reference             ;
-    using const_reference         = typename vector_type::const_reference       ;
-    using pointer                 = typename vector_type::pointer               ;
-    using const_pointer	          = typename vector_type::const_pointer         ;
-    using iterator                = typename vector_type::iterator              ;
-    using const_iterator          = typename vector_type::const_iterator        ;
-    using reverse_iterator        = typename vector_type::reverse_iterator      ;
-    using const_reverse_iterator  = typename vector_type::const_reverse_iterator;
-
-    using key_type                = typename map_type::key_type;
-
-
-protected:
-
-    bool          m_caseIgnore = true;
-    map_type      m_nameMap;
-    vector_type   m_values ;
-
-    key_type caseConvert(const key_type &k) const
-    {
-        return m_caseIgnore ? utils::tolower_copy(k) : k;
-    }
-
-    BasicArgs& addArg(const value_type &v)
-    {
-        m_values.emplace_back(v);
-        return *this;
-    }
-
-    BasicArgs& addArg(const key_type &k_, const value_type &v)
-    {
-        key_type k = caseConvert(k_);
-        auto nameIt = m_nameMap.find(caseConvert(k));
-        if (nameIt!=m_nameMap.end())
-            throw argid_already_exist("argId '" + k + " already exist");
-
-        m_nameMap.insert(typename map_type::value_type{k, m_values.size()});
-        m_values.emplace_back(v);
-
-        return *this;
-    }
-
-
-public:
-
-    //#! BasicArgsCtor
-    BasicArgs(bool caseIgnore=true)
-    : m_caseIgnore(caseIgnore)
-    {}
-    //#! 
-
-    BasicArgs(const BasicArgs &) = default;
-    BasicArgs(BasicArgs &&) = default;
-    BasicArgs& operator=(const BasicArgs &) = default;
-    BasicArgs& operator=(BasicArgs &&) = default;
-
-    const_iterator begin () const { return m_values.begin(); }
-    const_iterator end   () const { return m_values.end  (); }
-    const_iterator cbegin() const { return m_values.begin(); }
-    const_iterator cend  () const { return m_values.end  (); }
-
-    std::size_t size() const
-    {
-        return m_values.size();
-    }
-
-    bool empty() const
-    {
-        return m_values.size();
-    }
-
-    //#! BasicArgs_Find
-    const_iterator find(const key_type &k) const
-    //#!
-    {
-        auto nameIt = m_nameMap.find(caseConvert(k));
-        if (nameIt==m_nameMap.end())
-            return m_values.end();
-
-        auto idx = nameIt->second;
-        if (idx>=m_values.size())
-            return m_values.end();
-
-        return m_values.begin() + std::ptrdiff_t(idx);
-    }
-    
-    const_iterator find(const char* b, const char* e) const
-    {
-        return find(key_type(b, e));
-    }
-
-    //#! BasicArgs_FindByPos
-    const_iterator find_by_pos(std::size_t idx) const
-    //#!
-    {
-        if (idx>=m_values.size())
-            return m_values.end();
-
-        return m_values.begin() + std::ptrdiff_t(idx);
-    }
-
-    //#! BasicArgs_arg_T
-    template<typename T> BasicArgs& arg(T t)
-    //#!
-    {
-        return addArg(value_type{t});
-    }
-
-    //#! BasicArgs_arg_CharK_T
-    template<typename T> BasicArgs& arg(const char* k, T t)
-    //#!
-    {
-        return addArg(key_type{k}, value_type{t});
-    }
-
-    //#! BasicArgs_arg_KeyK_T
-    template<typename T> BasicArgs& arg(const key_type &k, T t)
-    //#!
-    {
-        return addArg(k, value_type{t});
-    }
-
-    //#! BasicArgs_arg_empty
-    BasicArgs& arg()
-    //#!
-    {
-        return addArg(value_type{0});
-    }
-
-}; // class BasicArgs
-
-//----------------------------------------------------------------------------
 
 
 
@@ -734,6 +587,7 @@ using DefaultUtfWidthCalculator = utils::DefaultUtfWidthCalculator;
 using Args = BasicArgs< FormatArgumentVariant
                       , std::vector<FormatArgumentVariant>
                       , std::unordered_map<std::string, std::size_t>
+                      , DefaultUtfWidthCalculator
                       >;
 //#!
 

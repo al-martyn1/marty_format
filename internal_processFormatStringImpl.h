@@ -571,6 +571,21 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
             }
         }
 
+        
+        // **~** bitCast
+        if (ch==utfch_t('~'))
+        {
+            formattingOptions.optionsFlags |= FormattingOptionsFlags::bitCast;
+
+            incB(); // Идём дальше
+            if (b==e) // Дошли до конца
+                return finalizeParsing("unexpected end reached while reading format spec");
+            if (ch==utfch_t('}'))
+            {
+                incB(); doFormat(); continue;
+            }
+        }
+
         // **!** caseInvert
         if (ch==utfch_t('!'))
         {
@@ -635,7 +650,7 @@ ResultStringType processFormatStringImpl(CharIterator pCharB, CharIterator pChar
         }
 
         // **width**
-        if (utils::isFormatDigit(ch, 1, 9))
+        if (utils::isFormatDigit(ch, 0, 9))
         {
             formattingOptions.optionsFlags |= FormattingOptionsFlags::fieldWidthTaken;
             formattingOptions.width   = (width_t)utils::toDigit(ch);

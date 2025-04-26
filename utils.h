@@ -26,6 +26,64 @@
 // marty::format::utils::
 namespace marty{
 namespace format{
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+
+// Для некоторых шаблонов требуется предварительное объявление
+struct FormattingOptions;
+
+//----------------------------------------------------------------------------
+// MSVC, по крайней мере, не переваривает некоторые SFINAE-шаблоны, если
+// вообще ничего не знает об именах, поэтому подсунем ему фиктивное объявление
+// шаблонной функции, определение которой не будем нигде делать
+
+#if 0
+template<typename WC, typename ST, typename T>
+ST martyFormatValueFormat(FormattingOptions&, const T&);
+
+// template<typename StringType> inline StringType martyFormatSimpleConvertToString(bool b) { return StringType(b ? "true" : "false" ); }
+// template<typename ST, typename T>
+// ST martyFormatSimpleConvertToString(const T &t);
+
+// template<typename ST, typename T>
+// ST martyFormatSimpleConvertToString(const T& t) {
+//     // Стандартная реализация
+//     if constexpr (std::is_convertible_v<T, ST>) {
+//         return ST{t};
+//     } else {
+//         static_assert(sizeof(T) == 0, "No implementation for this type");
+//     }
+// }
+
+// template<typename ST, typename T>
+// ST martyFormatSimpleConvertToString(const T& t);
+//  
+// // Явные инстанцирования
+// extern template std::string martyFormatSimpleConvertToString<std::string, bool>(const bool&);
+
+struct DummyCustomType {};
+struct DummyAnotherType {};
+
+template<typename ST>
+ST martyFormatSimpleConvertToString(const DummyCustomType&) {
+    return ST{"DummyCustomType"};
+}
+
+template<typename ST>
+ST martyFormatSimpleConvertToString(DummyAnotherType) {
+    return ST{"DummyAnotherType"};
+}
+#endif
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
 namespace utils{
 
 //----------------------------------------------------------------------------
@@ -59,6 +117,33 @@ int toDigit(char ch)
            ? int(ch-'0')
            : -1
            ;
+}
+
+//----------------------------------------------------------------------------
+namespace details{
+
+inline
+constexpr
+char digitToCharDec(int d)
+{
+    return char('0'+d);
+}
+
+inline
+constexpr
+char digitToCharAlpha(int d, int bUpper)
+{
+    return char((bUpper?'A':'a')+d);
+}
+
+} // namespace details
+
+//----------------------------------------------------------------------------
+inline
+constexpr
+char digitToChar(int d, int bUpper)
+{
+    return d<10 ? details::digitToCharDec(d) : details::digitToCharAlpha(d-10, bUpper);
 }
 
 //----------------------------------------------------------------------------
@@ -207,6 +292,8 @@ bool isFormatTypeChar(utf32_char_t ch)
         || ch==utf32_char_t('B')
         || ch==utf32_char_t('c')
         || ch==utf32_char_t('d')
+        || ch==utf32_char_t('h')
+        || ch==utf32_char_t('H')
         || ch==utf32_char_t('o')
         || ch==utf32_char_t('x')
         || ch==utf32_char_t('X')
@@ -244,8 +331,47 @@ bool isFormatAnySpecialChar(utf32_char_t ch)
         || ch==utf32_char_t('z')
         || ch==utf32_char_t('|')
         || ch==utf32_char_t('{')
+        || ch==utf32_char_t('~')
            ;
 }
+
+//----------------------------------------------------------------------------
+// Подсчитывает длину строки в символах
+//#! DefaultUtfWidthCalculator
+struct DefaultUtfWidthCalculator
+{
+
+    std::size_t operator()(marty::utf::unicode_char_t ch) const
+    {
+        // suf - simpleUnicodeFeature
+        if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
+            return 0;
+
+        return 1;
+    }
+
+    std::size_t operator()(const char* b, const char* e) const
+    {
+        auto it    = marty::utf::UtfInputIterator<char>(b, e);
+        auto endIt = marty::utf::UtfInputIterator<char>();
+
+        std::size_t size = 0;
+
+        for(; it!=endIt; ++it)
+        {
+            size += operator()(*it);
+        }
+
+        return size;
+    }
+
+    std::size_t operator()(const char* b, std::size_t strLen) const
+    {
+        return operator()(b, b+std::ptrdiff_t(strLen));
+    }
+
+}; // struct DefaultUtfWidthCalculator
+//#!
 
 //----------------------------------------------------------------------------
 inline
@@ -495,43 +621,183 @@ struct has_const_iterator : std::false_type {};
 template< typename C >
 struct has_const_iterator< C, std::void_t<typename C::const_iterator> > : std::true_type {};
 
-
 //----------------------------------------------------------------------------
 
 
 
 //----------------------------------------------------------------------------
-// Подсчитывает длину строки в символах
-//#! DefaultUtfWidthCalculator
-struct DefaultUtfWidthCalculator
+// Для поддержки форматирования пользовательских типов
+
+//----------------------------------------------------------------------------
+template< typename T, typename = void >
+struct has_free_standing_enum_is_flags : std::false_type {};
+ 
+template<typename T>
+struct has_free_standing_enum_is_flags<T, std::void_t<decltype(enum_is_flags(static_cast<T>(0)))>> : std::true_type {};
+
+//------------------------------
+template< typename T, typename = void >
+struct has_free_standing_enum_serialize : std::false_type {};
+ 
+template<typename T>
+struct has_free_standing_enum_serialize<T, std::void_t<decltype(enum_serialize(static_cast<T>(0)))>> : std::true_type {};
+
+//------------------------------
+template< typename T, typename = void >
+struct has_free_standing_enum_serialize_flags : std::false_type {};
+ 
+template<typename T>
+struct has_free_standing_enum_serialize_flags<T, std::void_t<decltype(enum_serialize_flags(static_cast<T>(0)))>> : std::true_type {};
+
+//------------------------------
+template<typename T>
+T& as_lvalue(const T &t)
 {
+    return const_cast<T&>(t);
+}
 
-    std::size_t operator()(marty::utf::unicode_char_t ch) const
-    {
-        // suf - simpleUnicodeFeature
-        if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
-            return 0;
+//------------------------------
+#if 0
+template< typename WidthCalculator, typename StringType, typename T, typename = void >
+struct has_free_standing_martyFormatValueFormat : std::false_type {};
+ 
+template<typename WidthCalculator, typename StringType, typename T>
+struct has_free_standing_martyFormatValueFormat< T
+                                               , std::void_t< decltype(martyFormatValueFormat<WidthCalculator, StringType>( as_lvalue(marty::format::FormattingOptions{})
+                                                                                                                          , T{}
+                                                                                                                          )
+                                                                      )
+                                                            >
+                                               > : std::true_type {};
+#endif
 
-        return 1;
-    }
+// (c) deepseek
+// Основной шаблон
+// template< typename WidthCalculator, 
+//           typename StringType, 
+//           typename T, 
+//           typename = void >
+// struct has_free_standing_martyFormatValueFormat 
+//     : std::false_type 
+// {};
+//  
+// // Специализация
+// template< typename WidthCalculator, 
+//           typename StringType, 
+//           typename T >
+// struct has_free_standing_martyFormatValueFormat< WidthCalculator
+//                                                , StringType
+//                                                , T
+//                                                , std::void_t< decltype(martyFormatValueFormat<WidthCalculator, StringType>( std::declval<marty::format::FormattingOptions&>()
+//                                                                                                                           , std::declval<T>()
+//                                                                                                                           )
+//                                                                       ) 
+//                                               >
+//     > : std::true_type 
+// {};
 
-    std::size_t operator()(const char* b, const char* e) const
-    {
-        auto it    = marty::utf::UtfInputIterator<char>(b, e);
-        auto endIt = marty::utf::UtfInputIterator<char>();
+//------------------------------
+// template< typename StringType
+//         , typename T
+//         , typename = void
+//         >
+// struct has_free_standing_martyFormatSimpleConvertToString
+//     : std::false_type
+// {};
+ 
+// template<typename StringType, typename T>
+// struct has_free_standing_martyFormatSimpleConvertToString< StringType, T
+//                                                          , std::void_t< decltype( martyFormatSimpleConvertToString<StringType>(T{})
+//                                                                                 )
+//                                                                       >
+//                                                          > : std::true_type {};
+// template<typename StringType, typename T>
+// struct has_free_standing_martyFormatSimpleConvertToString< 
+//     StringType, 
+//     T,
+//     std::void_t<decltype(
+//         martyFormatSimpleConvertToString<StringType>(std::declval<T>())
+//     )>
+// > : std::true_type {};
 
-        std::size_t size = 0;
+// SFINAE-хелпер
+namespace detail {
 
-        for(; it!=endIt; ++it)
-        {
-            size += operator()(*it);
-        }
+// template<typename ST, typename T>
+// auto test_const_ref(int) -> decltype(
+//     martyFormatSimpleConvertToString<ST>(std::declval<const T&>()),
+//     std::true_type{}
+// );
+//  
+// template<typename ST, typename T>
+// auto test_value(int) -> decltype(
+//     martyFormatSimpleConvertToString<ST>(std::declval<T>()),
+//     std::true_type{}
+// );
+//  
+// template<typename ST, typename T>
+// auto test_const_ref(...) -> std::false_type;
+//  
+// template<typename ST, typename T>
+// auto test_value(...) -> std::false_type;
 
-        return size;
-    }
 
-}; // struct DefaultUtfWidthCalculator
-//#!
+} // namespace detail
+
+
+
+// template< typename WidthCalculator, 
+//           typename StringType, 
+//           typename T, 
+//           typename = void >
+// struct has_free_standing_martyFormatValueFormat 
+//     : std::false_type 
+// {};
+//  
+// // Специализация
+// template< typename WidthCalculator, 
+//           typename StringType, 
+//           typename T >
+// struct has_free_standing_martyFormatValueFormat< WidthCalculator
+//                                                , StringType
+//                                                , T
+// //                                                , std::void_t< decltype(martyFormatValueFormat<WidthCalculator, StringType>( std::declval<marty::format::FormattingOptions&>()
+// //                                                                                                                           , std::declval<T>()
+// //                                                                                                                           )
+// //                                                                       ) 
+// //                                               >
+// //     > : std::true_type 
+// // {};
+//     std::void_t<
+//         decltype(detail::test_const_ref<StringType, T>(0)),
+//         decltype(detail::test_value<StringType, T>(0))
+//     >
+// > : std::bool_constant<
+//         decltype(detail::test_const_ref<StringType, T>(0))::value ||
+//         decltype(detail::test_value<StringType, T>(0))::value
+//     > {};
+
+
+
+// template<typename StringType, typename T, typename = void>
+// struct has_free_standing_martyFormatSimpleConvertToString 
+//     : std::false_type {};
+//  
+// template<typename StringType, typename T>
+// struct has_free_standing_martyFormatSimpleConvertToString< 
+//     StringType, 
+//     T,
+//     std::void_t<
+//         decltype(detail::test_const_ref<StringType, T>(0)),
+//         decltype(detail::test_value<StringType, T>(0))
+//     >
+// > : std::bool_constant<
+//         decltype(detail::test_const_ref<StringType, T>(0))::value ||
+//         decltype(detail::test_value<StringType, T>(0))::value
+//     > {};
+//----------------------------------------------------------------------------
+
+
 
 //----------------------------------------------------------------------------
 
@@ -569,6 +835,17 @@ const char* rawConstCharPtrFromIterator(IteratorType it)
 //----------------------------------------------------------------------------
 
 
+
+//----------------------------------------------------------------------------
+template < typename T
+         , std::enable_if_t< std::is_integral_v<T>, int> = 0
+         >
+constexpr
+std::make_unsigned_t<T> toUnsignedCast(T t)
+{
+   using UT = std::make_unsigned_t<T>;
+   return static_cast<UT>(t);
+}
 
 //----------------------------------------------------------------------------
 template < typename T
