@@ -113,7 +113,8 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
     std::array<marty::utf::utf32_char_t, 16> groupSepRaw = { 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u }; 
     //const char fracSep[2]  = { 0, 0 }; // не нужно для целых
 
-    const bool grouppingTakenOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::grouppingTaken)!=0);
+    const bool grouppingTakenOpt = (formattingOptions.grouppingChar!=0);
+    // ((formattingOptions.optionsFlags&FormattingOptionsFlags::grouppingTaken)!=0);
     bool grouppingTaken = false;
     if (grouppingTakenOpt || localeFormattingOpt)
     {
@@ -137,6 +138,7 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
     }
 
     std::string grpSepStr;
+    if (grouppingTaken)
     {
         auto outIt = marty::utf::UtfOutputIterator<char>(grpSepStr);
         for(auto uch : groupSepRaw)
@@ -230,7 +232,7 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
         auto vTmp = v; // На всякий случай делаем копию, вдруг оригинальное число ещё пригодится
         for(; vTmp; vTmp/=base)
         {
-            numStr.append(1, utils::digitToChar(int(vTmp % base), int(base)));
+            numStr.append(1, utils::digitToChar(int(vTmp % base), isNumberUpper));
         }
 
         if (numStr.empty())
@@ -270,9 +272,9 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
     }
 
 
+    width_t grpSepLen = width_t(WidthCalculator()(grpSepStr.data(), grpSepStr.size()));
     std::reverse(grpSepStr.begin(), grpSepStr.end()); // делаем реверс разделителя, потом будет обратный реверс
 
-    width_t grpSepLen = width_t(WidthCalculator()(grpSepStr.data(), grpSepStr.size()));
     width_t numStrLen     = width_t(numStr.size()); // число цифровых символов в строке
     width_t numStrFullLen = width_t(numStr.size()); // число символов вместе с сепараторами
     {
@@ -308,7 +310,7 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
 
         FormattingOptions fc = formattingOptions;
         fc.typeChar = 's';
-        fc.optionsFlags &= FormattingOptionsFlags::precisionTaken;
+        fc.optionsFlags &= ~FormattingOptionsFlags::precisionTaken;
         fc.precision = 0;
 
         std::string tmpStr;
@@ -381,6 +383,9 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
 
     if (formattingOptions.width!=0 || (base!=2 && base!=16 )) 
     {
+        // Не нулевая ширина, или база не 2 и не 16
+        // Добиваем до нужной длины нулями
+
         while(restWidth!=0)
         {
             if (numStrLen && (numStrLen%grpSize)==0)
@@ -394,9 +399,12 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
                 }
             }
     
-            numStr.append(1, '0');
-            restWidth -= width_t(1);
-            ++numStrLen;
+            if (restWidth)
+            {
+                numStr.append(1, '0');
+                restWidth -= width_t(1);
+                ++numStrLen;
+            }
         }
     }
     else // Если было что-то типа 0x00X в форматной строке, то количество символов равно размеру типа
@@ -420,9 +428,12 @@ StringType martyFormatValueFormatUnsigned(const FormattingOptions &formattingOpt
                 }
             }
     
-            numStr.append(1, '0');
-            restWidth -= width_t(1);
-            ++numStrLen;
+            //if (restWidth)
+            {
+                numStr.append(1, '0');
+                restWidth -= width_t(1);
+                ++numStrLen;
+            }
         }
     }
 

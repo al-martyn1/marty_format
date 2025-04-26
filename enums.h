@@ -141,11 +141,10 @@ enum class FormattingOptionsFlags : std::uint32_t
     localeFormatting          = 0x800 /*!<  */,
     precisionTaken            = 0x1000 /*!<  */,
     precisionIndirect         = 0x2000 /*!<  */,
-    grouppingTaken            = 0x4000 /*!<  */,
-    caseInvert                = 0x8000 /*!<  */,
-    bitCast                   = 0x10000 /*!<  */,
-    internalSigned            = 0x20000 /*!<  */,
-    internalNegative          = 0x40000 /*!<  */,
+    caseInvert                = 0x4000 /*!<  */,
+    bitCast                   = 0x8000 /*!<  */,
+    internalSigned            = 0x10000 /*!<  */,
+    internalNegative          = 0x20000 /*!<  */,
     fieldWidthIndirectTaken   = fieldWidthTaken | fieldWidthIndirect /*!<  */,
     precisionIndirectTaken    = precisionTaken | precisionIndirect /*!<  */,
     fillingIndirectTaken      = fillingTaken | fillingIndirect /*!<  */
@@ -173,7 +172,6 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::fillingIndirect          , "FillingIndirect"         );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::precisionTaken           , "PrecisionTaken"          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirect        , "PrecisionIndirect"       );
-    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::grouppingTaken           , "GrouppingTaken"          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::bitCast                  , "BitCast"                 );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::internalSigned           , "InternalSigned"          );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingOptionsFlags::internalNegative         , "InternalNegative"        );
@@ -231,9 +229,6 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingOptionsFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirect        , "precision-indirect"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirect        , "precision_indirect"         );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::precisionIndirect        , "precisionindirect"          );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::grouppingTaken           , "groupping-taken"            );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::grouppingTaken           , "groupping_taken"            );
-    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::grouppingTaken           , "grouppingtaken"             );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::bitCast                  , "bit-cast"                   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::bitCast                  , "bit_cast"                   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingOptionsFlags::bitCast                  , "bitcast"                    );

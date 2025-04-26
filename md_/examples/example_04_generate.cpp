@@ -7,6 +7,7 @@
 #include "marty_format/marty_format.h"
 
 using std::cout;
+using namespace marty::format;
  
 int main()
 {
@@ -32,7 +33,7 @@ int main()
     std::array<char, 4> signChars  = {0, '-', '+', ' '};
     std::array<const char*, 5> alignNames = {"Default", "Width", "Left", "Right", "Center"};
 
-    int valueInitialVal = 420;
+    int valueInitialVal = 1420;
     std::array<int, 2> signs  = {-1, 1};
 
     std::array<bool, 2> useZeros            = {false, true};
@@ -148,8 +149,10 @@ int main()
 
                                                 resultStrings.insert(strRes);
                     
-                                                std::string fullFmtStr = std::string("{") + fmt + "}" + std::string(fmtFillSize, ' ') + "  -  |" + fmt + "|\\n";
-                                                cout << "    cout << formatMessage(\"" << fullFmtStr.c_str() << "\", {" << value << "} );\n";
+                                                cout << "    cout << formatMessage(\"|" << fmt << "|\", " << std::string(fmtFillSize, ' ') << "{ " << value << " }) << \"\\n\"; // |" << strRes << "|\n";
+
+                                                // std::string fullFmtStr = std::string("{") + fmt + "}" + std::string(fmtFillSize, ' ') + "  -  |" + fmt + "|\\n";
+                                                // cout << "    cout << formatMessage(\"" << fullFmtStr.c_str() << "\", {" << value << "} );\n";
     
                                             }
                                         }
