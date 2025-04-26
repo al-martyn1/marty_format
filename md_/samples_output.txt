@@ -54,10 +54,16 @@ Unsigned as bool string, (using spec-y#): y, n, as native: 42, 0
 Unsigned as bool string, (using spec-Y#): Y, N, as native: 42, 0
 Unsigned as bool string, (using spec-t#): t, f, as native: 42, 0
 Unsigned as bool string, (using spec-T#): T, F, as native: 42, 0
-Int as bool string, (using spec-y): yes, no, as native: 42, 0
-Int as bool string, (using spec-Y): YES, NO, as native: 42, 0
-Int as bool string, (using spec-t): true, false, as native: 42, 0
-Int as bool string, (using spec-T): TRUE, FALSE, as native: 42, 0
+Int as bool string, (using spec-y): yes, no, as native: -42, 0
+Int as bool string, (using spec-Y): YES, NO, as native: -42, 0
+Int as bool string, (using spec-t): true, false, as native: -42, 0
+Int as bool string, (using spec-T): TRUE, FALSE, as native: -42, 0
+//#!
+
+
+//#! FormattingPointers
+Argv Pointer: 00000107454DE9F0
+Short as ptr: FB2E
 //#!
 
 

@@ -17,6 +17,7 @@ int main(int argc, char* argv[])
     (void)(argc);
     (void)(argv);
 
+
     #if 0
     // Indirect align not supported
     cout << "//#! StringWidthPrecisionTest01\n";
@@ -184,6 +185,23 @@ int main(int argc, char* argv[])
                              , Args().arg("bt", true).arg("bf", false)
                                      .arg("ut", 42u) .arg("uf", 0u)
                                      .arg("st", -42) .arg("sf", 0)
+                             );
+        //#!
+    }
+    cout << "//#!\n\n\n" << std::flush;
+
+    //----------------------------------------------------------------------------
+
+    cout << "//#! FormattingPointers\n";
+    {
+        // Примеры форматирования указателей
+        //#! FormattingPointers
+        using std::cout;
+        using namespace marty::format;
+        cout << formatMessage( "Argv Pointer: {argv:P}\n"
+                               "Short as ptr: {ptrShort:P}\n"
+                             , Args().arg("argv", (void*)argv)
+                                     .arg("ptrShort", short(-1234))
                              );
         //#!
     }

@@ -98,9 +98,18 @@
 
 
 #//---------
+## Выводим указатели (и целые числа, как указатели)
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#FormattingPointers
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingPointers
+
+
+#//---------
 ## Вывод целых чисел
 
-#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/integer_format_sampes
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} integer_format_sampes.cpp
 
 
 #// #//---------
