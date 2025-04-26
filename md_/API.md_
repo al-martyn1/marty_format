@@ -140,7 +140,7 @@
 Контейнер типа `marty::format::BasicArgs` предоставляет как метод `find` по имени, так и метод 
 `find_by_pos(std::size_t)` для "поиска" по индексу.
 
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs
 
 
 ### Конструктор marty::format::BasicArgs
@@ -151,7 +151,7 @@
 Игнорирование регистра именованных аргументов производится путём приведения имён
 к нижнему регистру, и работает только для имён, содержащих символы из базовой таблицы ASCII.
 
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgsCtor
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgsCtor
 
 
 ### Методы marty::format::BasicArgs::arg
@@ -160,16 +160,16 @@
 и возвращает ссылку на объект `marty::format::BasicArgs` для того, чтобы можно было делать цепочки вызовов.
 
 Добавляет безымянный аргумент:
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_T
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_T
 
 Добавляет именованный аргумент, имя задаётся параметром типа `const char*`:
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_CharK_T
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_CharK_T
 
 Добавляет именованный аргумент, имя задаётся параметром типа ключа в `map`, хранящей индексы именованных аргументов:
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_KeyK_T
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_KeyK_T
 
 Добавляет безымянный аргумент типа int со значением `0`:
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicArgs_arg_empty
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_empty
 
 
 ## marty::format::Args
