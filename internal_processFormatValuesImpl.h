@@ -152,7 +152,7 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
     const bool grouppingTakenOpt = (formattingOptions.grouppingChar!=0);
     // ((formattingOptions.optionsFlags&FormattingOptionsFlags::grouppingTaken)!=0);
     bool grouppingTaken = false;
-    if (grouppingTakenOpt || localeFormattingOpt)
+    if (grouppingTakenOpt || useLocale)
     {
         grouppingTaken = true;
 
@@ -675,6 +675,14 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
 template< typename WidthCalculator, typename StringType, typename FloatType >
 StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, FloatType v)
 {
+
+  // static FMT_CONSTEXPR_DECL const int double_significand_size =
+  //     std::numeric_limits<double>::digits - 1;
+  // static FMT_CONSTEXPR_DECL const uint64_t implicit_bit =
+  //     1ULL << double_significand_size;
+  // static FMT_CONSTEXPR_DECL const int significand_size =
+  //     bits<significand_type>::value;
+
     MARTY_ARG_USED(formattingOptions);
     return martyFormatSimpleConvertToString<StringType>(v);
 }
@@ -697,6 +705,13 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, co
 {
     return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, std::uintptr_t(ptr), true  /* formatNativePtr */);
 }
+
+//----------------------------------------------------------------------------
+// template< typename WidthCalculator, typename StringType=std::string >
+// StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, std::nullptr_t ptr)
+// {
+//     return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (const void*)ptr);
+// }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType=std::string >
