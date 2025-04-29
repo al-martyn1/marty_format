@@ -1,0 +1,4 @@
+invalid,unknown          = -1
+invariant                = 0
+user
+system

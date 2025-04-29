@@ -69,6 +69,7 @@ namespace format{
     '$' - сюда подставляется символ валюты (строка)
 
 */
+//#! LocaleInfo
 struct LocaleInfo
 {
     virtual ~LocaleInfo() {}
@@ -81,16 +82,13 @@ struct LocaleInfo
     LocaleInfo& operator=(LocaleInfo &&) = default;
 
 
+// Для отладки удобнее std::vector<std::uint8_t>, а в релизе std::basic_string<std::uint8_t> гораздо быстрее
 #if defined(DEBUG) || defined(_DEBUG)
-
     using group_info_t = std::vector<std::uint8_t>;
     static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u) { gi.resize(gi.size()+n, u); }
-
 #else
-
-    using group_info_t = std::string<std::uint8_t>;
+    using group_info_t = std::basic_string<std::uint8_t>;
     static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u) { gi.append(n, u); }
-
 #endif
 
 
@@ -146,7 +144,7 @@ public: // virtual methods
                                          ) const;
 
 
-public: // static helpers
+public: // static helper methods
 
     //! Подстановка локализованных символов в шаблон форматной строки
     static
@@ -186,7 +184,7 @@ public: // static helpers
                                                , std::size_t maxLen
                                                );
 
-protected: // static helpers
+protected: // static helper methods
 
     static std::string insertGroupSeparatorsImplHelper(const std::string &numStr, const std::string &sep, const group_info_t &grpInfo);
     static std::string expandWithGroupSeparatorImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
@@ -197,7 +195,7 @@ protected: // static helpers
                                                          );
     
 }; // struct LocaleInfo
-
+//#!
 
 #include "impl/internal_locale_info_impl_base.h"
 
@@ -236,16 +234,44 @@ const LocaleInfo* getLocaleInfoSystem()
 }
 
 //----------------------------------------------------------------------------
-inline
-const LocaleInfo* getLocaleInfo(bool bSystem=false)
-{
-    return bSystem ? getLocaleInfoSystem() : getLocaleInfoUser();
-}
+// inline
+// const LocaleInfo* getLocaleInfo(bool bSystem=false)
+// {
+//     return bSystem ? getLocaleInfoSystem() : getLocaleInfoUser();
+// }
 
 //----------------------------------------------------------------------------
 
 
 #endif
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+//#! getLocaleInfo
+const LocaleInfo* getLocaleInfo(LocaleInfoType lt);
+//#!
+
+inline
+const LocaleInfo* getLocaleInfo(LocaleInfoType lt)
+{
+    if (lt==LocaleInfoType::invariant)
+        return getLocaleInfoInvariant();
+
+#if defined(WIN32) || defined(_WIN32)
+    if (lt==LocaleInfoType::user)
+        return getLocaleInfoUser();
+    if (lt==LocaleInfoType::system)
+        return getLocaleInfoSystem();
+#else
+    if (lt==LocaleInfoType::user || lt==LocaleInfoType::system)
+        return getLocaleInfoInvariant();
+#endif
+
+    throw std::invalid_argument("marty::format::getLocaleInfo: invalid LocaleInfoType taken");
+}
+
 //----------------------------------------------------------------------------
 
 

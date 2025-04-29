@@ -36,6 +36,7 @@ umba-enum-gen %GEN_OPTS% %HEX2% %TPL_OVERRIDE% %SNIPPETOPTIONS_GEN_FLAGS%       
     %UINT32% %HEX2% -E=FormatIndexType          -F=@FormatIndexType.txt                ^
     %UINT32% %HEX2% -E=StdFilterType            -F=@StdFilterType.txt                  ^
     %UINT32% %HEX2% -E=NumeralSystem            -F=@NumeralSystem.txt                  ^
+    %UINT32% %HEX2% -E=LocaleInfoType           -F=@LocaleInfoType.txt                 ^
     %UINT32% %HEX2% -E=LocaleInfoValueType      -F=@LocaleInfoValueType.txt            ^
     %UINT32% %HEX2% -E=PositiveNumbersMode      -F=@PositiveNumbersMode.txt            ^
     %FLAGS% %FLAGENUM_EXTRA%                                                           ^
