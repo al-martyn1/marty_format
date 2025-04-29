@@ -176,7 +176,9 @@ enum class LocaleInfoValueType : std::uint32_t
     formatPercentNegative    = 0x08 /*!<  */,
     formatPercentPositive    = 0x09 /*!<  */,
     formatCurrencyNegative   = 0x0A /*!<  */,
-    formatCurrencyPositive   = 0x0B /*!<  */
+    formatCurrencyPositive   = 0x0B /*!<  */,
+    formatNumberNegative     = 0x0C /*!<  */,
+    formatNumberPositive     = 0x0D /*!<  */
 
 }; // enum 
 //#!
@@ -197,6 +199,8 @@ MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( LocaleInfoValueType, std::map, 1 )
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "FormatPercentPositive"  );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "FormatCurrencyPositive" );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "FormatCurrencyNegative" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "FormatNumberNegative"   );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "FormatNumberPositive"   );
 MARTY_CPP_ENUM_CLASS_SERIALIZE_END( LocaleInfoValueType, std::map, 1 )
 
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( LocaleInfoValueType, std::map, 1 )
@@ -236,7 +240,43 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( LocaleInfoValueType, std::map, 1 )
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "format-currency-negative" );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "format_currency_negative" );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "formatcurrencynegative"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "format-number-negative"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "formatnumbernegative"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "format_number_negative"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "format-number-positive"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "formatnumberpositive"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "format_number_positive"   );
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoValueType, std::map, 1 )
+
+
+//#!PositiveNumbersMode
+enum class PositiveNumbersMode : std::uint32_t
+{
+    unknown   = (std::uint32_t)(-1) /*!<  */,
+    invalid   = (std::uint32_t)(-1) /*!<  */,
+    none      = 0x00 /*!< Do not insert anything */,
+    space     = 0x01 /*!< Insert space instead of sign */,
+    sign      = 0x02 /*!< Insert sign itself */
+
+}; // enum 
+//#!
+
+MARTY_CPP_MAKE_ENUM_IS_FLAGS_FOR_NON_FLAGS_ENUM(PositiveNumbersMode)
+
+MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( PositiveNumbersMode, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( PositiveNumbersMode::unknown   , "Unknown" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( PositiveNumbersMode::none      , "None"    );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( PositiveNumbersMode::space     , "Space"   );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( PositiveNumbersMode::sign      , "Sign"    );
+MARTY_CPP_ENUM_CLASS_SERIALIZE_END( PositiveNumbersMode, std::map, 1 )
+
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( PositiveNumbersMode, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( PositiveNumbersMode::unknown   , "unknown" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( PositiveNumbersMode::unknown   , "invalid" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( PositiveNumbersMode::none      , "none"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( PositiveNumbersMode::space     , "space"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( PositiveNumbersMode::sign      , "sign"    );
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( PositiveNumbersMode, std::map, 1 )
 
 
 //#!FormattingOptionsFlags

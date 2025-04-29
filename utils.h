@@ -133,6 +133,58 @@ int toDigit(char ch)
 }
 
 //----------------------------------------------------------------------------
+inline
+const wchar_t* simpleParseDecimal(const wchar_t* b, const wchar_t* e, unsigned *pu)
+{
+    unsigned res = 0;
+
+    auto returnB = [&]()
+    {
+        if (pu)
+           *pu = res;
+        return b;
+    };
+
+    for(; b!=e; ++b)
+    {
+        auto d = toDigit(utf32_char_t(*b));
+        if (d<0)
+            return returnB();
+
+        res *= 10u;
+        res += unsigned(d);
+    }
+
+    return returnB();
+}
+
+//----------------------------------------------------------------------------
+inline
+const char* simpleParseDecimal(const char* b, const char* e, unsigned *pu)
+{
+    unsigned res = 0;
+
+    auto returnB = [&]()
+    {
+        if (pu)
+           *pu = res;
+        return b;
+    };
+
+    for(; b!=e; ++b)
+    {
+        auto d = toDigit(*b);
+        if (d<0)
+            return returnB();
+
+        res *= 10u;
+        res += unsigned(d);
+    }
+
+    return returnB();
+}
+
+//----------------------------------------------------------------------------
 namespace details{
 
 inline

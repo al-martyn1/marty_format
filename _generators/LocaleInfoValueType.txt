@@ -17,5 +17,7 @@ formatPercentNegative
 formatPercentPositive
 formatCurrencyNegative
 formatCurrencyPositive
+formatNumberNegative
+formatNumberPositive
 
 

@@ -1,0 +1,4 @@
+unknown,invalid             = -1
+none                        = 0   // Do not insert anything
+space                             // Insert space instead of sign
+sign                              // Insert sign itself
