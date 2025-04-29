@@ -1,0 +1,21 @@
+invalid,unknown          = -1
+none                     = 0
+
+# Group separators
+thousandSeparator        = 1  // Separately for each numeral system
+fractionalSeparator           // same as decimal, but for fractional part of floating point numbers
+
+# Symbols
+signDecimal                   // Aka decimal separator, decimal mark, decimal point
+signPlus
+signMinus
+signPercent
+signCurrency
+
+# Format strings
+formatPercentNegative
+formatPercentPositive
+formatCurrencyNegative
+formatCurrencyPositive
+
+

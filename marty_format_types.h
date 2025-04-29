@@ -16,6 +16,7 @@
 #include "utils.h"
 //namespace marty_utf {
 
+#include <cstddef>
 #include <functional>
 #include <string>
 #include <type_traits>
@@ -398,6 +399,7 @@ using FormatArgumentVariant =
                 , std::wstring
                 , marty::Decimal
                 , const void*
+                // , std::nullptr_t
                 , FormatValueFilter
                 >;
 //#!

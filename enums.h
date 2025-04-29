@@ -121,6 +121,124 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( StdFilterType, std::map, 1 )
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( StdFilterType, std::map, 1 )
 
 
+//#!NumeralSystem
+enum class NumeralSystem : std::uint32_t
+{
+    invalid    = (std::uint32_t)(-1) /*!<  */,
+    unknown    = (std::uint32_t)(-1) /*!<  */,
+    none       = 0x00 /*!<  */,
+    currency   = 0x01 /*!<  */,
+    bin        = 0x02 /*!<  */,
+    oct        = 0x08 /*!<  */,
+    dec        = 0x0A /*!<  */,
+    hex        = 0x10 /*!<  */
+
+}; // enum 
+//#!
+
+MARTY_CPP_MAKE_ENUM_IS_FLAGS_FOR_NON_FLAGS_ENUM(NumeralSystem)
+
+MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( NumeralSystem, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( NumeralSystem::invalid    , "Invalid"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( NumeralSystem::dec        , "Dec"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( NumeralSystem::none       , "None"     );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( NumeralSystem::bin        , "Bin"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( NumeralSystem::currency   , "Currency" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( NumeralSystem::oct        , "Oct"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( NumeralSystem::hex        , "Hex"      );
+MARTY_CPP_ENUM_CLASS_SERIALIZE_END( NumeralSystem, std::map, 1 )
+
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( NumeralSystem, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::invalid    , "invalid"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::invalid    , "unknown"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::dec        , "dec"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::none       , "none"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::bin        , "bin"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::currency   , "currency" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::oct        , "oct"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( NumeralSystem::hex        , "hex"      );
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( NumeralSystem, std::map, 1 )
+
+
+//#!LocaleInfoValueType
+enum class LocaleInfoValueType : std::uint32_t
+{
+    invalid                  = (std::uint32_t)(-1) /*!<  */,
+    unknown                  = (std::uint32_t)(-1) /*!<  */,
+    none                     = 0x00 /*!<  */,
+    thousandSeparator        = 0x01 /*!< Separately for each numeral system */,
+    fractionalSeparator      = 0x02 /*!< same as decimal, but for fractional part of floating point numbers */,
+    signDecimal              = 0x03 /*!< Aka decimal separator, decimal mark, decimal point */,
+    signPlus                 = 0x04 /*!<  */,
+    signMinus                = 0x05 /*!<  */,
+    signPercent              = 0x06 /*!<  */,
+    signCurrency             = 0x07 /*!<  */,
+    formatPercentNegative    = 0x08 /*!<  */,
+    formatPercentPositive    = 0x09 /*!<  */,
+    formatCurrencyNegative   = 0x0A /*!<  */,
+    formatCurrencyPositive   = 0x0B /*!<  */
+
+}; // enum 
+//#!
+
+MARTY_CPP_MAKE_ENUM_IS_FLAGS_FOR_NON_FLAGS_ENUM(LocaleInfoValueType)
+
+MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( LocaleInfoValueType, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::invalid                  , "Invalid"                );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "SignDecimal"            );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::none                     , "None"                   );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::thousandSeparator        , "ThousandSeparator"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::fractionalSeparator      , "FractionalSeparator"    );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "FormatPercentNegative"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "SignMinus"              );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "SignPlus"               );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "SignPercent"            );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "SignCurrency"           );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "FormatPercentPositive"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "FormatCurrencyPositive" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "FormatCurrencyNegative" );
+MARTY_CPP_ENUM_CLASS_SERIALIZE_END( LocaleInfoValueType, std::map, 1 )
+
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( LocaleInfoValueType, std::map, 1 )
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::invalid                  , "invalid"                  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::invalid                  , "unknown"                  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "sign-decimal"             );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "sign_decimal"             );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "signdecimal"              );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::none                     , "none"                     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::thousandSeparator        , "thousand-separator"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::thousandSeparator        , "thousand_separator"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::thousandSeparator        , "thousandseparator"        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::fractionalSeparator      , "fractional-separator"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::fractionalSeparator      , "fractional_separator"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::fractionalSeparator      , "fractionalseparator"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "format-percent-negative"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "format_percent_negative"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "formatpercentnegative"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "sign-minus"               );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "sign_minus"               );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "signminus"                );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "sign-plus"                );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "sign_plus"                );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "signplus"                 );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "sign-percent"             );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "sign_percent"             );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "signpercent"              );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "sign-currency"            );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "sign_currency"            );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "signcurrency"             );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "format-percent-positive"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "format_percent_positive"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "formatpercentpositive"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "format-currency-positive" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "format_currency_positive" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "formatcurrencypositive"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "format-currency-negative" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "format_currency_negative" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "formatcurrencynegative"   );
+MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoValueType, std::map, 1 )
+
+
 //#!FormattingOptionsFlags
 enum class FormattingOptionsFlags : std::uint32_t
 {

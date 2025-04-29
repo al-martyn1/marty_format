@@ -17,6 +17,19 @@
 #include <string>
 #include <type_traits>
 #include <variant>
+// #include <system_error>
+
+// GCC ниже 11ой версии не поддерживает std::to_chars
+// Поэтому будем использовать fcvt/ecvt/gcvt
+// MSVC2019 поддерживает, включая hex, а ниже нам и не надо
+// Другие компиляторы старых версий нас не интересуют
+#if defined(__GNUC__) && (__GNUC__ < 11)
+    // #include <crtdefs.h>
+    // #include <stdlib.h>
+    #include <sstream>
+
+#endif
+
 
 //
 #include "undef_min_max.h"
@@ -884,6 +897,51 @@ std::make_unsigned_t<T> toUnsignedAbs(T t)
 
 //----------------------------------------------------------------------------
 
+
+
+//----------------------------------------------------------------------------
+#if 0
+template <typename T>
+std::string formatFloat(T value, char spec, int precision = -1)
+{
+    #if defined(__GNUC__) && (__GNUC__ < 11)
+
+    #include <stdlib.h>
+
+    // GCC ниже 11ой версии не поддерживает std::to_chars
+    // https://www.opennet.ru/man.shtml?topic=fcvt&category=3&russian=0
+    // https://learn.microsoft.com/ru-ru/cpp/c-runtime-library/reference/fcvt?view=msvc-170
+    // https://learn.microsoft.com/ru-ru/cpp/c-runtime-library/reference/ecvt?view=msvc-170
+    // https://learn.microsoft.com/ru-ru/cpp/c-runtime-library/reference/gcvt?view=msvc-170
+
+    #else
+
+    // MSVC2019 поддерживает, включая hex, а ниже нам и не надо
+
+    #endif
+
+    char buffer[64];
+    std::to_chars_result result;
+
+    // Выбор формата для std::to_chars
+    std::chars_format fmt = std::chars_format::general;
+    switch (spec) {
+        case 'a': case 'A': fmt = std::chars_format::hex; break;
+        case 'e': case 'E': fmt = std::chars_format::scientific; break;
+        case 'f': case 'F': fmt = std::chars_format::fixed; break;
+        case 'g': case 'G': fmt = std::chars_format::general; break;
+        default: throw std::invalid_argument("Invalid specifier");
+    }
+
+    // Преобразование числа в строку
+    result = std::to_chars(buffer.data(), buffer.data() + buffer.size(), value, fmt, precision);
+    if (result.ec != std::errc()) {
+        throw std::runtime_error("Formatting failed");
+    }
+
+    return std::string(buffer.data(), result.ptr);
+}
+#endif
 
 
 //----------------------------------------------------------------------------
