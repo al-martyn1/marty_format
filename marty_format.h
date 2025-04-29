@@ -70,7 +70,7 @@ namespace format{
 
 // std::size_t (const char* str, FormatIndexType indexType)
 
-#include "internal_processFormatStringImpl.h"
+#include "impl/internal_processFormatStringImpl.h"
 
 
 //----------------------------------------------------------------------------
@@ -451,7 +451,7 @@ struct MartyFormatValueGetter< ContainerType
 
 
 //----------------------------------------------------------------------------
-#include "internal_processFormatValuesImpl.h"
+#include "impl/internal_processFormatValuesImpl.h"
 
 //----------------------------------------------------------------------------
 

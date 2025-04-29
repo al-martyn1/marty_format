@@ -199,7 +199,7 @@ protected: // static helpers
 }; // struct LocaleInfo
 
 
-#include "internal_locale_info_impl_base.h"
+#include "impl/internal_locale_info_impl_base.h"
 
 
 //----------------------------------------------------------------------------
@@ -217,7 +217,7 @@ const LocaleInfo* getLocaleInfoInvariant()
 //----------------------------------------------------------------------------
 #if defined(WIN32) || defined(_WIN32)
 
-#include "internal_locale_info_impl_win.h"
+#include "impl/internal_locale_info_impl_win.h"
 
 //----------------------------------------------------------------------------
 inline
