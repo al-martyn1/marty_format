@@ -13,7 +13,7 @@
 
 @set ARGLIST_OPTIONS=--arg-list-title=:Значение,:Описание --arg-list-type=table --arg-list-value-style=bold
 
-@set EXCLUDE_DIRS=--batch-exclude-dir=_libs,libs,_lib,lib,tests,test,rc,_generators,conf,_distr_conf,doxy,src,_src,.msvc2019,boost,icons
+@set EXCLUDE_DIRS=--batch-exclude-dir=_libs,libs,_lib,lib,tests,test,rc,_generators,_enums,conf,_distr_conf,doxy,src,_src,.msvc2019,boost,icons
 @set COMMON=--overwrite --copy-images
 @rem 
 @set GRAPHVIZ_OPTIONS=
