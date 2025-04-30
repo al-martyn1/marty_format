@@ -179,8 +179,8 @@ public: // static helper methods
     static std::string expandWithGroupSeparator( std::string numStr, std::string sep, const group_info_t &grpInfo
                                                , bool bFractionalPart
                                                , std::size_t sepCalculatedLen  // Посчитанная снаружи длина разделителя
-                                               , std::size_t startingNumStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
-                                               , std::size_t startingDigitsCount
+                                               , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                               , std::size_t &digitsCount
                                                , std::size_t maxLen
                                                );
 
@@ -189,8 +189,8 @@ protected: // static helper methods
     static std::string insertGroupSeparatorsImplHelper(const std::string &numStr, const std::string &sep, const group_info_t &grpInfo);
     static std::string expandWithGroupSeparatorImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
                                                          , std::size_t sepCalculatedLen // Посчитанная снаружи длина разделителя
-                                                         , std::size_t startingNumStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
-                                                         , std::size_t startingDigitsCount
+                                                         , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                                         , std::size_t &digitsCount
                                                          , std::size_t maxLen
                                                          );
     

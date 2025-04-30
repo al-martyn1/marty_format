@@ -352,19 +352,37 @@ std::string LocaleInfo::insertGroupSeparators( std::string numStr, std::string s
 }
 
 //----------------------------------------------------------------------------
+//     static std::string expandWithGroupSeparator( std::string numStr, std::string sep, const group_info_t &grpInfo
+//                                                , bool bFractionalPart
+//                                                , std::size_t sepCalculatedLen  // Посчитанная снаружи длина разделителя
+//                                                , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+//                                                , std::size_t &digitsCount
+//                                                , std::size_t maxLen
+//                                                );
+//  
+// protected: // static helper methods
+//  
+//     static std::string insertGroupSeparatorsImplHelper(const std::string &numStr, const std::string &sep, const group_info_t &grpInfo);
+//     static std::string expandWithGroupSeparatorImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
+//                                                          , std::size_t sepCalculatedLen // Посчитанная снаружи длина разделителя
+//                                                          , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+//                                                          , std::size_t &digitsCount
+//                                                          , std::size_t maxLen
+//                                                          );
+
 inline
-std::string LocaleInfo::expandWithGroupSeparatorImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
+std::string LocaleInfo::expandWithGroupSeparatorImplHelper( std::string numStr, const std::string &sep, const LocaleInfo::group_info_t &grpInfo
                                                           , std::size_t sepCalculatedLen  // Посчитанная снаружи длина разделителя
-                                                          , std::size_t startingNumStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
-                                                          , std::size_t startingDigitsCount
+                                                          , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                                          , std::size_t &digitsCount
                                                           , std::size_t maxLen
                                                           )
 {
-    if (startingNumStrLen>=maxLen)
+    if (numStrLen>=maxLen)
         return numStr;
 
-    std::size_t restLen = maxLen - startingNumStrLen;
-    std::size_t digitsCount = startingDigitsCount;
+    std::size_t restLen = maxLen - numStrLen;
+    //std::size_t digitsCount = startingDigitsCount;
 
     while(restLen!=0)
     {
@@ -373,7 +391,8 @@ std::string LocaleInfo::expandWithGroupSeparatorImplHelper( std::string numStr, 
             if (restLen>=sepCalculatedLen)
             {
                 numStr.append(sep);
-                restLen -= sepCalculatedLen;
+                restLen   -= sepCalculatedLen;
+                numStrLen += sepCalculatedLen;
             }
 
             //res.append(sep);
@@ -384,6 +403,7 @@ std::string LocaleInfo::expandWithGroupSeparatorImplHelper( std::string numStr, 
             numStr.append(1, '0');
             restLen -= 1u;
             ++digitsCount;
+            ++numStrLen;
         }
     }
 
@@ -395,8 +415,8 @@ inline
 std::string LocaleInfo::expandWithGroupSeparator( std::string numStr, std::string sep, const group_info_t &grpInfo
                                                 , bool bFractionalPart
                                                 , std::size_t sepCalculatedLen  // Посчитанная снаружи длина разделителя
-                                                , std::size_t startingNumStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
-                                                , std::size_t startingDigitsCount
+                                                , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                                , std::size_t &digitsCount
                                                 , std::size_t maxLen
                                                 )
 {
@@ -409,15 +429,16 @@ std::string LocaleInfo::expandWithGroupSeparator( std::string numStr, std::strin
 
         std::reverse(numStr.begin(), numStr.end());
         std::reverse(sep.begin()   , sep.end());
-        auto res = expandWithGroupSeparatorImplHelper(numStr, sep, grpInfo, sepCalculatedLen, startingNumStrLen, startingDigitsCount, maxLen);
+        auto res = expandWithGroupSeparatorImplHelper(numStr, sep, grpInfo, sepCalculatedLen, numStrLen, digitsCount, maxLen);
         std::reverse(res.begin(), res.end());
         return res;
     }
     else
     {
         // Для дробной части реверсы делать не надо, обработка идёт слева направо
-        return expandWithGroupSeparatorImplHelper(numStr, sep, grpInfo, sepCalculatedLen, startingNumStrLen, startingDigitsCount, maxLen);
+        return expandWithGroupSeparatorImplHelper(numStr, sep, grpInfo, sepCalculatedLen, numStrLen, digitsCount, maxLen);
     }
 }
+
 
 

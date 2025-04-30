@@ -185,6 +185,10 @@ const char* simpleParseDecimal(const char* b, const char* e, unsigned *pu)
 }
 
 //----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
 namespace details{
 
 inline
@@ -201,7 +205,44 @@ char digitToCharAlpha(int d, int bUpper)
     return char((bUpper?'A':'a')+d);
 }
 
+// superdetails :)
+namespace details{
+
+constexpr
+inline
+std::size_t calcExpandSize(std::size_t curSize, std::size_t requiredSize)
+{
+    return curSize>requiredSize ? 0 : requiredSize-curSize;
+}
+
+inline
+std::string expandBefore(std::string str, std::size_t size, char chFill)
+{
+    std::size_t expandSize = calcExpandSize(str.size(), size);
+    if (!expandSize)
+        return str;
+
+    return std::string(expandSize, chFill) + str;
+}
+
+inline
+std::string expandAfter(std::string str, std::size_t size, char chFill)
+{
+    std::size_t expandSize = calcExpandSize(str.size(), size);
+    if (!expandSize)
+        return str;
+
+    return str + std::string(expandSize, chFill);
+}
+
 } // namespace details
+
+
+} // namespace details
+
+//----------------------------------------------------------------------------
+
+
 
 //----------------------------------------------------------------------------
 inline
