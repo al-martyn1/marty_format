@@ -67,11 +67,28 @@ std::string LocaleInfo::getLocaleInfoValue(LocaleInfoValueType vt) const
         case LocaleInfoValueType::formatNumberPositive  : return formatNumberPositive  ;
         case LocaleInfoValueType::thousandSeparator     : [[fallthrough]];
         case LocaleInfoValueType::fractionalSeparator   : [[fallthrough]];
+        case LocaleInfoValueType::digitsNumber          : [[fallthrough]];
+        case LocaleInfoValueType::digitsCurrency        : [[fallthrough]];
         case LocaleInfoValueType::unknown               : [[fallthrough]];
         case LocaleInfoValueType::none                  : [[fallthrough]];
+
         // case LocaleInfoValueType::: return "";
         default: throw std::invalid_argument("LocaleInfo::getLocaleInfoValue: value type taken");
     }
+}
+
+//----------------------------------------------------------------------------
+    // digitsDecimal / digitsCurrency
+unsigned LocaleInfo::getNumberOfDigits(LocaleInfoValueType vt) const
+{
+    if (vt==LocaleInfoValueType::digitsNumber)
+        return digitsNumber;
+
+    else if (vt==LocaleInfoValueType::digitsCurrency)
+        return digitsCurrency;
+
+    else
+        return 6u;
 }
 
 //----------------------------------------------------------------------------

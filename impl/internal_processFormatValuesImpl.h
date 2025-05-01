@@ -112,6 +112,79 @@ const LocaleInfo* findLocaleInfo(const FormattingOptions &formattingOptions, con
 }
 
 //----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType, typename FloatType >
+StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, FloatType v)
+{
+    #if 0
+
+    const bool localeFormattingOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::localeFormatting)!=0); // L option char - C++
+    const bool useLocale = (typeChar=='n') || localeFormattingOpt;
+    const LocaleInfo *pLocaleInfo = findLocaleInfo(formattingOptions, pUserLocaleInfo, useLocale);
+
+    bool bNegative = std::signbit(v); // v<FloatType(0.0);
+
+    auto typeChar = formattingOptions.typeChar;
+    std::string formatString;
+
+    if (!typeChar)
+    {
+        typeChar = 'f';
+    }
+    else if (typeChar=='%')
+    {
+        typeChar = 'f';
+        v *= FloatType(100.0);
+        formatString = pLocaleInfo->getLocaleInfoValue(bNegative ? LocaleInfoValueType::formatPercentNegative : LocaleInfoValueType::formatPercentPositive);
+    }
+    else if (typeChar=='$')
+    {
+        typeChar = 'f';
+        formatString = pLocaleInfo->getLocaleInfoValue(bNegative ? LocaleInfoValueType::formatCurrencyNegative : LocaleInfoValueType::formatCurrencyPositive);
+    }
+    else if (typeChar=='d')
+    {
+        typeChar = 'f';
+    }
+    else
+    {
+        formatString = pLocaleInfo->getLocaleInfoValue(bNegative ? LocaleInfoValueType::formatNumberNegative : LocaleInfoValueType::formatNumberPositive);
+    }
+
+    if (typeChar!='a' && typeChar!='A' && typeChar!='e' && typeChar!='E' && typeChar!='f' && typeChar!='F' && typeChar!='g' && typeChar!='G')
+    {
+        if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)==0)
+            throw mismatch_format_type("invalid format type for float argument");
+
+        typeChar = 'f';
+    }
+
+
+    std::size_t signIdx  = std::size_t(-1);
+    std::size_t powerIdx = std::size_t(-1);
+
+
+
+// std::string formatFloat( T value, char spec
+//                        , std::size_t *pSignIdx  = 0
+//                        , std::size_t *pPowerIdx = 
+//                        , int precision = -1
+//                        )
+
+    #endif
+
+  // static FMT_CONSTEXPR_DECL const int double_significand_size =
+  //     std::numeric_limits<double>::digits - 1;
+  // static FMT_CONSTEXPR_DECL const uint64_t implicit_bit =
+  //     1ULL << double_significand_size;
+  // static FMT_CONSTEXPR_DECL const int significand_size =
+  //     bits<significand_type>::value;
+
+    MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(pLocaleInfo);
+    return martyFormatSimpleConvertToString<StringType>(v);
+}
+
+//----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, const LocaleInfo *pUserLocaleInfo, IntType v, size_t valSize)
 {
@@ -651,23 +724,6 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, co
     goto try_again;
 
     //return martyFormatSimpleConvertToString<StringType>(b);
-}
-
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType, typename FloatType >
-StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, FloatType v)
-{
-
-  // static FMT_CONSTEXPR_DECL const int double_significand_size =
-  //     std::numeric_limits<double>::digits - 1;
-  // static FMT_CONSTEXPR_DECL const uint64_t implicit_bit =
-  //     1ULL << double_significand_size;
-  // static FMT_CONSTEXPR_DECL const int significand_size =
-  //     bits<significand_type>::value;
-
-    MARTY_ARG_USED(formattingOptions);
-    MARTY_ARG_USED(pLocaleInfo);
-    return martyFormatSimpleConvertToString<StringType>(v);
 }
 
 //----------------------------------------------------------------------------

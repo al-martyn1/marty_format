@@ -25,9 +25,14 @@
 // MSVC2019 поддерживает, включая hex, а ниже нам и не надо
 // Другие компиляторы старых версий нас не интересуют
 #if defined(__GNUC__) && (__GNUC__ < 11)
-    // #include <crtdefs.h>
-    // #include <stdlib.h>
+
     #include <sstream>
+    #include <stdexcept>
+    #include <ios>
+
+#else 
+
+    #include <charconv>
 
 #endif
 
@@ -1104,13 +1109,18 @@ std::make_unsigned_t<T> toUnsignedAbs(T t)
 
 
 //----------------------------------------------------------------------------
-#if 0
+#if 1
 template <typename T>
-std::string formatFloat(T value, char spec, int precision = -1)
+std::string formatFloat( T value, char spec
+                       , std::size_t *pSignIdx  = 0
+                       , std::size_t *pPowerIdx = 0
+                       , int precision = -1
+                       )
 {
-    #if defined(__GNUC__) && (__GNUC__ < 11)
 
-    #include <stdlib.h>
+    std::string strRes;
+
+#if defined(__GNUC__) && (__GNUC__ < 11)
 
     // GCC ниже 11ой версии не поддерживает std::to_chars
     // https://www.opennet.ru/man.shtml?topic=fcvt&category=3&russian=0
@@ -1118,13 +1128,56 @@ std::string formatFloat(T value, char spec, int precision = -1)
     // https://learn.microsoft.com/ru-ru/cpp/c-runtime-library/reference/ecvt?view=msvc-170
     // https://learn.microsoft.com/ru-ru/cpp/c-runtime-library/reference/gcvt?view=msvc-170
 
-    #else
+    // fcvt/ecvt/gcvt временами выдают какую-то лажу
+    // Но потоки работают нормально
 
-    // MSVC2019 поддерживает, включая hex, а ниже нам и не надо
+    std::ostringstream oss;
 
-    #endif
+    // Устанавливаем точность, если она задана
+    if (precision >= 0)
+        oss.precision(precision);
 
-    char buffer[64];
+    // Форматируем всё в нижнем регистре
+    switch (fmt)
+    {
+        case 'a':
+        case 'A':
+            oss << std::hexfloat;
+            // oss << (fmt == 'A' ? std::uppercase : std::nouppercase);
+            break;
+
+        case 'e':
+        case 'E':
+            oss << std::scientific;
+            // oss << (fmt == 'E' ? std::uppercase : std::nouppercase);
+            break;
+
+        case 'f':
+        case 'F':
+            oss << std::fixed;
+            // oss << (fmt == 'F' ? std::uppercase : std::nouppercase);
+            break;
+
+        case 'g':
+        case 'G':
+            oss.unsetf(std::ios_base::fixed | std::ios_base::scientific);
+            // oss << (fmt == 'G' ? std::uppercase : std::nouppercase);
+            break;
+
+        // default:
+        //     throw std::invalid_argument("Invalid format specifier");
+    }
+    
+    oss << value;
+
+    strRes = oss.str();
+
+
+#else
+
+    // MSVC2019 поддерживает std::chars_format, включая hex, а ниже версия компилятора MSVC нас и не интересует
+
+    char buffer[128];
     std::to_chars_result result;
 
     // Выбор формата для std::to_chars
@@ -1138,12 +1191,37 @@ std::string formatFloat(T value, char spec, int precision = -1)
     }
 
     // Преобразование числа в строку
-    result = std::to_chars(buffer.data(), buffer.data() + buffer.size(), value, fmt, precision);
-    if (result.ec != std::errc()) {
-        throw std::runtime_error("Formatting failed");
+    result = std::to_chars(&buffer[0], &buffer[128], value, fmt, precision);
+    // if (result.ec != std::errc())
+    // {
+    //     //throw std::runtime_error("Formatting failed");
+    // }
+
+    if (result.ec==std::errc())
+    {
+        strRes = std::string(&buffer[0], result.ptr);
     }
 
-    return std::string(buffer.data(), result.ptr);
+#endif
+
+    if (pSignIdx)
+    {
+       *pSignIdx  = std::size_t(-1);
+       if (!strRes.empty() && strRes.front()=='-')
+           *pSignIdx = 0;
+    }
+
+    // if (pPowerIdx)
+    //    *pPowerIdx = std::size_t(-1);
+
+    if (pPowerIdx)
+    {
+        char eChar = (spec=='a' || spec=='A') ? 'p' : 'E';
+        *pPowerIdx = strRes.find(eChar);
+    }
+
+    return strRes;
+
 }
 #endif
 

@@ -125,6 +125,9 @@ public: // members
     std::string formatNumberNegative   = "-#";
     std::string formatNumberPositive   = "+#";
 
+    unsigned digitsNumber              = 3;
+    unsigned digitsCurrency            = 2;
+
 
 public: // virtual methods
 
@@ -142,6 +145,9 @@ public: // virtual methods
                                          , const std::string &numStr
                                          , PositiveNumbersMode pm
                                          ) const;
+
+    // digitsDecimal / digitsCurrency
+    virtual unsigned getNumberOfDigits(LocaleInfoValueType vt) const;
 
 
 public: // static helper methods

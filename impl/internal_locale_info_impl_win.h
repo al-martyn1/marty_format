@@ -51,7 +51,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_SGROUPING, buf, bufSize);
     if (szRes)
     {
-        buf[szRes] = 0; // на всякий случай
+        buf[szRes-1] = 0; // на всякий случай
         auto strGroupping = marty::utf::string_from_wstring(buf);
         auto grpInfo = LocaleInfo::parseGroupingString(strGroupping);
 
@@ -67,7 +67,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_STHOUSAND, buf, bufSize);
     if (szRes)
     {
-        buf[szRes] = 0; // на всякий случай
+        buf[szRes-1] = 0; // на всякий случай
         auto strSep = marty::utf::string_from_wstring(buf);
 
         // Для валюты и десятичных чисел используем локализованый разделитель, остальное - как у базовой локали
@@ -81,7 +81,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_SDECIMAL, buf, bufSize);
     if (szRes)
     {
-        buf[szRes] = 0; // на всякий случай
+        buf[szRes-1] = 0; // на всякий случай
         signDecimal = marty::utf::string_from_wstring(buf);
     }
 
@@ -89,7 +89,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_SPOSITIVESIGN, buf, bufSize);
     if (szRes)
     {
-        buf[szRes] = 0; // на всякий случай
+        buf[szRes-1] = 0; // на всякий случай
         signPlus = marty::utf::string_from_wstring(buf);
     }
 
@@ -97,7 +97,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_SNEGATIVESIGN, buf, bufSize);
     if (szRes)
     {
-        buf[szRes] = 0; // на всякий случай
+        buf[szRes-1] = 0; // на всякий случай
         signMinus = marty::utf::string_from_wstring(buf);
     }
 
@@ -105,7 +105,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_SPERCENT, buf, bufSize);
     if (szRes)
     {
-        buf[szRes] = 0; // на всякий случай
+        buf[szRes-1] = 0; // на всякий случай
         signPercent = marty::utf::string_from_wstring(buf);
     }
 
@@ -113,7 +113,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_SCURRENCY, buf, bufSize);
     if (szRes)
     {
-        buf[szRes] = 0; // на всякий случай
+        buf[szRes-1] = 0; // на всякий случай
         signCurrency = marty::utf::string_from_wstring(buf);
     }
 
@@ -121,6 +121,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_INEGATIVEPERCENT, buf, bufSize);
     if (szRes)
     {
+        buf[szRes-1] = 0; // на всякий случай
         unsigned u = 0;
         utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &u);
         switch(u)
@@ -144,6 +145,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_IPOSITIVEPERCENT, buf, bufSize);
     if (szRes)
     {
+        buf[szRes-1] = 0; // на всякий случай
         unsigned u = 0;
         utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &u);
         switch(u)
@@ -159,6 +161,7 @@ void LocaleInfoWin::init()
     szRes = getLocaleInfo(LOCALE_ICURRENCY, buf, bufSize);
     if (szRes)
     {
+        buf[szRes-1] = 0; // на всякий случай
         std::string formatCurrency = "$#";
         unsigned u = 0;
         utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &u);
@@ -174,15 +177,29 @@ void LocaleInfoWin::init()
         formatCurrencyPositive = "+" + formatCurrency;
     }
 
-
-// LOCALE_IDIGITS - Number of fractional digits placed after the decimal separator - https://learn.microsoft.com/en-us/windows/win32/intl/locale-idigits
-// LOCALE_ICURRDIGITS - Number of fractional digits for the local monetary format - https://learn.microsoft.com/en-us/windows/win32/intl/locale-icurrdigits
+    // LOCALE_IDIGITS - Number of fractional digits placed after the decimal separator - https://learn.microsoft.com/en-us/windows/win32/intl/locale-idigits
+    szRes = getLocaleInfo(LOCALE_IDIGITS, buf, bufSize);
+    if (szRes)
+    {
+        buf[szRes-1] = 0; // на всякий случай
+        // auto str = marty::utf::string_from_wstring(buf);
+        utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &(digitsNumber));
+    }
+     
+    // LOCALE_ICURRDIGITS - Number of fractional digits for the local monetary format - https://learn.microsoft.com/en-us/windows/win32/intl/locale-icurrdigits
+    szRes = getLocaleInfo(LOCALE_ICURRDIGITS, buf, bufSize);
+    if (szRes)
+    {
+        buf[szRes-1] = 0; // на всякий случай
+        // auto str = marty::utf::string_from_wstring(buf);
+        utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &(digitsCurrency));
+    }
 
     // // 
     // szRes = getLocaleInfo(, buf, bufSize);
     // if (szRes)
     // {
-    //     buf[szRes] = 0; // на всякий случай
+    //     buf[szRes-1] = 0; // на всякий случай
     //      = marty::utf::string_from_wstring(buf);
     // }
     //  

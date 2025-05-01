@@ -5,6 +5,10 @@ none                     = 0
 thousandSeparator        = 1  // Separately for each numeral system
 fractionalSeparator           // same as decimal, but for fractional part of floating point numbers
 
+# Number of digits
+digitsNumber
+digitsCurrency
+
 # Symbols
 signDecimal                   // Aka decimal separator, decimal mark, decimal point
 signPlus

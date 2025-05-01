@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <array>
 #include <exception>
+#include <cfloat>
+#include <cmath>
 #include <stdexcept>
 #include <type_traits>
 #include <variant>
