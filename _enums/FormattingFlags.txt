@@ -19,4 +19,11 @@ ignoreOptionsIndirectErrors = ignoreFillIndirectErrors | ignoreWidthIndirectErro
 ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors
 considerUnicodeFeatures     = considerZeroWidthSpaces | considerCombiningChars
 
-all = ignoreErrors | considerUnicodeFeatures | fractionalGroupping
+
+all = ignoreErrors | considerUnicodeFeatures | fractionalGroupping // Все флаги, кроме флагов локали
+
+localeForceCustom
+localeUseSystem     // Instead of user
+
+
+

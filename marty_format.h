@@ -626,8 +626,12 @@ StringType formatMessageImpl( const StringType &fmt
     std::size_t argIdx = 0;
 
     if (!pLocaleInfo)
-        pLocaleInfo = getLocaleInfo(LocaleInfoType::user);
-
+    {
+        if ((formattingFlags&FormattingFlags::localeUseSystem)==0)
+            pLocaleInfo = getLocaleInfo(LocaleInfoType::user);
+        else
+            pLocaleInfo = getLocaleInfo(LocaleInfoType::system);
+    }
 
     auto indexStringConverter = [&](const char* strB, const char* strE, FormatIndexType indexType)
     {

@@ -89,6 +89,29 @@ StringType martyFormatValueFormatPointer(FormattingOptions formattingOptions, co
 }
 
 //----------------------------------------------------------------------------
+inline
+const LocaleInfo* findLocaleInfo(const FormattingOptions &formattingOptions, const LocaleInfo *pUserLocaleInfo, bool useFormatStringLocale)
+{
+    // Для начала 
+    const LocaleInfo *pLocaleInfo = getLocaleInfo(LocaleInfoType::invariant);
+
+    // Вне зависимости от форматной строки используем кастомную локаль, которую нам передал пользователь
+    // Если пользователь ничего не передал, то уровнем выше берётся юзер/систем локаль
+    if ((formattingOptions.formattingFlags&FormattingFlags::localeForceCustom)!=0)
+    {
+        if (pUserLocaleInfo)
+            pLocaleInfo = pUserLocaleInfo;
+
+        return pLocaleInfo;
+    }
+
+    if (!useFormatStringLocale)
+        return pLocaleInfo; // в форматной строке не задано использование локали, возвращаем "сишную" invariant локаль
+
+    return pUserLocaleInfo ? pUserLocaleInfo : pLocaleInfo;
+}
+
+//----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
 StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, const LocaleInfo *pUserLocaleInfo, IntType v, size_t valSize)
 {
@@ -141,15 +164,11 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, c
 
     std::string formatString;
     // По дефолту используем "C" (invariant) локаль
-    const LocaleInfo *pLocaleInfo = getLocaleInfo(LocaleInfoType::invariant);
+    //const LocaleInfo *pLocaleInfo = getLocaleInfo(LocaleInfoType::invariant);
 
     const bool localeFormattingOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::localeFormatting)!=0); // L option char - C++
     const bool useLocale = (typeChar=='n') || localeFormattingOpt;
-    if (useLocale)
-    {
-        if (pUserLocaleInfo)
-            pLocaleInfo = pUserLocaleInfo;
-    }
+    const LocaleInfo *pLocaleInfo = findLocaleInfo(formattingOptions, pUserLocaleInfo, useLocale);
 
     if (typeChar=='n')
         typeChar = 'd';
