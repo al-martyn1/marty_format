@@ -39,9 +39,9 @@ std::string LocaleInfo::getGroupSeparator( LocaleInfoValueType vt //!
     {
         case NumeralSystem::currency : return groupSeparatorCur[idx];
         case NumeralSystem::bin      : return groupSeparatorBin[idx];
-        case NumeralSystem::hex      : return groupSeparatorOct[idx];
-        case NumeralSystem::oct      : return groupSeparatorDec[idx];
-        case NumeralSystem::dec      : return groupSeparatorHex[idx];
+        case NumeralSystem::oct      : return groupSeparatorOct[idx];
+        case NumeralSystem::dec      : return groupSeparatorDec[idx];
+        case NumeralSystem::hex      : return groupSeparatorHex[idx];
         case NumeralSystem::unknown  : [[fallthrough]];
         case NumeralSystem::none     : [[fallthrough]];
         default: throw std::invalid_argument("LocaleInfo::getGroupSeparator: invalid numeral system taken");
@@ -84,9 +84,9 @@ LocaleInfo::group_info_t LocaleInfo::getGroupInfo(NumeralSystem ns, bool bFracti
     {
         case NumeralSystem::currency : return groupInfoCur[idx];
         case NumeralSystem::bin      : return groupInfoBin[idx];
-        case NumeralSystem::hex      : return groupInfoOct[idx];
-        case NumeralSystem::oct      : return groupInfoDec[idx];
-        case NumeralSystem::dec      : return groupInfoHex[idx];
+        case NumeralSystem::oct      : return groupInfoOct[idx];
+        case NumeralSystem::dec      : return groupInfoDec[idx];
+        case NumeralSystem::hex      : return groupInfoHex[idx];
         case NumeralSystem::unknown  : [[fallthrough]];
         case NumeralSystem::none     : [[fallthrough]];
         default: throw std::invalid_argument("LocaleInfo::getGroupSeparator: invalid numeral system taken");
@@ -440,5 +440,54 @@ std::string LocaleInfo::expandWithGroupSeparator( std::string numStr, std::strin
     }
 }
 
+//----------------------------------------------------------------------------
+inline
+std::string LocaleInfo::expandWithGroupSeparatorToNumDigitsImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
+                                              , std::size_t &digitsCount
+                                              , std::size_t maxLen           // Макс длина в цифрах
+                                              )
+{
+    while(digitsCount<maxLen)
+    {
+        if (testAppendGroupSeparator(digitsCount, grpInfo))
+        {
+            numStr.append(sep);
+        }
 
+        numStr.append(1, '0');
+        ++digitsCount;
+    }
+
+    return numStr;
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string LocaleInfo::expandWithGroupSeparatorToNumDigits( std::string numStr, std::string sep, const group_info_t &grpInfo
+                                              , bool bFractionalPart
+                                              , std::size_t &digitsCount
+                                              , std::size_t maxLen            // Макс длина в цифрах
+                                              )
+{
+    if (!bFractionalPart)
+    {
+        // Целая часть числа. 
+        // Цифры числа у нас группируются справа налево
+        // Значит, мы реверснём цифры числа, обработаем строку числа в нормальном порядке, затем реверснём результат обратно
+        // Разделитель групп тоже надо реверснуть
+
+        std::reverse(numStr.begin(), numStr.end());
+        std::reverse(sep.begin()   , sep.end());
+        auto res = expandWithGroupSeparatorToNumDigitsImplHelper(numStr, sep, grpInfo, digitsCount, maxLen);
+        std::reverse(res.begin(), res.end());
+        return res;
+    }
+    else
+    {
+        // Для дробной части реверсы делать не надо, обработка идёт слева направо
+        return expandWithGroupSeparatorToNumDigitsImplHelper(numStr, sep, grpInfo, digitsCount, maxLen);
+    }
+}
+
+//----------------------------------------------------------------------------
 

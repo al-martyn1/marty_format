@@ -164,9 +164,12 @@ public: // static helper methods
      */
     static group_info_t fixGroupInfo(group_info_t &&grpInfo);
 
+    //! Разбор строк вида "3;2;0" в group_info_t
+    static group_info_t parseGroupingString(const std::string &str);
+
+    //! Восстановление group_info_t в строку
     static std::string composeGroupingString(const group_info_t &grpInfo);
 
-    static group_info_t parseGroupingString(const std::string &str);
 
     // 3;0     3,000,000,000,000
     // 3;2;0   30,00,00,00,00,000
@@ -179,9 +182,14 @@ public: // static helper methods
     static std::string expandWithGroupSeparator( std::string numStr, std::string sep, const group_info_t &grpInfo
                                                , bool bFractionalPart
                                                , std::size_t sepCalculatedLen  // Посчитанная снаружи длина разделителя
-                                               , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                               , std::size_t &numStrLen        // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
                                                , std::size_t &digitsCount
                                                , std::size_t maxLen
+                                               );
+    static std::string expandWithGroupSeparatorToNumDigits( std::string numStr, std::string sep, const group_info_t &grpInfo
+                                               , bool bFractionalPart
+                                               , std::size_t &digitsCount
+                                               , std::size_t maxLen            // Макс длина в цифрах
                                                );
 
 protected: // static helper methods
@@ -189,9 +197,13 @@ protected: // static helper methods
     static std::string insertGroupSeparatorsImplHelper(const std::string &numStr, const std::string &sep, const group_info_t &grpInfo);
     static std::string expandWithGroupSeparatorImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
                                                          , std::size_t sepCalculatedLen // Посчитанная снаружи длина разделителя
-                                                         , std::size_t &numStrLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                                         , std::size_t &numStrLen       // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
                                                          , std::size_t &digitsCount
                                                          , std::size_t maxLen
+                                                         );
+    static std::string expandWithGroupSeparatorToNumDigitsImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
+                                                         , std::size_t &digitsCount
+                                                         , std::size_t maxLen           // Макс длина в цифрах
                                                          );
     
 }; // struct LocaleInfo

@@ -7,7 +7,9 @@
 #include "defs.h"
 #include "exceptions.h"
 #include "marty_format_types.h"
+#include "locale_info.h"
 #include "utils.h"
+
 
 //
 #include <algorithm>
@@ -599,7 +601,8 @@ template< typename StringType      = std::string
         >
 StringType formatMessageImpl( const StringType &fmt
                             , const ArgsType   &args
-                            , FormattingFlags  formattingFlags=FormattingFlags::all
+                            , const LocaleInfo *pLocaleInfo = 0
+                            , FormattingFlags   formattingFlags=FormattingFlags::all
                             )
 //#!
 {
@@ -620,21 +623,10 @@ StringType formatMessageImpl( const StringType &fmt
 
     std::vector<FilterType> filters;
 
-    // struct FiltersClearer
-    // {
-    //     FiltersClearer(std::vector<FilterType> &v) : m_v(v) {}
-    //     ~FiltersClearer() { m_v.clear(); }
-    //     std::vector<FilterType> &m_v;
-    // };
-
     std::size_t argIdx = 0;
 
-    // std::vector<>
-
-// using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>
-//                                                 , marty::utf::UtfOutputIterator<char>
-//                                                 >;
-
+    if (!pLocaleInfo)
+        pLocaleInfo = getLocaleInfo(LocaleInfoType::user);
 
 
     auto indexStringConverter = [&](const char* strB, const char* strE, FormatIndexType indexType)
@@ -779,7 +771,7 @@ StringType formatMessageImpl( const StringType &fmt
         {
             return std::visit( [&](auto && a) -> StringType
                                {
-                                   return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, a);
+                                   return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, a);
                                }
                              , valToFormat
                              );
@@ -855,11 +847,12 @@ template< typename StringType      = std::string
         >
 StringType formatMessage( const StringType &fmt
                         , const ArgsType   &args
+                        , const LocaleInfo *pLocaleInfo = 0
                         , FormattingFlags  formattingFlags=FormattingFlags::all
                         )
 //#!
 {
-    return formatMessageImpl<StringType, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
+    return formatMessageImpl<StringType, ArgsType, WidthCalculator, FilterFactory>(fmt, args, pLocaleInfo, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
@@ -868,13 +861,14 @@ template< typename ArgsType        = Args
         , typename WidthCalculator = DefaultUtfWidthCalculator
         , typename FilterFactory   = StdFilterFactory
         >
-std::string formatMessage( const char *fmt
+std::string formatMessage( const char       *fmt
                          , const ArgsType   &args
+                         , const LocaleInfo *pLocaleInfo = 0
                          , FormattingFlags  formattingFlags=FormattingFlags::all
                          )
 //#!
 {
-    return formatMessageImpl<std::string, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
+    return formatMessageImpl<std::string, ArgsType, WidthCalculator, FilterFactory>(fmt, args, pLocaleInfo, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
@@ -891,12 +885,13 @@ template< typename StringType = std::string
         >
 StringType formatMessage( const StringType          &fmt
                         , FormatArgumentVariantList &&args
+                        , const LocaleInfo          *pLocaleInfo = 0
                         , FormattingFlags           formattingFlags=FormattingFlags::all
                         )
 //#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
-    return formatMessageImpl<StringType, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
+    return formatMessageImpl<StringType, ArgsType, WidthCalculator, FilterFactory>(fmt, args, pLocaleInfo, formattingFlags);
 }
 
 //----------------------------------------------------------------------------
@@ -907,12 +902,13 @@ template< typename WidthCalculator = DefaultUtfWidthCalculator
 inline
 std::string formatMessage( const char                *fmt
                          , FormatArgumentVariantList &&args
+                         , const LocaleInfo          *pLocaleInfo = 0
                          , FormattingFlags           formattingFlags=FormattingFlags::all
                          )
 //#!
 {
     using ArgsType = std::initializer_list<FormatArgumentVariant>;
-    return formatMessageImpl<std::string, ArgsType, WidthCalculator, FilterFactory>(fmt, args, formattingFlags);
+    return formatMessageImpl<std::string, ArgsType, WidthCalculator, FilterFactory>(fmt, args, pLocaleInfo, formattingFlags);
 }
 
 

@@ -16,14 +16,17 @@ StringType martyFormatSimpleConvertToString(const std::string &str)
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str);
+StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const std::string &str);
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, IntType v, size_t valSize);
+StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, const LocaleInfo *pLocaleInfo, IntType v, size_t valSize);
 
 //----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType, typename FloatType >
+StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, FloatType v);
 
+//----------------------------------------------------------------------------
 
 
 
@@ -63,16 +66,17 @@ template<typename StringType> inline StringType martyFormatSimpleConvertToString
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bool b);
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, bool b);
 
 //----------------------------------------------------------------------------
 
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormatPointer(FormattingOptions formattingOptions, std::uintptr_t p, bool formatNativePtr=false)
+StringType martyFormatValueFormatPointer(FormattingOptions formattingOptions, const LocaleInfo *pLocaleInfo, std::uintptr_t p, bool formatNativePtr=false)
 {
     MARTY_ARG_USED(formatNativePtr);
+    MARTY_ARG_USED(pLocaleInfo);
 
     if (formattingOptions.typeChar!='p' && formattingOptions.typeChar!='P')
         formattingOptions.typeChar = 'P';
@@ -81,17 +85,29 @@ StringType martyFormatValueFormatPointer(FormattingOptions formattingOptions, st
     formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
 
     // Надо обдумать, как форматировать сегментный адрес
-    return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, p, sizeof(std::uintptr_t));
+    return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, p, sizeof(std::uintptr_t));
 }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, IntType v, size_t valSize)
+StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, const LocaleInfo *pUserLocaleInfo, IntType v, size_t valSize)
 {
-    //MARTY_ARG_USED(valSize);
+    MARTY_ARG_USED(valSize);
 
     if (formattingOptions.typeChar=='t' || formattingOptions.typeChar=='T' || formattingOptions.typeChar=='y' || formattingOptions.typeChar=='Y')
-        return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, (v==0 ? false : true) );
+        return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, (v==0 ? false : true) );
+
+    bool bNegative = ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0) ? true : false;
+
+    if (formattingOptions.typeChar=='$')
+    {
+        double d = double(v);
+        return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, bNegative ? -d :d);
+    }
+
+    if (formattingOptions.typeChar=='c')
+        return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, utils::charToStringUtf8(utf32_char_t(v)));
+
 
     if (formattingOptions.typeChar=='p' || formattingOptions.typeChar=='P')
     {
@@ -99,21 +115,16 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
         formattingOptions.width = 0; // Форматируем по ширине целиком по размеру типа
         formattingOptions.alignment = '=';
         formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
-        //return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, (unsigned long long)v);
 
-        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalSigned)!=0)
+        if (bNegative)
         {
             // Нам упало из обработчика знаковых чисел, надо обратно переделать в знаковый, поменять знак, и потом сбиткастить в беззнаковый
-
-            if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
-            {
-                // Нам упало не просто знаковое, но отрицательное знаковое
-                // Делаем обратное преобразование
-                using SignedT = std::make_signed_t<IntType>;
-                SignedT signedValueAbs = utils::toSignedCast(v);
-                SignedT signedValue    = -signedValueAbs;
-                v = utils::toUnsignedCast(signedValue);
-            }
+            // Нам упало не просто знаковое, но отрицательное знаковое
+            // Делаем обратное преобразование
+            using SignedT = std::make_signed_t<IntType>;
+            SignedT signedValueAbs = utils::toSignedCast(v);
+            SignedT signedValue    = -signedValueAbs;
+            v = utils::toUnsignedCast(signedValue);
 
             // Сбрасываем все признаки бывшей знаковости
             formattingOptions.optionsFlags &= ~FormattingOptionsFlags::internalSigned;
@@ -121,19 +132,41 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
         }
     }
 
+
     auto typeChar = formattingOptions.typeChar;
 
     if (typeChar==0)
         typeChar = 'd';
 
-    const bool doPercent = (typeChar=='%');
-    if (typeChar=='%')
-        typeChar = 'd';
 
-    bool localeFormattingOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::localeFormatting)!=0); // L option char - C++
+    std::string formatString;
+    // По дефолту используем "C" (invariant) локаль
+    const LocaleInfo *pLocaleInfo = getLocaleInfo(LocaleInfoType::invariant);
+
+    const bool localeFormattingOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::localeFormatting)!=0); // L option char - C++
     const bool useLocale = (typeChar=='n') || localeFormattingOpt;
+    if (useLocale)
+    {
+        if (pUserLocaleInfo)
+            pLocaleInfo = pUserLocaleInfo;
+    }
+
     if (typeChar=='n')
         typeChar = 'd';
+
+    formatString = pLocaleInfo->getLocaleInfoValue(bNegative ? LocaleInfoValueType::formatNumberNegative : LocaleInfoValueType::formatNumberPositive);
+
+    if (typeChar=='%')
+    {
+        typeChar = 'd';
+        formatString = pLocaleInfo->getLocaleInfoValue(bNegative ? LocaleInfoValueType::formatPercentNegative : LocaleInfoValueType::formatPercentPositive);
+    }
+
+    if (formatString.empty() || formatString.find('#')==formatString.npos)
+    {
+        formatString = bNegative ? "-#" : "+#";
+    }
+
 
     if (typeChar!='b' && typeChar!='B' && typeChar!='d' && typeChar!='o' && typeChar!='O' && typeChar!='x' && typeChar!='X' && typeChar!='h' && typeChar!='H')
     {
@@ -145,45 +178,6 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
         typeChar = 'd';
     }
 
-    // Максимальная длина разделителя разрядов - 16 символов
-    std::array<marty::utf::utf32_char_t, 16> groupSepRaw = { 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u }; 
-    //const char fracSep[2]  = { 0, 0 }; // не нужно для целых
-
-    const bool grouppingTakenOpt = (formattingOptions.grouppingChar!=0);
-    // ((formattingOptions.optionsFlags&FormattingOptionsFlags::grouppingTaken)!=0);
-    bool grouppingTaken = false;
-    if (grouppingTakenOpt || useLocale)
-    {
-        grouppingTaken = true;
-
-        // if (grouppingTakenOpt)
-        {
-            groupSepRaw[0] = formattingOptions.grouppingChar;
-            if (groupSepRaw[0]==0)
-            {
-                if (typeChar=='b' || typeChar=='B' || typeChar=='o'  || typeChar=='O' || typeChar=='x' || typeChar=='X' || typeChar=='h' || typeChar=='H')
-                    groupSepRaw[0] = marty::utf::utf32_char_t('_');
-                else
-                    groupSepRaw[0] = marty::utf::utf32_char_t('\'');
-            }
-        }
-        // else // localeFormattingOpt
-        // {
-        //     // TODO: !!! Извлечь разделитель разрядов из системы
-        // }
-    }
-
-    std::string grpSepStr;
-    if (grouppingTaken)
-    {
-        auto outIt = marty::utf::UtfOutputIterator<char>(grpSepStr);
-        for(auto uch : groupSepRaw)
-        {
-            if (!uch)
-                break;
-            *outIt++ = uch;
-        }
-    }
 
     const bool isNumberUpper = (formattingOptions.typeChar=='B' || formattingOptions.typeChar=='O' || formattingOptions.typeChar=='X' || formattingOptions.typeChar=='H');
     const bool caseInvert    = ((formattingOptions.optionsFlags&FormattingOptionsFlags::caseInvert)!=0);
@@ -196,57 +190,66 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
         XOR (!=)
     */
     const bool prefixUpper = (isNumberUpper != caseInvert);
-    std::size_t grpSize = 3;
-    IntType base = 10u;
     auto fillChar = formattingOptions.fillChar;
-    //utf32_char_t  = 
 
-    //const bool prefixOptional = (typeChar=='o'); // Если префикс опциональный и первая цифра - 0, то префикс не добавляется
+    const bool prefixOptional = (typeChar=='o' || typeChar=='O'); // Если префикс опциональный и первая цифра - 0, то префикс не добавляется
     std::string prefixStr;
     std::string postfixStr;
 
-    // bBdoxX
+    NumeralSystem numeralSystem = NumeralSystem::dec;
+
     if (typeChar=='b' || typeChar=='B')
     {
-        grpSize = 4;
-        base    = 2u;
+        numeralSystem = NumeralSystem::bin;
         prefixStr.assign(prefixUpper?"0B":"0b");
-        //if (!fillChar)
-        //    fillChar = marty::utf::utf32_char_t('0');
     }
     else if (typeChar=='d')
     {
-        // if (!fillChar)
-        //     fillChar = marty::utf::utf32_char_t('0');
     }
     else if (typeChar=='o')
     {
-        grpSize = 3;
-        base    = 8u;
+        numeralSystem = NumeralSystem::oct;
         prefixStr.assign(1, '0');
-        // if (!fillChar)
-        //     fillChar = marty::utf::utf32_char_t('0');
     }
     else if (typeChar=='x' || typeChar=='X')
     {
-        grpSize = 4;
-        base    = 16u;
+        numeralSystem = NumeralSystem::hex;
         prefixStr.assign(prefixUpper?"0X":"0x");
-        // if (!fillChar)
-        //     fillChar = marty::utf::utf32_char_t('0');
     }
     else if (typeChar=='h' || typeChar=='H')
     {
-        grpSize = 4;
-        base    = 16u;
+        numeralSystem = NumeralSystem::hex;
         postfixStr.assign(prefixUpper?"H":"h");
-        // if (!fillChar)
-        //     fillChar = marty::utf::utf32_char_t('0');
+    }
+
+
+    std::string grpSepStr;
+
+    // Разделение на группы разрядов делаем только если указан какой-то из символов разделителей групп разрядов
+    // Даже если у нас не "сишная", а пользовательская, всё равно надо явно указать, что используем разделитель
+    // Или нет?
+    // Для чисел с плавающей точкой мы можем хотеть вывести число с десятичной точкой из локали,
+    // но не разделять группы разрядов
+    // Поэтому использование разделителя надо указать явно.
+    // Для целых чисел использование разделителя надо указать явно для единообразности правил.
+
+    if (formattingOptions.grouppingChar!=0) // Задан какой-то из разделителей - '\'', '_', ','
+    {
+        if (useLocale) // используем разделитель разрядов из локали
+        {
+            grpSepStr = pLocaleInfo->getGroupSeparator(LocaleInfoValueType::thousandSeparator, numeralSystem);
+        }
+        else // используем явно заданный разделитель разрядов
+        {
+            auto outIt = marty::utf::UtfOutputIterator<char>(grpSepStr);
+            *outIt++ = marty::utf::utf32_char_t(formattingOptions.grouppingChar);
+        }
     }
 
     if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signAlterForm)==0)
     {
-        prefixStr.clear(); // Очищаем префикс - "альтернативная" форма не задана
+        // Очищаем префикс и постфикс - "альтернативная" форма не задана
+        prefixStr.clear(); 
         postfixStr.clear();
     }
 
@@ -263,20 +266,8 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
         fillChar = utf32_char_t(' ');
 
 
-    std::string numStr;
-    {
-        auto vTmp = v; // На всякий случай делаем копию, вдруг оригинальное число ещё пригодится
-        for(; vTmp; vTmp/=base)
-        {
-            numStr.append(1, utils::digitToChar(int(vTmp % base), isNumberUpper));
-        }
+    std::string numStr = utils::simpleToString(v, numeralSystem, isNumberUpper);
 
-        if (numStr.empty())
-            numStr.assign(1, '0');
-    }
-
-
-    char signChar = 0; // No sign
 
     //FormattingOptionsFlags signOpt = FormattingOptionsFlags::signMinus; // (this is the default behavior)
     // Sign, #, and 0
@@ -285,48 +276,25 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
     // -: Indicates that a sign should be used for negative numbers only (this is the default behavior).
     // space: Indicates that a leading space should be used for non-negative numbers, and a minus sign for negative numbers.
     // Negative zero is treated as a negative number.
+
+    PositiveNumbersMode positiveNumbersMode = PositiveNumbersMode::none;
+
     if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signPlus)!=0)
-    {
-        // signOpt = FormattingOptionsFlags::signPlus;
-        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
-            signChar = '-';
-        else
-            signChar = '+';
-    }
+        positiveNumbersMode = PositiveNumbersMode::sign;
+
     else if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signSpace)!=0)
-    {
-        // signOpt = FormattingOptionsFlags::signSpace;
-        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
-            signChar = '-';
-        else
-            signChar = ' ';
-    }
-    else // FormattingOptionsFlags::signMinus
-    {
-        if ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0)
-            signChar = '-';
-    }
+        positiveNumbersMode = PositiveNumbersMode::space;
 
 
-    width_t grpSepLen = width_t(WidthCalculator()(grpSepStr.data(), grpSepStr.size()));
-    std::reverse(grpSepStr.begin(), grpSepStr.end()); // делаем реверс разделителя, потом будет обратный реверс
+    std::size_t grpSepLen = width_t(WidthCalculator()(grpSepStr.data(), grpSepStr.size()));
 
-    width_t numStrLen     = width_t(numStr.size()); // число цифровых символов в строке
-    width_t numStrFullLen = width_t(numStr.size()); // число символов вместе с сепараторами
-    {
-        std::string tmpStr;
-        for(width_t i=0u; i!=numStrLen; ++i)
-        {
-            if (i && (i%grpSize)==0)
-            {
-                tmpStr.append(grpSepStr);
-                numStrFullLen += grpSepLen;
-            }
-            tmpStr.append(1, numStr[i]);
-        }
+    std::size_t numStrLen     = numStr.size(); // число цифровых символов в строке
+    // std::size_t numStrFullLen = numStr.size(); // число символов вместе с сепараторами
 
-        swap(numStr, tmpStr);
-    }
+    LocaleInfo::group_info_t grpInfo = pLocaleInfo->getGroupInfo(numeralSystem, false /* !bFractionalPart */);
+
+    numStr = pLocaleInfo->insertGroupSeparators(numStr, grpSepStr, grpInfo, false /* !bFractionalPart */);
+    std::size_t numStrFullLen = WidthCalculator()(numStr.data(), numStr.size()); // число символов вместе с сепараторами
 
     // Шестнадцатиричные числа по умолчанию форматируются как в питоне с символом '='
     // - заполнение вставляется между знаком и/или префиксом, при этом, если задан '0'
@@ -342,159 +310,150 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, I
 
     if (alignment!='=')
     {
-        std::reverse(numStr.begin(), numStr.end());
-
-        //FormattingOptions fc = formattingOptions;
-        formattingOptions.typeChar = 's';
-        formattingOptions.optionsFlags &= ~FormattingOptionsFlags::precisionTaken;
-        formattingOptions.precision = 0;
-
-        std::string tmpStr;
-        if (signChar)
-            tmpStr.append(1u, signChar);
-
-        if (!prefixStr.empty())
-            tmpStr.append(prefixStr);
-
-        tmpStr.append(numStr);
-
-        if (!postfixStr.empty())
-            tmpStr.append(postfixStr);
-
-        if (doPercent)
-            tmpStr.append(1u, '%');
-
-        return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, tmpStr);
+        numStr = prefixStr + numStr + postfixStr;
+        numStr = pLocaleInfo->substFormatString(formatString, numStr, positiveNumbersMode);
+        return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, numStr);
     }
 
-    width_t extraWidth = 0;
 
-    if (signChar!=0)
-        extraWidth += width_t(1u);
+    std::size_t fieldWidth = formattingOptions.width;
 
-    if (!prefixStr.empty())
-        extraWidth += width_t(prefixStr.size());
+    // Форматирование по ширине. Либо добиванием нулей, либо символом fillChar
 
-    if (!postfixStr.empty())
-        extraWidth += width_t(postfixStr.size());
-
-    if (doPercent)
-        extraWidth += width_t(1u);
-
-
-    // signZero
-    // numStrFullLen += width_t(grpSepLen);
-    auto restWidth = formattingOptions.width;
-    if (restWidth>=numStrFullLen)
-        restWidth -= numStrFullLen;
-    else
-        restWidth = 0;
-
-    if (restWidth>=extraWidth)
-        restWidth -= extraWidth;
-    else
-        restWidth = 0;
-
-    
     if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signZero)==0)
     {
-        // Заполняем при помощи fillChar после добавления префикса, но до добавления знака
+        // Добиваем fillChar'ами спереди
 
-        // if (restWidth>=numStr.size())
-        //     restWidth -= width_t(numStr.size());
-        // else
-        //     restWidth = 0;
+        numStr = prefixStr + numStr + postfixStr;
 
-        std::reverse(numStr.begin(), numStr.end());
+        std::size_t fillCount = 0;
 
-        std::string fillStr;
-        auto outIt = marty::utf::UtfOutputIterator<char>(fillStr);
-        for(; restWidth; --restWidth)
-            *outIt++ = fillChar;
+        // Пробуем составить финальную строку из того, что уже есть
+        {   
+            std::string tmpFinal = pLocaleInfo->substFormatString(formatString, numStr, positiveNumbersMode);
+            std::size_t tmpWidth = WidthCalculator()(tmpFinal.data(), tmpFinal.size());
 
-        return StringType((std::string((signChar==0 ? 0u : 1u), signChar) + fillStr + prefixStr + numStr + postfixStr + std::string((doPercent==0 ? 0u : 1u), '%')).c_str());
-    }    
-
-    // signZero установлен
-
-    if (formattingOptions.width!=0 || (base!=2 && base!=16 )) 
-    {
-        // Не нулевая ширина, или база не 2 и не 16
-        // Добиваем до нужной длины нулями
-
-        while(restWidth!=0)
-        {
-            if (numStrLen && (numStrLen%grpSize)==0)
+            // Найдена длина финальной строки после подстановки строки с числом (с префиксами/постфиксами)
+            
+            if (tmpWidth<fieldWidth)
             {
-                //numStr.append(grpSepStr);
-                //numStrFullLen += width_t(grpSepStr.size());
-                if (restWidth>=grpSepLen)
-                {
-                    numStr.append(grpSepStr);
-                    restWidth -= grpSepLen;
-                }
-            }
-    
-            if (restWidth)
-            {
-                numStr.append(1, '0');
-                restWidth -= width_t(1);
-                ++numStrLen;
+                // Полученная финальная строка короче заданной ширины поля, надо расширять
+                fillCount = fieldWidth - tmpWidth;
             }
         }
+
+        numStr = utils::expandBefore(numStr, fillCount, utils::charToStringUtf8(fillChar));
+        return pLocaleInfo->substFormatString(formatString, numStr, positiveNumbersMode);
     }
-    else // Если было что-то типа 0x00X в форматной строке, то количество символов равно размеру типа
+
+    // ZeroFlag установлен
+
+    // Нам надо добить строку до нужной ширины ведущими нулями перед тем, как добавить префикс/суффикс/постфикс
+
+    if (fieldWidth==0 && (numeralSystem==NumeralSystem::bin || numeralSystem==NumeralSystem::hex)) 
     {
-        width_t totalRequiredWidth = 0;
-        if (base==2)
-            totalRequiredWidth = width_t(valSize*8u);
-        else
-            totalRequiredWidth = width_t(valSize*2u);
-
-        while(numStrLen<totalRequiredWidth)
-        {
-            if (numStrLen && (numStrLen%grpSize)==0)
-            {
-                //numStr.append(grpSepStr);
-                //numStrFullLen += width_t(grpSepStr.size());
-                //if (restWidth>=grpSepLen)
-                {
-                    numStr.append(grpSepStr);
-                    restWidth -= grpSepLen;
-                }
-            }
-    
-            //if (restWidth)
-            {
-                numStr.append(1, '0');
-                restWidth -= width_t(1);
-                ++numStrLen;
-            }
-        }
+        // Задана нулевая ширина поля - задаём по размеру целого типа
+        // и добиваем до нужного количества цифр
+        std::size_t requiredNumDigits = (numeralSystem==NumeralSystem::bin) ? std::size_t(valSize*8u) : std::size_t(valSize*2u);
+        numStr = pLocaleInfo->expandWithGroupSeparatorToNumDigits(numStr, grpSepStr, grpInfo, false, numStrLen, requiredNumDigits);
+        numStr = prefixStr + numStr + postfixStr;
+        return pLocaleInfo->substFormatString(formatString, numStr, positiveNumbersMode);
     }
 
-    std::reverse(numStr.begin(), numStr.end());
 
-    return StringType((std::string((signChar==0 ? 0u : 1u), signChar) + prefixStr + numStr + postfixStr + std::string((doPercent==0 ? 0u : 1u), '%')).c_str());
+    if (!prefixOptional)
+    {
+        // Префикс добавляется безусловно
 
+        // Пробуем составить финальную строку из того, что уже есть, с префиксами/постфиксами,
+        // но без самого числа, и получить её длину
+        std::size_t numStrWidth = 0; // длина/ширина, до которой надо расширить числовую строку без префиксов и суффиксов
+        {
+            std::string tmpFinal = pLocaleInfo->substFormatString(formatString, prefixStr + postfixStr, positiveNumbersMode);
+            numStrWidth = WidthCalculator()(tmpFinal.data(), tmpFinal.size());
+        }
+
+        numStr = pLocaleInfo->expandWithGroupSeparator( numStr, grpSepStr, grpInfo, false /* !bFractionalPart */
+                                                      , grpSepLen
+                                                      , numStrFullLen // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                                      , numStrLen     // aka digitsCount
+                                                      , numStrWidth   // maxLen
+                                                      );
+        numStr = prefixStr + numStr + postfixStr;
+        return pLocaleInfo->substFormatString(formatString, numStr, positiveNumbersMode);
+    }
+
+    // У нас условный префикс - если отформатированное число начинается с нуля,
+    // то префикс не добавляется
+    std::size_t numStrWidth = 0; // длина/ширина, до которой надо расширить числовую строку без префиксов и суффиксов
+    {
+        std::string tmpFinal = pLocaleInfo->substFormatString(formatString, prefixStr + postfixStr, positiveNumbersMode);
+        numStrWidth = WidthCalculator()(tmpFinal.data(), tmpFinal.size());
+    }
+
+    auto numStrFullLen1 = numStrFullLen;
+    auto numStrLen1     = numStrLen;
+    auto numStr1 = pLocaleInfo->expandWithGroupSeparator( numStr, grpSepStr, grpInfo, false /* !bFractionalPart */
+                                                        , grpSepLen
+                                                        , numStrFullLen1 // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                                        , numStrLen1     // aka digitsCount
+                                                        , numStrWidth    // maxLen
+                                                        );
+    if (numStr1.empty() || numStr1.front()!='0')
+    {
+        // Нуля спереди нет, поэтому всё идёт штатно
+        numStr1 = prefixStr + numStr1 + postfixStr;
+        return pLocaleInfo->substFormatString(formatString, numStr1, positiveNumbersMode);
+    }
+    
+    // Спереди ноль, префикс не нужен
+    // пытаемся расширить, исключив префикс
+    auto numStrFullLen2 = numStrFullLen;
+    auto numStrLen2     = numStrLen;
+    auto numStrWidth2    = numStrWidth;
+    if (numStrWidth2>=prefixStr.size())
+        numStrWidth2 -= prefixStr.size();
+    else
+        numStrWidth2 = 0;
+
+    auto numStr2 = pLocaleInfo->expandWithGroupSeparator( numStr, grpSepStr, grpInfo, false /* !bFractionalPart */
+                                                        , grpSepLen
+                                                        , numStrFullLen2 // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+                                                        , numStrLen2     // aka digitsCount
+                                                        , numStrWidth2   // maxLen
+                                                        );
+    if (numStr2.empty() || numStr2.front()!='0')
+    {
+        // Нуля спереди нет, префикс нужен
+        // Но мы формировали эту строку без учёта префикса
+        // Откатываемся к первой версии
+        numStr1 = prefixStr + numStr1 + postfixStr;
+        return pLocaleInfo->substFormatString(formatString, numStr1, positiveNumbersMode);
+    }
+    
+    // У второй строки есть ведущий ноль, всё нормально
+    numStr2 = prefixStr + numStr2 + postfixStr;
+    return pLocaleInfo->substFormatString(formatString, numStr2, positiveNumbersMode);
 }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, IntType v, size_t valSize)
+StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, IntType v, size_t valSize)
 {
+    MARTY_ARG_USED(pLocaleInfo);
+
     // Надо добавить форматный символ ~ - который делает битовый каст к беззнаковому
     // // шестнадцатиричное и двоичные числа битово кастим и отображаем как беззнаковые
     if ( (formattingOptions.optionsFlags&FormattingOptionsFlags::bitCast)!=0
       && (formattingOptions.typeChar=='b' || formattingOptions.typeChar=='B' || formattingOptions.typeChar=='x' || formattingOptions.typeChar=='X' || formattingOptions.typeChar=='h' || formattingOptions.typeChar=='H')
        )
     {
-        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, utils::toUnsignedCast(v), valSize);
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, utils::toUnsignedCast(v), valSize);
     }
 
     if (formattingOptions.typeChar=='p' || formattingOptions.typeChar=='P')
     {
-        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, utils::toUnsignedCast(v), valSize);
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, utils::toUnsignedCast(v), valSize);
     }
 
     FormattingOptions fc = formattingOptions;
@@ -503,16 +462,18 @@ StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions,
     if (v<0)
     {
         fc.optionsFlags |= FormattingOptionsFlags::internalNegative;
-        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, utils::toUnsignedAbs(v), valSize);
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, pLocaleInfo, utils::toUnsignedAbs(v), valSize);
     }
 
-    return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, utils::toUnsignedAbs(v), valSize);
+    return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, pLocaleInfo, utils::toUnsignedAbs(v), valSize);
 }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const std::string &str)
+StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const LocaleInfo* pLocaleInfo, const std::string &str)
 {
+    MARTY_ARG_USED(pLocaleInfo);
+
     // Extraction
     auto optionsFlags  = formattingOptions.optionsFlags;
     auto typeChar      = formattingOptions.typeChar;
@@ -613,8 +574,10 @@ StringType martyFormatValueFormatString(const FormattingOptions &formattingOptio
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bool b)
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, bool b)
 {
+    MARTY_ARG_USED(pLocaleInfo);
+
     FormattingOptions fc = formattingOptions;
 
     try_again:
@@ -653,12 +616,12 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
             fc.precision = 1;
         }
 
-        return martyFormatValueFormatString<WidthCalculator, StringType>(fc, boolStr);
+        return martyFormatValueFormatString<WidthCalculator, StringType>(fc, pLocaleInfo, boolStr);
     }
     else if (fc.typeChar=='b' || fc.typeChar=='B' || fc.typeChar=='d' || fc.typeChar=='o' || fc.typeChar=='x' || fc.typeChar=='X')
     {
         // Форматируем как байт
-        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, (unsigned char)(b?1u:0u), 1u);
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, pLocaleInfo, (unsigned char)(b?1u:0u), 1u);
     }
 
     if ((formattingOptions.formattingFlags&FormattingFlags::ignoreTypeMismatchErrors)==0)
@@ -673,7 +636,7 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, bo
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename FloatType >
-StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, FloatType v)
+StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, FloatType v)
 {
 
   // static FMT_CONSTEXPR_DECL const int double_significand_size =
@@ -684,6 +647,7 @@ StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOption
   //     bits<significand_type>::value;
 
     MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(pLocaleInfo);
     return martyFormatSimpleConvertToString<StringType>(v);
 }
 
@@ -693,17 +657,16 @@ StringType martyFormatValueFormatFloat(const FormattingOptions &formattingOption
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType=std::string >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, char ch)
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, char ch)
 {
-    MARTY_ARG_USED(formattingOptions);
-    return martyFormatSimpleConvertToString<StringType>(ch);
+    return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, std::string(1, ch));
 }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType=std::string >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const void* ptr)
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const void* ptr)
 {
-    return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, std::uintptr_t(ptr), true  /* formatNativePtr */);
+    return martyFormatValueFormatPointer<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, std::uintptr_t(ptr), true  /* formatNativePtr */);
 }
 
 //----------------------------------------------------------------------------
@@ -715,41 +678,43 @@ StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, co
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType=std::string >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const marty::Decimal &d)
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const marty::Decimal &d)
 {
     MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(pLocaleInfo);
     return martyFormatSimpleConvertToString<StringType>(d);
 }
 
 //----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed char  v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, signed short v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, int          v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long         v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long long    v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, signed char  v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, signed short v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, int          v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, long         v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, long long    v) { return martyFormatValueFormatInt<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
 
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned char      v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned short     v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned int       v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long      v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, unsigned long long v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, v, sizeof(v)); }
-
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, float v)       { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, v); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, double v)      { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, v); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, long double v) { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, v); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, unsigned char      v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, unsigned short     v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, unsigned int       v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, unsigned long      v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, unsigned long long v) { return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v, sizeof(v)); }
 
 //----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const std::string &str)  { return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, str); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const char* str)         { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, str ? std::string(str) : std::string()); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const std::wstring &str) { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, marty::utf::string_from_wstring(str)); }
-template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const wchar_t* str)      { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, str ? std::wstring(str) : std::wstring()); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, float v)       { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, double v)      { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, long double v) { return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, v); }
+
+//----------------------------------------------------------------------------
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const std::string &str)  { return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, str); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const char* str)         { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, str ? std::string(str) : std::string()); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const std::wstring &str) { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, marty::utf::string_from_wstring(str)); }
+template< typename WidthCalculator, typename StringType=std::string > StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const wchar_t* str)      { return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, str ? std::wstring(str) : std::wstring()); }
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType=std::string >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, FormatValueFilter filter)
+StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, FormatValueFilter filter)
 {
     MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(pLocaleInfo);
     MARTY_ARG_USED(filter);
     throw filter_as_value_error("invalid filter usage: filter used as value");
 }

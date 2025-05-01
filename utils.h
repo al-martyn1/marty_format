@@ -11,6 +11,7 @@
 #include "marty_utf/utf.h"
 //namespace marty_utf {
 
+#include <algorithm>
 #include <cstring>
 #include <functional>
 #include <stdexcept>
@@ -112,6 +113,40 @@ using utf32_char_t = marty::utf::utf32_char_t;
 
 //----------------------------------------------------------------------------
 inline
+std::string charToStringUtf8(utf32_char_t ch)
+{
+    std::string res;
+    auto outIt = marty::utf::UtfOutputIterator<char>(res);
+    *outIt++ = utf32_char_t(ch);
+    return res;
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string charToStringUtf8(char ch)
+{
+    return std::string(1, ch);
+}
+
+//----------------------------------------------------------------------------
+inline
+unsigned getNumeralSystemBase(NumeralSystem ns)
+{
+    switch(ns)
+    {
+        case NumeralSystem::unknown : return 10u;
+        case NumeralSystem::none    : return 10u;
+        case NumeralSystem::currency: return 10u;
+        case NumeralSystem::bin     : return  2u;
+        case NumeralSystem::oct     : return  8u;
+        case NumeralSystem::dec     : return 10u;
+        case NumeralSystem::hex     : return 16u;
+        default: return 10u;
+    }
+}
+
+//----------------------------------------------------------------------------
+inline
 constexpr
 int toDigit(utf32_char_t ch)
 {
@@ -200,13 +235,10 @@ char digitToCharDec(int d)
 
 inline
 constexpr
-char digitToCharAlpha(int d, int bUpper)
+char digitToCharAlpha(int d, bool bUpper)
 {
     return char((bUpper?'A':'a')+d);
 }
-
-// superdetails :)
-namespace details{
 
 constexpr
 inline
@@ -216,40 +248,118 @@ std::size_t calcExpandSize(std::size_t curSize, std::size_t requiredSize)
 }
 
 inline
-std::string expandBefore(std::string str, std::size_t size, char chFill)
+std::string makeStrRepitition(std::size_t n, const std::string &str)
 {
-    std::size_t expandSize = calcExpandSize(str.size(), size);
-    if (!expandSize)
-        return str;
-
-    return std::string(expandSize, chFill) + str;
+    std::string res; res.reserve(str.size()*n);
+    for(std::size_t i=0; i!=n; ++i)
+        res.append(str);
+    return res;
 }
-
-inline
-std::string expandAfter(std::string str, std::size_t size, char chFill)
-{
-    std::size_t expandSize = calcExpandSize(str.size(), size);
-    if (!expandSize)
-        return str;
-
-    return str + std::string(expandSize, chFill);
-}
-
-} // namespace details
-
 
 } // namespace details
 
 //----------------------------------------------------------------------------
 
 
+
+//----------------------------------------------------------------------------
+//! Добавляет size элементов
+inline
+std::string expandBefore(std::string str, std::size_t size, char chFill)
+{
+    return std::string(size, chFill) + str;
+}
+
+//----------------------------------------------------------------------------
+//! Добавляет size элементов
+inline
+std::string expandAfter(std::string str, std::size_t size, char chFill)
+{
+    return str + std::string(size, chFill);
+}
+
+//----------------------------------------------------------------------------
+//! Добавляет size элементов
+// strFill - это один символ, неважно, сколько он занимает char'ов
+inline
+std::string expandBefore(std::string str, std::size_t size, const std::string &strFill)
+{
+    return utils::details::makeStrRepitition(size, strFill) + str;
+}
+
+//----------------------------------------------------------------------------
+//! Добавляет size элементов
+// strFill - это один символ, неважно, сколько он занимает char'ов
+inline
+std::string expandAfter(std::string str, std::size_t size, const std::string &strFill)
+{
+    return str + utils::details::makeStrRepitition(size, strFill);
+}
+
+//----------------------------------------------------------------------------
+//! Расширяет до размера size
+inline
+std::string expandBeforeUpTo(std::string str, std::size_t strSize, std::size_t sizeTo, char chFill)
+{
+    std::size_t expandSize = details::calcExpandSize(strSize, sizeTo);
+    return expandBefore(str, expandSize, chFill);
+}
+
+//----------------------------------------------------------------------------
+//! Расширяет до размера size
+inline
+std::string expandAfterUpTo(std::string str, std::size_t strSize, std::size_t sizeTo, char chFill)
+{
+    std::size_t expandSize = details::calcExpandSize(strSize, sizeTo);
+    return expandAfter(str, expandSize, chFill);
+}
+
+//----------------------------------------------------------------------------
+//! Расширяет до размера size
+// strFill - это один символ, неважно, сколько он занимает char'ов
+inline
+std::string expandBeforeUpTo(std::string str, std::size_t strSize, std::size_t sizeTo, const std::string &strFill)
+{
+    std::size_t expandSize = details::calcExpandSize(strSize, sizeTo);
+    return expandBefore(str, expandSize, strFill);
+}
+
+//----------------------------------------------------------------------------
+//! Расширяет до размера size
+// strFill - это один символ, неважно, сколько он занимает char'ов
+inline
+std::string expandAfterUpTo(std::string str, std::size_t strSize, std::size_t sizeTo, const std::string &strFill)
+{
+    std::size_t expandSize = details::calcExpandSize(strSize, sizeTo);
+    return expandAfter(str, expandSize, strFill);
+}
 
 //----------------------------------------------------------------------------
 inline
 constexpr
-char digitToChar(int d, int bUpper)
+char digitToChar(int d, bool bUpper)
 {
     return d<10 ? details::digitToCharDec(d) : details::digitToCharAlpha(d-10, bUpper);
+}
+
+//----------------------------------------------------------------------------
+template<typename IntType>
+std::string simpleToString(IntType i, NumeralSystem ns, bool bUpper)
+{
+    std::string res;
+    IntType base = IntType(getNumeralSystemBase(ns));
+    while(i)
+    {
+        res.append(1, digitToChar(int(i%base), bUpper));
+        i /= base;
+    }
+
+    if (res.empty())
+        res.assign(1, '0');
+
+    std::reverse(res.begin(), res.end());
+
+    return res;
 }
 
 //----------------------------------------------------------------------------
@@ -416,9 +526,10 @@ bool isFormatTypeChar(utf32_char_t ch)
         || ch==utf32_char_t('T')
         || ch==utf32_char_t('y')
         || ch==utf32_char_t('Y')
-        || ch==utf32_char_t('%')
         || ch==utf32_char_t('p')
         || ch==utf32_char_t('P')
+        || ch==utf32_char_t('%')
+        || ch==utf32_char_t('$')
     ;
 }
 
