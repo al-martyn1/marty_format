@@ -132,7 +132,7 @@ public: // members
 public: // virtual methods
 
     //! Обрабатывает только LocaleInfoValueType::thousandSeparator и LocaleInfoValueType::fractionalSeparator
-    virtual std::string getGroupSeparator( LocaleInfoValueType vt //! 
+    virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //! 
                                          , NumeralSystem ns       //!
                                          ) const;
 
@@ -147,7 +147,7 @@ public: // virtual methods
                                          ) const;
 
     // digitsDecimal / digitsCurrency
-    virtual unsigned getNumberOfDigits(LocaleInfoValueType vt) const;
+    virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
 
 
 public: // static helper methods
