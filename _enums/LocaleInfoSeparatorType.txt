@@ -1,0 +1,3 @@
+invalid,unknown   = -1
+thousands         =  1  // Separately for each numeral system
+fractional              // same as decimal, but for fractional part of floating point numbers

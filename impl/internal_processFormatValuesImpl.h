@@ -329,7 +329,7 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, c
     {
         if (useLocale) // используем разделитель разрядов из локали
         {
-            grpSepStr = pLocaleInfo->getGroupSeparator(LocaleInfoValueType::thousandSeparator, numeralSystem);
+            grpSepStr = pLocaleInfo->getGroupSeparator(LocaleInfoSeparatorType::thousands, numeralSystem);
         }
         else // используем явно заданный разделитель разрядов
         {

@@ -24,16 +24,16 @@ LocaleInfo::LocaleInfo()
 
 //----------------------------------------------------------------------------
 inline
-std::string LocaleInfo::getGroupSeparator( LocaleInfoValueType vt //! 
+std::string LocaleInfo::getGroupSeparator( LocaleInfoSeparatorType vt //! 
                                          , NumeralSystem ns       //!
                                          ) const
 {
-    if (vt!=LocaleInfoValueType::thousandSeparator && vt!=LocaleInfoValueType::fractionalSeparator)
+    if (vt!=LocaleInfoSeparatorType::thousands && vt!=LocaleInfoSeparatorType::fractional)
     {
         throw std::invalid_argument("LocaleInfo::getGroupSeparator: vt is not thousandSeparator nor fractionalSeparator");
     }
 
-    std::size_t idx = (vt!=LocaleInfoValueType::thousandSeparator) ? 1u : 0u;
+    std::size_t idx = (vt!=LocaleInfoSeparatorType::thousands) ? 1u : 0u;
 
     switch(ns)
     {
@@ -65,10 +65,6 @@ std::string LocaleInfo::getLocaleInfoValue(LocaleInfoValueType vt) const
         case LocaleInfoValueType::formatCurrencyPositive: return formatCurrencyPositive;
         case LocaleInfoValueType::formatNumberNegative  : return formatNumberNegative  ;
         case LocaleInfoValueType::formatNumberPositive  : return formatNumberPositive  ;
-        case LocaleInfoValueType::thousandSeparator     : [[fallthrough]];
-        case LocaleInfoValueType::fractionalSeparator   : [[fallthrough]];
-        case LocaleInfoValueType::digitsNumber          : [[fallthrough]];
-        case LocaleInfoValueType::digitsCurrency        : [[fallthrough]];
         case LocaleInfoValueType::unknown               : [[fallthrough]];
         case LocaleInfoValueType::none                  : [[fallthrough]];
 
@@ -79,12 +75,12 @@ std::string LocaleInfo::getLocaleInfoValue(LocaleInfoValueType vt) const
 
 //----------------------------------------------------------------------------
     // digitsDecimal / digitsCurrency
-unsigned LocaleInfo::getNumberOfDigits(LocaleInfoValueType vt) const
+unsigned LocaleInfo::getNumberOfDigits(LocaleInfoDigitsType vt) const
 {
-    if (vt==LocaleInfoValueType::digitsNumber)
+    if (vt==LocaleInfoDigitsType::number)
         return digitsNumber;
 
-    else if (vt==LocaleInfoValueType::digitsCurrency)
+    else if (vt==LocaleInfoDigitsType::currency)
         return digitsCurrency;
 
     else
