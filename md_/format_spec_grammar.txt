@@ -1,7 +1,7 @@
 format_spec     ::= [options][width][grouping]["." precision][frac_grouping]["L"][type][filters]
 options         ::= [[fill]align][sign]["z"]["~"]["!"]["#"]["0"]
 fill            ::= <any character> | "{" argId "}"
-align           ::= "<" | ">" | "=" | "^"
+align           ::= "<" | ">" | "^" | "="
 sign            ::= "+" | "-" | " "
 width           ::= digit+ | "{" argId "}"
 grouping        ::= "," | "_" | "'"
