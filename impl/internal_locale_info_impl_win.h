@@ -126,18 +126,30 @@ void LocaleInfoWin::init()
         utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &u);
         switch(u)
         {
-            case 0 : formatPercentNegative = "-# %"; break; // Negative sign, number, space, percent; for example, -# %
-            case 1 : formatPercentNegative = "-#%" ; break; // Negative sign, number, percent; for example, -#%
-            case 2 : formatPercentNegative = "-%#" ; break; // Negative sign, percent, number; for example, -%#
-            case 3 : formatPercentNegative = "%-#" ; break; // Percent, negative sign, number; for example, %-#
-            case 4 : formatPercentNegative = "%#-" ; break; // Percent, number, negative sign; for example, %#-
-            case 5 : formatPercentNegative = "#-%" ; break; // Number, negative sign, percent; for example, #-%
-            case 6 : formatPercentNegative = "#%-" ; break; // Number, percent, negative sign; for example, #%-
-            case 7 : formatPercentNegative = "-% #"; break; // Negative sign, percent, space, number; for example, -% #
-            case 8 : formatPercentNegative = "# %-"; break; // Number, space, percent, negative sign; for example, # %-
-            case 9 : formatPercentNegative = "% #-"; break; // Percent, space, number, negative sign; for example, % #-
-            case 10: formatPercentNegative = "% -#"; break; // Percent, space, negative sign, number; for example, % -#
-            case 11: formatPercentNegative = "#- %"; break; // Number, negative sign, space, percent; for example, #- %
+            case 0 : formatPercentShortNegative = "-#";     // Negative sign, number, space, percent; for example, -# %
+                     formatPercentNegative = "-# %"; break;
+            case 1 : formatPercentShortNegative = "-#";     // Negative sign, number, percent; for example, -#%
+                     formatPercentNegative = "-#%" ; break;
+            case 2 : formatPercentShortNegative = "-#";     // Negative sign, percent, number; for example, -%#
+                     formatPercentNegative = "-%#" ; break;
+            case 3 : formatPercentShortNegative = "-#";     // Percent, negative sign, number; for example, %-#
+                     formatPercentNegative = "%-#" ; break;
+            case 4 : formatPercentShortNegative = "#-";     // Percent, number, negative sign; for example, %#-
+                     formatPercentNegative = "%#-" ; break;
+            case 5 : formatPercentShortNegative = "#-";     // Number, negative sign, percent; for example, #-%
+                     formatPercentNegative = "#-%" ; break;
+            case 6 : formatPercentShortNegative = "#-";     // Number, percent, negative sign; for example, #%-
+                     formatPercentNegative = "#%-" ; break;
+            case 7 : formatPercentShortNegative = "- #";    // Negative sign, percent, space, number; for example, -% #
+                     formatPercentNegative = "-% #"; break;
+            case 8 : formatPercentShortNegative = "# -";    // Number, space, percent, negative sign; for example, # %-
+                     formatPercentNegative = "# %-"; break;
+            case 9 : formatPercentShortNegative = "#-";     // Percent, space, number, negative sign; for example, % #-
+                     formatPercentNegative = "% #-"; break;
+            case 10: formatPercentShortNegative = "-#";     // Percent, space, negative sign, number; for example, % -#
+                     formatPercentNegative = "% -#"; break;
+            case 11: formatPercentShortNegative = "#-";     // Number, negative sign, space, percent; for example, #- %
+                     formatPercentNegative = "#- %"; break;
         }
     }
 
@@ -150,10 +162,14 @@ void LocaleInfoWin::init()
         utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &u);
         switch(u)
         {
-            case 0: formatPercentPositive = "# %"; break; // Number, space, percent; for example, # %
-            case 1: formatPercentPositive = "#%" ; break; // Number, percent; for example, #%
-            case 2: formatPercentPositive = "%#" ; break; // Percent, number; for example, %#
-            case 3: formatPercentPositive = "% #"; break; // Percent, space, number; for example, % #
+            case 0: formatPercentShortPositive = "#";     // Number, space, percent; for example, # %
+                    formatPercentPositive = "# %"; break;
+            case 1: formatPercentShortPositive = "#";     // Number, percent; for example, #%
+                    formatPercentPositive = "#%" ; break;
+            case 2: formatPercentShortPositive = "#";     // Percent, number; for example, %#
+                    formatPercentPositive = "%#" ; break;
+            case 3: formatPercentShortPositive = "#";     // Percent, space, number; for example, % #
+                    formatPercentPositive = "% #"; break;
         }
     }
 
@@ -163,18 +179,25 @@ void LocaleInfoWin::init()
     {
         buf[szRes-1] = 0; // на всякий случай
         std::string formatCurrency = "$#";
+        std::string formatCurrencyShort = "#";
         unsigned u = 0;
         utils::simpleParseDecimal(&buf[0], &buf[szRes-1], &u);
         switch(u)
         {
-            case 0: formatCurrency = "$1.1" ; break; // Prefix, no separation, for example, $1.1
-            case 1: formatCurrency = "1.1$" ; break; // Suffix, no separation, for example, 1.1$
-            case 2: formatCurrency = "$ 1.1"; break; // Prefix, 1-character separation, for example, $ 1.1
-            case 3: formatCurrency = "1.1 $"; break; // Suffix, 1-character separation, for example, 1.1 $
+            case 0: formatCurrencyShort = "#";     // Prefix, no separation, for example, $1.1
+                    formatCurrency = "$#" ; break;
+            case 1: formatCurrencyShort = "#";     // Suffix, no separation, for example, 1.1$
+                    formatCurrency = "#$" ; break;
+            case 2: formatCurrencyShort = "#";     // Prefix, 1-character separation, for example, $ 1.1
+                    formatCurrency = "$ #"; break;
+            case 3: formatCurrencyShort = "#";     // Suffix, 1-character separation, for example, 1.1 $
+                    formatCurrency = "# $"; break;
         }
 
-        formatCurrencyNegative = "-" + formatCurrency;
-        formatCurrencyPositive = "+" + formatCurrency;
+        formatCurrencyNegative      = "-" + formatCurrency;
+        formatCurrencyPositive      = "+" + formatCurrency;
+        formatCurrencyShortNegative = "-" + formatCurrencyShort;
+        formatCurrencyShortPositive = "+" + formatCurrencyShort;
     }
 
     // LOCALE_IDIGITS - Number of fractional digits placed after the decimal separator - https://learn.microsoft.com/en-us/windows/win32/intl/locale-idigits

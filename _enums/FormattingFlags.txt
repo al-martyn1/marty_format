@@ -17,10 +17,10 @@ fractionalGroupping                // Группировка цифр также
 
 ignoreOptionsIndirectErrors = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
 ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors
-considerUnicodeFeatures     = considerZeroWidthSpaces | considerCombiningChars
+considerUnicodeFeatures     = considerZeroWidthSpaces  | considerCombiningChars
 
-
-all = ignoreErrors | considerUnicodeFeatures | fractionalGroupping // Все флаги, кроме флагов локали
+allBase = ignoreErrors | considerUnicodeFeatures
+all     = allBase | fractionalGroupping
 
 localeForceCustom
 localeUseSystem     // Instead of user

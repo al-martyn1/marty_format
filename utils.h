@@ -302,6 +302,10 @@ std::string expandAfter(std::string str, std::size_t size, const std::string &st
 }
 
 //----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
 //! Расширяет до размера size
 inline
 std::string expandBeforeUpTo(std::string str, std::size_t strSize, std::size_t sizeTo, char chFill)
@@ -341,6 +345,35 @@ std::string expandAfterUpTo(std::string str, std::size_t strSize, std::size_t si
 
 //----------------------------------------------------------------------------
 inline
+std::string expandBeforeUpTo(std::string str, std::size_t sizeTo, char chFill)
+{
+    return expandBeforeUpTo(str, str.size(), sizeTo, chFill);
+}
+
+inline
+std::string expandAfterUpTo(std::string str, std::size_t sizeTo, char chFill)
+{
+    return expandAfterUpTo(str, str.size(), sizeTo, chFill);
+}
+
+inline
+std::string expandBeforeUpTo(std::string str, std::size_t sizeTo, const std::string &strFill)
+{
+    return expandBeforeUpTo(str, str.size(), sizeTo, strFill);
+}
+
+inline
+std::string expandAfterUpTo(std::string str, std::size_t sizeTo, const std::string &strFill)
+{
+    return expandAfterUpTo(str, str.size(), sizeTo, strFill);
+}
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+inline
 constexpr
 char digitToChar(int d, bool bUpper)
 {
@@ -349,7 +382,7 @@ char digitToChar(int d, bool bUpper)
 
 //----------------------------------------------------------------------------
 template<typename IntType>
-std::string simpleToString(IntType i, NumeralSystem ns, bool bUpper)
+std::string simpleToString(IntType i, NumeralSystem ns=NumeralSystem::dec, bool bUpper=false)
 {
     std::string res;
     IntType base = IntType(getNumeralSystemBase(ns));
@@ -1109,7 +1142,6 @@ std::make_unsigned_t<T> toUnsignedAbs(T t)
 
 
 //----------------------------------------------------------------------------
-#if 1
 template <typename T>
 std::string formatFloat( T value, char spec
                        , std::size_t *pSignIdx  = 0
@@ -1207,7 +1239,7 @@ std::string formatFloat( T value, char spec
     if (pSignIdx)
     {
        *pSignIdx  = std::size_t(-1);
-       if (!strRes.empty() && strRes.front()=='-')
+       if (!strRes.empty() && (strRes.front()=='-' || strRes.front()=='+'))
            *pSignIdx = 0;
     }
 
@@ -1216,14 +1248,59 @@ std::string formatFloat( T value, char spec
 
     if (pPowerIdx)
     {
-        char eChar = (spec=='a' || spec=='A') ? 'p' : 'E';
+        char eChar = (spec=='a' || spec=='A') ? 'p' : 'e';
         *pPowerIdx = strRes.find(eChar);
     }
 
     return strRes;
 
 }
-#endif
+
+//----------------------------------------------------------------------------
+inline
+char splitExponentionalNumberString(std::string numStr, std::string &floatStr, std::string &expStr)
+{
+    auto pos = numStr.find_first_of("pP");
+    if (pos!=numStr.npos)
+    {
+        floatStr.assign(numStr, 0, pos);
+        expStr.assign(numStr, pos + 1, numStr.npos);
+        return numStr[pos];
+    }
+
+    pos = numStr.find_first_of("eE");
+    if (pos!=numStr.npos)
+    {
+        floatStr.assign(numStr, 0, pos);
+        expStr.assign(numStr, pos + 1, numStr.npos);
+        return numStr[pos];
+    }
+
+    floatStr = numStr;
+    expStr.clear(); // на всякий случай
+    return 0;
+}
+
+//----------------------------------------------------------------------------
+inline
+char splitFloatNumberString(std::string numStr, std::string &partInteger, std::string &partFractional)
+{
+    auto pos = numStr.find_first_of(".,");
+    if (pos==numStr.npos)
+    {
+        partInteger = numStr;
+        partFractional.clear(); // на всякий случай
+        return 0;
+    }
+
+    partInteger.assign(numStr, 0, pos);
+    partFractional.assign(numStr, pos + 1, numStr.npos);
+
+    return numStr[pos];
+}
+
+//----------------------------------------------------------------------------
+
 
 
 //----------------------------------------------------------------------------

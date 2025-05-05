@@ -193,20 +193,24 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoType, std::map, 1 )
 //#!LocaleInfoValueType
 enum class LocaleInfoValueType : std::uint32_t
 {
-    invalid                  = (std::uint32_t)(-1) /*!<  */,
-    unknown                  = (std::uint32_t)(-1) /*!<  */,
-    none                     = 0x00 /*!<  */,
-    signDecimal              = 0x01 /*!< Aka decimal separator, decimal mark, decimal point */,
-    signPlus                 = 0x02 /*!<  */,
-    signMinus                = 0x03 /*!<  */,
-    signPercent              = 0x04 /*!<  */,
-    signCurrency             = 0x05 /*!<  */,
-    formatPercentNegative    = 0x06 /*!<  */,
-    formatPercentPositive    = 0x07 /*!<  */,
-    formatCurrencyNegative   = 0x08 /*!<  */,
-    formatCurrencyPositive   = 0x09 /*!<  */,
-    formatNumberNegative     = 0x0A /*!<  */,
-    formatNumberPositive     = 0x0B /*!<  */
+    invalid                       = (std::uint32_t)(-1) /*!<  */,
+    unknown                       = (std::uint32_t)(-1) /*!<  */,
+    none                          = 0x00 /*!<  */,
+    signDecimal                   = 0x01 /*!< Aka decimal separator, decimal mark, decimal point */,
+    signPlus                      = 0x02 /*!<  */,
+    signMinus                     = 0x03 /*!<  */,
+    signPercent                   = 0x04 /*!<  */,
+    signCurrency                  = 0x05 /*!<  */,
+    formatPercentNegative         = 0x06 /*!<  */,
+    formatPercentPositive         = 0x07 /*!<  */,
+    formatPercentShortNegative    = 0x08 /*!<  */,
+    formatPercentShortPositive    = 0x09 /*!<  */,
+    formatCurrencyNegative        = 0x0A /*!<  */,
+    formatCurrencyPositive        = 0x0B /*!<  */,
+    formatCurrencyShortNegative   = 0x0C /*!<  */,
+    formatCurrencyShortPositive   = 0x0D /*!<  */,
+    formatNumberNegative          = 0x0E /*!<  */,
+    formatNumberPositive          = 0x0F /*!<  */
 
 }; // enum 
 //#!
@@ -214,58 +218,74 @@ enum class LocaleInfoValueType : std::uint32_t
 MARTY_CPP_MAKE_ENUM_IS_FLAGS_FOR_NON_FLAGS_ENUM(LocaleInfoValueType)
 
 MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( LocaleInfoValueType, std::map, 1 )
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::invalid                  , "Invalid"                );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "SignDecimal"            );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::none                     , "None"                   );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "SignMinus"              );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "FormatPercentNegative"  );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "SignPlus"               );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "SignPercent"            );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "SignCurrency"           );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "FormatPercentPositive"  );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "FormatCurrencyPositive" );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "FormatCurrencyNegative" );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "FormatNumberNegative"   );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "FormatNumberPositive"   );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::invalid                     , "Invalid"                     );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signDecimal                 , "SignDecimal"                 );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::none                        , "None"                        );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signMinus                   , "SignMinus"                   );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative       , "FormatPercentNegative"       );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signPlus                    , "SignPlus"                    );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signPercent                 , "SignPercent"                 );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::signCurrency                , "SignCurrency"                );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive       , "FormatPercentPositive"       );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortNegative  , "FormatPercentShortNegative"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortPositive  , "FormatPercentShortPositive"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive      , "FormatCurrencyPositive"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative      , "FormatCurrencyNegative"      );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortNegative , "FormatCurrencyShortNegative" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortPositive , "FormatCurrencyShortPositive" );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative        , "FormatNumberNegative"        );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive        , "FormatNumberPositive"        );
 MARTY_CPP_ENUM_CLASS_SERIALIZE_END( LocaleInfoValueType, std::map, 1 )
 
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( LocaleInfoValueType, std::map, 1 )
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::invalid                  , "invalid"                  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::invalid                  , "unknown"                  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "sign-decimal"             );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "sign_decimal"             );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal              , "signdecimal"              );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::none                     , "none"                     );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "sign-minus"               );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "sign_minus"               );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                , "signminus"                );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "format-percent-negative"  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "format_percent_negative"  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative    , "formatpercentnegative"    );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "sign-plus"                );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "sign_plus"                );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                 , "signplus"                 );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "sign-percent"             );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "sign_percent"             );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent              , "signpercent"              );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "sign-currency"            );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "sign_currency"            );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency             , "signcurrency"             );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "format-percent-positive"  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "format_percent_positive"  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive    , "formatpercentpositive"    );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "format-currency-positive" );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "format_currency_positive" );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive   , "formatcurrencypositive"   );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "format-currency-negative" );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "format_currency_negative" );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative   , "formatcurrencynegative"   );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "format-number-negative"   );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "formatnumbernegative"     );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative     , "format_number_negative"   );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "format-number-positive"   );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "formatnumberpositive"     );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive     , "format_number_positive"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::invalid                     , "invalid"                        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::invalid                     , "unknown"                        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal                 , "sign-decimal"                   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal                 , "sign_decimal"                   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signDecimal                 , "signdecimal"                    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::none                        , "none"                           );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                   , "sign-minus"                     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                   , "sign_minus"                     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signMinus                   , "signminus"                      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative       , "format-percent-negative"        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative       , "format_percent_negative"        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentNegative       , "formatpercentnegative"          );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                    , "sign-plus"                      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                    , "sign_plus"                      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPlus                    , "signplus"                       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent                 , "sign-percent"                   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent                 , "sign_percent"                   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signPercent                 , "signpercent"                    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency                , "sign-currency"                  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency                , "sign_currency"                  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::signCurrency                , "signcurrency"                   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive       , "format-percent-positive"        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive       , "format_percent_positive"        );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentPositive       , "formatpercentpositive"          );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortNegative  , "format-percent-short-negative"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortNegative  , "format_percent_short_negative"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortNegative  , "formatpercentshortnegative"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortPositive  , "format-percent-short-positive"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortPositive  , "format_percent_short_positive"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatPercentShortPositive  , "formatpercentshortpositive"     );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive      , "format-currency-positive"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive      , "format_currency_positive"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyPositive      , "formatcurrencypositive"         );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative      , "format-currency-negative"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative      , "format_currency_negative"       );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyNegative      , "formatcurrencynegative"         );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortNegative , "format-currency-short-negative" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortNegative , "format_currency_short_negative" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortNegative , "formatcurrencyshortnegative"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortPositive , "format-currency-short-positive" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortPositive , "format_currency_short_positive" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatCurrencyShortPositive , "formatcurrencyshortpositive"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative        , "format-number-negative"         );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative        , "formatnumbernegative"           );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberNegative        , "format_number_negative"         );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive        , "format-number-positive"         );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive        , "formatnumberpositive"           );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoValueType::formatNumberPositive        , "format_number_positive"         );
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoValueType, std::map, 1 )
 
 
@@ -506,8 +526,9 @@ enum class FormattingFlags : std::uint32_t
     fractionalGroupping             = 0x800 /*!< Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа */,
     ignoreOptionsIndirectErrors     = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!<  */,
     ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors /*!<  */,
-    considerUnicodeFeatures         = considerZeroWidthSpaces | considerCombiningChars /*!<  */,
-    all                             = ignoreErrors | considerUnicodeFeatures | fractionalGroupping /*!< Все флаги, кроме флагов локали */,
+    considerUnicodeFeatures         = considerZeroWidthSpaces  | considerCombiningChars /*!<  */,
+    allBase                         = ignoreErrors | considerUnicodeFeatures /*!<  */,
+    all                             = allBase | fractionalGroupping /*!<  */,
     localeForceCustom               = 0x1000 /*!<  */,
     localeUseSystem                 = 0x2000 /*!< Instead of user */
 
@@ -536,6 +557,7 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "IgnoreOptionsIndirectErrors"   );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreErrors                    , "IgnoreErrors"                  );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "ConsiderUnicodeFeatures"       );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::allBase                         , "AllBase"                       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::localeUseSystem                 , "LocaleUseSystem"               );
 MARTY_CPP_ENUM_FLAGS_SERIALIZE_END( FormattingFlags, std::map, 1 )
 
@@ -592,6 +614,9 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "consider-unicode-features"        );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "consider_unicode_features"        );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "considerunicodefeatures"          );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::allBase                         , "all-base"                         );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::allBase                         , "all_base"                         );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::allBase                         , "allbase"                          );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::localeUseSystem                 , "locale-use-system"                );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::localeUseSystem                 , "locale_use_system"                );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::localeUseSystem                 , "localeusesystem"                  );

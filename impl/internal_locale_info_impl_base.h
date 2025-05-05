@@ -54,19 +54,23 @@ std::string LocaleInfo::getLocaleInfoValue(LocaleInfoValueType vt) const
 {
     switch(vt)
     {
-        case LocaleInfoValueType::signDecimal           : return signDecimal           ;
-        case LocaleInfoValueType::signPlus              : return signPlus              ;
-        case LocaleInfoValueType::signMinus             : return signMinus             ;
-        case LocaleInfoValueType::signPercent           : return signPercent           ;
-        case LocaleInfoValueType::signCurrency          : return signCurrency          ;
-        case LocaleInfoValueType::formatPercentNegative : return formatPercentNegative ;
-        case LocaleInfoValueType::formatPercentPositive : return formatPercentPositive ;
-        case LocaleInfoValueType::formatCurrencyNegative: return formatCurrencyNegative;
-        case LocaleInfoValueType::formatCurrencyPositive: return formatCurrencyPositive;
-        case LocaleInfoValueType::formatNumberNegative  : return formatNumberNegative  ;
-        case LocaleInfoValueType::formatNumberPositive  : return formatNumberPositive  ;
-        case LocaleInfoValueType::unknown               : [[fallthrough]];
-        case LocaleInfoValueType::none                  : [[fallthrough]];
+        case LocaleInfoValueType::signDecimal                : return signDecimal                ;
+        case LocaleInfoValueType::signPlus                   : return signPlus                   ;
+        case LocaleInfoValueType::signMinus                  : return signMinus                  ;
+        case LocaleInfoValueType::signPercent                : return signPercent                ;
+        case LocaleInfoValueType::signCurrency               : return signCurrency               ;
+        case LocaleInfoValueType::formatPercentNegative      : return formatPercentNegative      ;
+        case LocaleInfoValueType::formatPercentPositive      : return formatPercentPositive      ;
+        case LocaleInfoValueType::formatPercentShortNegative : return formatPercentShortNegative ;
+        case LocaleInfoValueType::formatPercentShortPositive : return formatPercentShortPositive ;
+        case LocaleInfoValueType::formatCurrencyNegative     : return formatCurrencyNegative     ;
+        case LocaleInfoValueType::formatCurrencyPositive     : return formatCurrencyPositive     ;
+        case LocaleInfoValueType::formatCurrencyShortNegative: return formatCurrencyShortNegative;
+        case LocaleInfoValueType::formatCurrencyShortPositive: return formatCurrencyShortPositive;
+        case LocaleInfoValueType::formatNumberNegative       : return formatNumberNegative       ;
+        case LocaleInfoValueType::formatNumberPositive       : return formatNumberPositive       ;
+        case LocaleInfoValueType::unknown                    : [[fallthrough]];
+        case LocaleInfoValueType::none                       : [[fallthrough]];
 
         // case LocaleInfoValueType::: return "";
         default: throw std::invalid_argument("LocaleInfo::getLocaleInfoValue: value type taken");

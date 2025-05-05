@@ -604,7 +604,7 @@ template< typename StringType      = std::string
 StringType formatMessageImpl( const StringType &fmt
                             , const ArgsType   &args
                             , const LocaleInfo *pLocaleInfo = 0
-                            , FormattingFlags   formattingFlags=FormattingFlags::all
+                            , FormattingFlags   formattingFlags=FormattingFlags::allBase
                             )
 //#!
 {
@@ -854,7 +854,7 @@ template< typename StringType      = std::string
 StringType formatMessage( const StringType &fmt
                         , const ArgsType   &args
                         , const LocaleInfo *pLocaleInfo = 0
-                        , FormattingFlags  formattingFlags=FormattingFlags::all
+                        , FormattingFlags  formattingFlags=FormattingFlags::allBase
                         )
 //#!
 {
@@ -870,7 +870,7 @@ template< typename ArgsType        = Args
 std::string formatMessage( const char       *fmt
                          , const ArgsType   &args
                          , const LocaleInfo *pLocaleInfo = 0
-                         , FormattingFlags  formattingFlags=FormattingFlags::all
+                         , FormattingFlags  formattingFlags=FormattingFlags::allBase
                          )
 //#!
 {
@@ -892,7 +892,7 @@ template< typename StringType = std::string
 StringType formatMessage( const StringType          &fmt
                         , FormatArgumentVariantList &&args
                         , const LocaleInfo          *pLocaleInfo = 0
-                        , FormattingFlags           formattingFlags=FormattingFlags::all
+                        , FormattingFlags           formattingFlags=FormattingFlags::allBase
                         )
 //#!
 {
@@ -909,7 +909,7 @@ inline
 std::string formatMessage( const char                *fmt
                          , FormatArgumentVariantList &&args
                          , const LocaleInfo          *pLocaleInfo = 0
-                         , FormattingFlags           formattingFlags=FormattingFlags::all
+                         , FormattingFlags           formattingFlags=FormattingFlags::allBase
                          )
 //#!
 {

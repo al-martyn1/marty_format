@@ -12,7 +12,13 @@
 #include "marty_utf/utf.h"
 
 #if defined(WIN32) || defined(_WIN32)
+    
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    
     #include <windows.h>
+
 #endif
 
 #include <algorithm>
@@ -114,10 +120,14 @@ public: // members
     std::string signPercent            = "%";  
     std::string signCurrency           = "$";  
 
-    std::string formatPercentNegative  = "-#%";
-    std::string formatPercentPositive  = "+#%";
-    std::string formatCurrencyNegative = "-$#";
-    std::string formatCurrencyPositive = "+$#";
+    std::string formatPercentNegative       = "-#%";
+    std::string formatPercentPositive       = "+#%";
+    std::string formatPercentShortNegative  = "-#" ;
+    std::string formatPercentShortPositive  = "+#" ;
+    std::string formatCurrencyNegative      = "-$#";
+    std::string formatCurrencyPositive      = "+$#";
+    std::string formatCurrencyShortNegative = "-#" ;
+    std::string formatCurrencyShortPositive = "+#" ;
 
     // Числа любой СС форматируем по тем же правилам.
     // Только перед подстановкой в форматную строку строки числа могут быть дополнены
@@ -291,6 +301,7 @@ const LocaleInfo* getLocaleInfo(LocaleInfoType lt)
 }
 
 //----------------------------------------------------------------------------
+
 
 
 

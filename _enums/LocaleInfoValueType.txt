@@ -11,8 +11,12 @@ signCurrency
 # Format strings
 formatPercentNegative
 formatPercentPositive
+formatPercentShortNegative
+formatPercentShortPositive
 formatCurrencyNegative
 formatCurrencyPositive
+formatCurrencyShortNegative
+formatCurrencyShortPositive
 formatNumberNegative
 formatNumberPositive
 

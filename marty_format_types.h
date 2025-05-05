@@ -7,6 +7,7 @@
 #include "defs.h"
 #include "enums.h"
 #include "exceptions.h"
+#include "locale_info.h"
 
 // 
 #include "marty_utf/utf.h"
@@ -736,7 +737,7 @@ public:
 
     bool empty() const
     {
-        return m_values.size();
+        return m_values.empty();
     }
 
     //#! BasicArgs_Find
@@ -800,6 +801,230 @@ public:
 }; // class BasicArgs
 
 //----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+namespace utils
+{
+
+//----------------------------------------------------------------------------
+inline
+const LocaleInfo* findLocaleInfo(const FormattingOptions &formattingOptions, const LocaleInfo *pUserLocaleInfo, bool useFormatStringLocale)
+{
+    // Для начала 
+    const LocaleInfo *pLocaleInfo = getLocaleInfo(LocaleInfoType::invariant);
+
+    if ((formattingOptions.formattingFlags&FormattingFlags::localeForceCustom)!=0)
+    {
+        // Вне зависимости от форматной строки используем кастомную локаль, которую нам передал пользователь
+        // Если пользователь ничего не передал, то уровнем выше берётся юзер/систем локаль
+        if (pUserLocaleInfo)
+            return pUserLocaleInfo;
+    }
+
+    if (!useFormatStringLocale)
+        return pLocaleInfo; // в форматной строке не задано использование локали, возвращаем "сишную" invariant локаль
+
+    return pUserLocaleInfo ? pUserLocaleInfo : pLocaleInfo;
+}
+
+//----------------------------------------------------------------------------
+inline
+utf32_char_t getBaseFractionalSeparator(const FormattingOptions &formattingOptions)
+{
+    // Если есть явно заданный разделитель групп для дробной части - возвращаем его
+    if (formattingOptions.fractionalGrouppingChar!=0)
+        return formattingOptions.fractionalGrouppingChar;
+
+    // Если нет явно заданного разделителя групп для целой части - возвращаем ноль
+    if (formattingOptions.grouppingChar==0)
+        return formattingOptions.grouppingChar;
+
+    // Есть явно заданный разделитель групп разрядов для целой части
+
+    // Флагами явно задано, что если задан разделитель групп разрядов для целой части,
+    // то и дробную часть надо группировать
+    if ((formattingOptions.formattingFlags&FormattingFlags::fractionalGroupping)!=0)
+        return formattingOptions.grouppingChar;
+
+    return 0;
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string getFractionalSeparator(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, NumeralSystem numeralSystem, bool useLocale)
+{
+    std::string fracSepStr;
+    
+    auto fracGrpChar = getBaseFractionalSeparator(formattingOptions);
+    if (fracGrpChar!=0) // Задан какой-то из разделителей - '\'', '_', ','
+    {
+        if (useLocale) // используем разделитель разрядов из локали
+        {
+            fracSepStr = pLocaleInfo->getGroupSeparator(LocaleInfoSeparatorType::fractional, numeralSystem);
+        }
+        else // используем явно заданный разделитель разрядов
+        {
+            auto outIt = marty::utf::UtfOutputIterator<char>(fracSepStr);
+            *outIt++ = marty::utf::utf32_char_t(fracGrpChar);
+        }
+    }
+    
+    return fracSepStr;
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string getThousandsSeparator(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, NumeralSystem numeralSystem, bool useLocale)
+{
+    MARTY_ARG_USED(formattingOptions);
+
+    std::string grpSepStr;
+    
+    auto grpChar = formattingOptions.grouppingChar;
+    if (grpChar!=0) // Задан какой-то из разделителей - '\'', '_', ','
+    {
+        if (useLocale) // используем разделитель разрядов из локали
+        {
+            grpSepStr = pLocaleInfo->getGroupSeparator(LocaleInfoSeparatorType::thousands, numeralSystem);
+        }
+        else // используем явно заданный разделитель разрядов
+        {
+            auto outIt = marty::utf::UtfOutputIterator<char>(grpSepStr);
+            *outIt++ = marty::utf::utf32_char_t(grpChar);
+        }
+    }
+    
+    return grpSepStr;
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string getFormatStringHelper(const LocaleInfo *pLocaleInfo, LocaleInfoValueType formatType, bool bNegative, bool bAlter)
+{
+    if (formatType==LocaleInfoValueType::formatCurrencyPositive)
+    {
+        return pLocaleInfo->getLocaleInfoValue( bAlter
+                                              ? bNegative ? LocaleInfoValueType::formatCurrencyShortNegative : LocaleInfoValueType::formatCurrencyShortPositive
+                                              : bNegative ? LocaleInfoValueType::formatCurrencyNegative      : LocaleInfoValueType::formatCurrencyPositive
+                                              );
+    }
+    else if (formatType==LocaleInfoValueType::formatPercentPositive)
+    {
+        return pLocaleInfo->getLocaleInfoValue( bAlter
+                                              ? bNegative ? LocaleInfoValueType::formatPercentShortNegative : LocaleInfoValueType::formatPercentShortPositive
+                                              : bNegative ? LocaleInfoValueType::formatPercentNegative      : LocaleInfoValueType::formatPercentPositive
+                                              );
+    }
+    else
+    {
+        return pLocaleInfo->getLocaleInfoValue(bNegative ? LocaleInfoValueType::formatNumberNegative : LocaleInfoValueType::formatNumberPositive);
+    }
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string getFormatString(const LocaleInfo *pLocaleInfo, LocaleInfoValueType formatType, bool bNegative, bool bAlter)
+{
+    auto formatString = getFormatStringHelper(pLocaleInfo, formatType, bNegative, bAlter);
+    if (formatString.empty() || formatString.find('#')==formatString.npos)
+    {
+        formatString = bNegative ? "-#" : "+#";
+    }
+
+    return formatString;
+}
+
+//----------------------------------------------------------------------------
+/*
+Если точность у нас не указана, то:
+1) Можно взять её из настроек локали
+2) Можно оставить на усмотрение библиотеки (альтер форма)
+   Но это только для чисел. Для валюты и процента всегда четкое число из локали или явно заданное
+
+*/
+
+//----------------------------------------------------------------------------
+inline
+void checkUpdateNumberPrecision(FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, LocaleInfoValueType formatType)
+{
+    // Если не задана точность, то берём её из локали
+    if ((formattingOptions.optionsFlags&FormattingOptionsFlags::precisionTaken)==0)
+    {
+        formattingOptions.optionsFlags |= FormattingOptionsFlags::precisionTaken;
+        formattingOptions.precision     = width_t(pLocaleInfo->getNumberOfDigits(formatType==LocaleInfoValueType::formatCurrencyPositive ? LocaleInfoDigitsType::currency : LocaleInfoDigitsType::number));
+    }
+}
+
+//----------------------------------------------------------------------------
+inline
+int getPrecisionForFormatFloat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, LocaleInfoValueType formatType)
+{
+    // Если не задана точность, то берём её из локали
+    if ((formattingOptions.optionsFlags&FormattingOptionsFlags::precisionTaken)==0)
+    {
+        // У нас просто число, а не валюта и не процент
+        if (formatType==LocaleInfoValueType::formatNumberPositive)
+        {
+            // Альт форма использует автоматическую точность
+            if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signAlterForm)!=0)
+            {
+                return -1;
+            }
+        }
+
+        // У нас валюта или процент, или обычное число без альтер признака
+        // Берём точность из локали
+        return (int)width_t(pLocaleInfo->getNumberOfDigits(formatType==LocaleInfoValueType::formatCurrencyPositive ? LocaleInfoDigitsType::currency : LocaleInfoDigitsType::number));
+    }
+
+    // Есть явно заданная точность, используем её
+    return int(formattingOptions.precision);
+}
+
+//----------------------------------------------------------------------------
+template<typename WidthCalculator>
+std::string getFillCharString(const FormattingOptions &formattingOptions)
+{
+    auto fillChar = formattingOptions.fillChar;
+    if (fillChar<32 || WidthCalculator()(fillChar)<1)
+        fillChar = utf32_char_t(' ');
+    return charToStringUtf8(fillChar);
+}
+
+//----------------------------------------------------------------------------
+inline
+PositiveNumbersMode getPositiveNumbersMode(const FormattingOptions &formattingOptions)
+{
+    if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signPlus)!=0)
+        return PositiveNumbersMode::sign;
+
+    else if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signSpace)!=0)
+        return PositiveNumbersMode::space;
+
+    return PositiveNumbersMode::none;
+}
+
+//----------------------------------------------------------------------------
+inline
+char getNumbersAlignment(const FormattingOptions &formattingOptions)
+{
+    if (formattingOptions.alignment!=0)
+        return formattingOptions.alignment;
+    
+    if ((formattingOptions.optionsFlags&FormattingOptionsFlags::signZero)==0)
+        return '<';
+    else
+        return '=';
+}    
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+} // namespace utils
 
 
 
