@@ -115,15 +115,23 @@ void test(bool doTest=false)
     // std::cout << "\n";
 
 
-    std::cout << "// n - число, форматирование с использованием локали.\n"
+    std::cout << "//---------------------\n";
+    std::cout << "// n - десятичное число, форматирование с использованием локали.\n"
                  "// Точность не задана, берётся из текущей локали пользователя\n"
                  "// (русская под Win - 2 десятичных знака)\n";
     simpleTest(nTotal, nPassed, doTest, "3.14"                      , "n"         , Args().arg( dPi) );
     std::cout << "\n";
 
-    std::cout << "// n - число, форматирование с использованием локали.\n"
+    std::cout << "// n - десятичное число, форматирование с использованием локали.\n"
                  "// Точность задана явно, .4.\n";
     simpleTest(nTotal, nPassed, doTest, "3.14"                      , ".4n"       , Args().arg( dPi) );
+    std::cout << "\n";
+
+    std::cout << "// n - десятичное число, форматирование с использованием локали.\n"
+                 "// Точность задана явно, .6.\n"
+                 "// Указано разделение на разряды дробной части.\n"
+                 "// Разделитель используется из локали пользователя в ОС.\n";
+    simpleTest(nTotal, nPassed, doTest, "3.14"                      , ".6_n"       , Args().arg( dPi) );
     std::cout << "\n";
 
 
@@ -193,10 +201,17 @@ void test(bool doTest=false)
     std::cout << "\n";
 
 
+    std::cout << "\n";
     std::cout << "//---------------------\n";
-    std::cout << "// Резюме.\n";
+    std::cout << "// Краткий сводный пример форматирования чисел, процентов, валюты.\n";
+    std::cout << "\n";
     simpleTest(nTotal, nPassed, doTest, "3.14"                      , "n"         , Args().arg( dPi) );
+    std::cout << "\n";
+    std::cout << "// 9 знаков после запятой, разбиение дробной части по разрядам.\n";
+    std::cout << "// Используется локаль пользователя системы.\n";
+    std::cout << "// Разделитель - неразрывный пробел (&nbsp;) - локаль RU-ru.\n";
     simpleTest(nTotal, nPassed, doTest, "3.14"                      , ".9'n"      , Args().arg( dPi) );
+    std::cout << "\n";
     simpleTest(nTotal, nPassed, doTest, "3.14"                      , "d"         , Args().arg( dPi) );
     simpleTest(nTotal, nPassed, doTest, "3.14"                      , ".9'd"      , Args().arg( dPi) );
     simpleTest(nTotal, nPassed, doTest, "3.14"                      , "f"         , Args().arg( dPi) );
