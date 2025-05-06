@@ -1,5 +1,5 @@
 /*! \file
-    \brief Тестируем форматирование чисел с плавающей точкой (используем форматный символ 'f')
+    \brief Тестируем форматирование чисел с плавающей точкой (используем форматный символ 'f') - marty::Decimal
  */
 
 
@@ -107,19 +107,19 @@ void test(bool doTest=false)
     std::size_t nPassed = 0;
     std::size_t nTotal  = 0;
 
-    double dPi = 3.1415926535897932384626433832795;
-    double dE  = 2.7182818284590452353602874713527;
+    marty::Decimal dPi = marty::Decimal("3.1415926535897932384626433832795");
+    marty::Decimal dE  = marty::Decimal("2.7182818284590452353602874713527");
 
     // simpleTest(nTotal, nPassed, doTest, " 003.14159"               , " 010.05f" , Args().arg(dPi)  );
     // simpleTest(nTotal, nPassed, doTest, "2.71828"                   , "09'.05f"   , Args().arg( dE ) );
     // std::cout << "\n";
 
     simpleTest(nTotal, nPassed, doTest, "3.14159"                   , ".05f"      , Args().arg( dPi) );
-    simpleTest(nTotal, nPassed, doTest, "3.14159265358979311600"    , ".020f"     , Args().arg( dPi) );
+    simpleTest(nTotal, nPassed, doTest, "3.14159265358979323846"    , ".020f"     , Args().arg( dPi) );
     simpleTest(nTotal, nPassed, doTest, "-3.14159"                  , ".05f"      , Args().arg(-dPi) );
-    simpleTest(nTotal, nPassed, doTest, "-3.14159265358979311600"   , ".020f"     , Args().arg(-dPi) );
+    simpleTest(nTotal, nPassed, doTest, "-3.14159265358979323846"   , ".020f"     , Args().arg(-dPi) );
     simpleTest(nTotal, nPassed, doTest, "3.14159"                   , ".5f"       , Args().arg( dPi) );
-    simpleTest(nTotal, nPassed, doTest, "3.14159265358979311600"    , ".20f"      , Args().arg( dPi) );
+    simpleTest(nTotal, nPassed, doTest, "3.14159265358979323846"    , ".20f"      , Args().arg( dPi) );
 
     std::cout << "\n";
     simpleTest(nTotal, nPassed, doTest, "003.14159"                 , "09.05f"    , Args().arg( dPi) );
@@ -177,15 +177,15 @@ void test(bool doTest=false)
 
     std::cout << "\n";
     simpleTest(nTotal, nPassed, doTest, "2.71828"                   , ".05f"      , Args().arg( dE ) );
-    simpleTest(nTotal, nPassed, doTest, "2.71828182845904509080"    , ".020f"     , Args().arg( dE ) );
+    simpleTest(nTotal, nPassed, doTest, "2.71828182845904523536"    , ".020f"     , Args().arg( dE ) );
 
     std::cout << "\n";
     simpleTest(nTotal, nPassed, doTest, "00'002.71828"              , "012'.05f"   , Args().arg( dE ) );
-    simpleTest(nTotal, nPassed, doTest, "2.718281828459045091"      , "012'.018f"  , Args().arg( dE ) );
+    simpleTest(nTotal, nPassed, doTest, "2.718281828459045235"      , "012'.018f"  , Args().arg( dE ) );
     simpleTest(nTotal, nPassed, doTest, "0'002.718'28"              , "012'.05'f"  , Args().arg( dE ) );
-    simpleTest(nTotal, nPassed, doTest, "2.718'281'828'459'045'091" , "012'.018'f" , Args().arg( dE ) );
+    simpleTest(nTotal, nPassed, doTest, "2.718'281'828'459'045'235" , "012'.018'f" , Args().arg( dE ) );
     simpleTest(nTotal, nPassed, doTest, "0'002.718'28"              , "012'.5'f"   , Args().arg( dE ) );
-    simpleTest(nTotal, nPassed, doTest, "2.718'281'828'459'045'091" , "012'.18'f"  , Args().arg( dE ) );
+    simpleTest(nTotal, nPassed, doTest, "2.718'281'828'459'045'235" , "012'.18'f"  , Args().arg( dE ) );
 
 
 

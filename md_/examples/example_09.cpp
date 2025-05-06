@@ -1,5 +1,5 @@
 /*! \file
-    \brief Тестируем форматирование чисел - проценты, валюта, с использованием локали и без
+    \brief Тестируем форматирование чисел - проценты, валюта, с использованием локали и без - marty::Decimal
  */
 
 
@@ -107,7 +107,7 @@ void test(bool doTest=false)
     std::size_t nPassed = 0;
     std::size_t nTotal  = 0;
 
-    double dPi = 3.1415926535897932384626433832795;
+    marty::Decimal dPi = marty::Decimal("3.1415926535897932384626433832795");
     // double dE  = 2.7182818284590452353602874713527;
 
     // simpleTest(nTotal, nPassed, doTest, " 003.14159"               , " 010.05f" , Args().arg(dPi)  );
@@ -149,7 +149,7 @@ void test(bool doTest=false)
 
     std::cout << "// d - число. Точность не задана, альтер маркер '#' указывает\n"
                  "// выбрать точность автоматически\n";
-    simpleTest(nTotal, nPassed, doTest, "3.141593"                  , "#d"        , Args().arg( dPi) );
+    simpleTest(nTotal, nPassed, doTest, "3.1415926535897932384626433832795", "#d" , Args().arg( dPi) );
     std::cout << "\n";
 
 
