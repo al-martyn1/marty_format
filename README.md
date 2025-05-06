@@ -437,31 +437,32 @@ Center   aligned: |@String larger@@|
 ```cpp
 using std::cout;
 using namespace marty::format;
-cout << formatMessage( "Bool as string, true : {bt:s}, false: {bf:s}\n"
-                       "Bool as string, upper case: {bt:S}, {bf:S}\n"
-                       "Bool as string, mixed case (first char upper): {bt:!s}, {bf:!}\n"
-                       "Bool as string, mixed case (first char lower): {bt:!S}, {bf:!S}\n"
-                       "Bool as string, single char (using precision): {bt:.1S}, {bf:.1S}\n"
-                       "Bool as string, (using spec-t): {bt:t}, {bf:t}\n"
-                       "Bool as string, (using spec-T): {bt:T}, {bf:T}\n"
-                       "Bool as string, (using spec-y): {bt:y}, {bf:y}\n"
-                       "Bool as string, (using spec-Y): {bt:Y}, {bf:Y}\n"
-                       "Bool as string, (using spec-t#): {bt:#t}, {bf:#t}\n"
-                       "Bool as string, (using spec-T#): {bt:#T}, {bf:#T}\n"
-                       "Bool as string, (using spec-y#): {bt:#y}, {bf:#y}\n"
-                       "Bool as string, (using spec-Y#): {bt:#Y}, {bf:#Y}\n"
-                       "Unsigned as bool string, (using spec-y#): {ut:#y}, {uf:#y}, as native: {ut:d}, {uf:d}\n"
-                       "Unsigned as bool string, (using spec-Y#): {ut:#Y}, {uf:#Y}, as native: {ut:d}, {uf:d}\n"
-                       "Unsigned as bool string, (using spec-t#): {ut:#t}, {uf:#t}, as native: {ut:d}, {uf:d}\n"
-                       "Unsigned as bool string, (using spec-T#): {ut:#T}, {uf:#T}, as native: {ut:d}, {uf:d}\n"
-                       "Int as bool string, (using spec-y): {st:y}, {sf:y}, as native: {st:d}, {sf:d}\n"
-                       "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
-                       "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
-                       "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
-                     , Args().arg("bt", true).arg("bf", false)
-                             .arg("ut", 42u) .arg("uf", 0u)
-                             .arg("st", -42) .arg("sf", 0)
-                     );
+cout << formatMessage
+            ( "Bool as string, true : {bt:s}, false: {bf:s}\n"
+              "Bool as string, upper case: {bt:S}, {bf:S}\n"
+              "Bool as string, mixed case (first char upper): {bt:!s}, {bf:!}\n"
+              "Bool as string, mixed case (first char lower): {bt:!S}, {bf:!S}\n"
+              "Bool as string, single char (using precision): {bt:.1S}, {bf:.1S}\n"
+              "Bool as string, (using spec-t): {bt:t}, {bf:t}\n"
+              "Bool as string, (using spec-T): {bt:T}, {bf:T}\n"
+              "Bool as string, (using spec-y): {bt:y}, {bf:y}\n"
+              "Bool as string, (using spec-Y): {bt:Y}, {bf:Y}\n"
+              "Bool as string, (using spec-t#): {bt:#t}, {bf:#t}\n"
+              "Bool as string, (using spec-T#): {bt:#T}, {bf:#T}\n"
+              "Bool as string, (using spec-y#): {bt:#y}, {bf:#y}\n"
+              "Bool as string, (using spec-Y#): {bt:#Y}, {bf:#Y}\n"
+              "Unsigned as bool string, (using spec-y#): {ut:#y}, {uf:#y}, as native: {ut:d}, {uf:d}\n"
+              "Unsigned as bool string, (using spec-Y#): {ut:#Y}, {uf:#Y}, as native: {ut:d}, {uf:d}\n"
+              "Unsigned as bool string, (using spec-t#): {ut:#t}, {uf:#t}, as native: {ut:d}, {uf:d}\n"
+              "Unsigned as bool string, (using spec-T#): {ut:#T}, {uf:#T}, as native: {ut:d}, {uf:d}\n"
+              "Int as bool string, (using spec-y): {st:y}, {sf:y}, as native: {st:d}, {sf:d}\n"
+              "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
+              "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
+              "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
+            , Args().arg("bt", true).arg("bf", false)
+                    .arg("ut", 42u) .arg("uf", 0u)
+                    .arg("st", -42) .arg("sf", 0)
+            );
 ```
 
 **Вывод:**
@@ -515,15 +516,15 @@ Short as ptr: FB2E
 
 ```cpp
 // Форматирование в 2ую СС
-cout << formatMessage("|{:0b}|",   { -1420 }) << "\n"; // |-00000000000000000000010110001100|
-cout << formatMessage("|{:0'b}|",  { -1420 }) << "\n"; // |-0000'0000'0000'0000'0000'0101'1000'1100|
-cout << formatMessage("|{:12b}|",  { -1420 }) << "\n"; // |-10110001100|
-cout << formatMessage("|{:12'b}|", { -1420 }) << "\n"; // |-101'1000'1100|
-cout << formatMessage("|{:#0b}|",  { -1420 }) << "\n"; // |-0b00000000000000000000010110001100|
-cout << formatMessage("|{:~0'b}|", { -1420 }) << "\n"; // |1111'1111'1111'1111'1111'1010'0111'0100|
-cout << formatMessage("|{:#0'b}|", { -1420 }) << "\n"; // |-0b0000'0000'0000'0000'0000'0101'1000'1100|
-cout << formatMessage("|{:#12b}|", { -1420 }) << "\n"; // |-0b10110001100|
-cout << formatMessage("|{:#12'b}|",{ -1420 }) << "\n"; // |-0b101'1000'1100|
+cout << formatMessage("|{:0b}|",   {-1420})<<"\n"; // |-00000000000000000000010110001100|
+cout << formatMessage("|{:0'b}|",  {-1420})<<"\n"; // |-0000'0000'0000'0000'0000'0101'1000'1100|
+cout << formatMessage("|{:12b}|",  {-1420})<<"\n"; // |-10110001100|
+cout << formatMessage("|{:12'b}|", {-1420})<<"\n"; // |-101'1000'1100|
+cout << formatMessage("|{:#0b}|",  {-1420})<<"\n"; // |-0b00000000000000000000010110001100|
+cout << formatMessage("|{:~0'b}|", {-1420})<<"\n"; // |1111'1111'1111'1111'1111'1010'0111'0100|
+cout << formatMessage("|{:#0'b}|", {-1420})<<"\n"; // |-0b0000'0000'0000'0000'0000'0101'1000'1100|
+cout << formatMessage("|{:#12b}|", {-1420})<<"\n"; // |-0b10110001100|
+cout << formatMessage("|{:#12'b}|",{-1420})<<"\n"; // |-0b101'1000'1100|
 
 // Фрматирование в 16ую СС
 cout << formatMessage("|{:0x}|",        { -1420 }) << "\n"; // |-0000058c|
