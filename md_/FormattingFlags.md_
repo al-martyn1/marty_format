@@ -2,7 +2,7 @@
 
 Флаги marty::format::FormattingFlags могут принимать следующие значения:
 
-<arg-list>
+<val-list>
 
 -none
 флаги не установлены.
@@ -49,5 +49,5 @@
 все флаги установлены (`ignoreErrors | fractionalGroupping`).
 #// ignoreErrors | considerUnicodeFeatures
 
-</arg-list>
+</val-list>
 
