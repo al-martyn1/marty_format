@@ -76,9 +76,10 @@ namespace format{
 
 */
 //#! LocaleInfo
-struct LocaleInfo
+class LocaleInfo
 {
-    virtual ~LocaleInfo() {}
+
+public: // constructors
 
     LocaleInfo();
 
@@ -88,6 +89,8 @@ struct LocaleInfo
     LocaleInfo& operator=(LocaleInfo &&) = default;
 
 
+public: // types
+
 // Для отладки удобнее std::vector<std::uint8_t>, а в релизе std::basic_string<std::uint8_t> гораздо быстрее
 #if defined(DEBUG) || defined(_DEBUG)
     using group_info_t = std::vector<std::uint8_t>;
@@ -96,6 +99,28 @@ struct LocaleInfo
     using group_info_t = std::basic_string<std::uint8_t>;
     static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u) { gi.append(n, u); }
 #endif
+
+
+public: // virtual methods
+
+    virtual ~LocaleInfo() {}
+
+    virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //! 
+                                         , NumeralSystem ns       //!
+                                         ) const;
+
+    //! Обрабатывает LocaleInfoValueType::sign* и LocaleInfoValueType::format*
+    virtual std::string getLocaleInfoValue(LocaleInfoValueType vt) const;
+
+    virtual group_info_t getGroupInfo(NumeralSystem ns, bool bFractionalPart) const;
+
+    virtual std::string substFormatString( const std::string &fmt
+                                         , const std::string &numStr
+                                         , PositiveNumbersMode pm
+                                         ) const;
+
+    // digitsDecimal / digitsCurrency
+    virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
 
 
 public: // members
@@ -139,27 +164,6 @@ public: // members
     unsigned digitsCurrency            = 2;
 
 
-public: // virtual methods
-
-    //! Обрабатывает только LocaleInfoValueType::thousandSeparator и LocaleInfoValueType::fractionalSeparator
-    virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //! 
-                                         , NumeralSystem ns       //!
-                                         ) const;
-
-    //! Обрабатывает LocaleInfoValueType::sign* и LocaleInfoValueType::format*
-    virtual std::string getLocaleInfoValue(LocaleInfoValueType vt) const;
-
-    virtual group_info_t getGroupInfo(NumeralSystem ns, bool bFractionalPart) const;
-
-    virtual std::string substFormatString( const std::string &fmt
-                                         , const std::string &numStr
-                                         , PositiveNumbersMode pm
-                                         ) const;
-
-    // digitsDecimal / digitsCurrency
-    virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
-
-
 public: // static helper methods
 
     //! Подстановка локализованных символов в шаблон форматной строки
@@ -193,34 +197,62 @@ public: // static helper methods
     // 3;2     30000000,00,000
     static bool testAppendGroupSeparator(std::size_t curDigitIndex, const group_info_t &grpInfo);
 
-    static std::string insertGroupSeparators(std::string numStr, std::string sep, const group_info_t &grpInfo, bool bFractionalPart);
+    static std::string insertGroupSeparators( std::string numStr
+                                            , std::string sep
+                                            , const group_info_t &grpInfo
+                                            , bool bFractionalPart
+                                            );
 
-    static std::string expandWithGroupSeparator( std::string numStr, std::string sep, const group_info_t &grpInfo
-                                               , bool bFractionalPart
-                                               , std::size_t sepCalculatedLen  // Посчитанная снаружи длина разделителя
-                                               , std::size_t &numStrLen        // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
-                                               , std::size_t &digitsCount
-                                               , std::size_t maxLen
-                                               );
-    static std::string expandWithGroupSeparatorToNumDigits( std::string numStr, std::string sep, const group_info_t &grpInfo
-                                               , bool bFractionalPart
-                                               , std::size_t &digitsCount
-                                               , std::size_t maxLen            // Макс длина в цифрах
-                                               );
+    // полная длина дополняемой строки, включает разделители разрядов
+    static
+    std::string expandWithGroupSeparator
+            ( std::string numStr, std::string sep, const group_info_t &grpInfo
+            , bool bFractionalPart
+            , std::size_t sepCalculatedLen // Посчитанная снаружи длина разделителя
+            , std::size_t &numStrLen       // Посчитанная снаружи полная длина дополняемой строки
+            , std::size_t &digitsCount
+            , std::size_t maxLen
+            );
+
+    // maxLen - Макс длина в цифрах
+    static
+    std::string expandWithGroupSeparatorToNumDigits( std::string numStr
+                                                   , std::string sep
+                                                   , const group_info_t &grpInfo
+                                                   , bool bFractionalPart
+                                                   , std::size_t &digitsCount
+                                                   , std::size_t maxLen
+                                                   );
 
 protected: // static helper methods
 
-    static std::string insertGroupSeparatorsImplHelper(const std::string &numStr, const std::string &sep, const group_info_t &grpInfo);
-    static std::string expandWithGroupSeparatorImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
-                                                         , std::size_t sepCalculatedLen // Посчитанная снаружи длина разделителя
-                                                         , std::size_t &numStrLen       // Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
-                                                         , std::size_t &digitsCount
-                                                         , std::size_t maxLen
-                                                         );
-    static std::string expandWithGroupSeparatorToNumDigitsImplHelper( std::string numStr, const std::string &sep, const group_info_t &grpInfo
-                                                         , std::size_t &digitsCount
-                                                         , std::size_t maxLen           // Макс длина в цифрах
-                                                         );
+    static
+    std::string insertGroupSeparatorsImplHelper( const std::string &numStr
+                                               , const std::string &sep
+                                               , const group_info_t &grpInfo
+                                               );
+
+    /*!
+        @param sepCalculatedLen Посчитанная снаружи длина разделителя
+        @param numStrLen Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+    */
+    static
+    std::string expandWithGroupSeparatorImplHelper( std::string numStr
+                                                  , const std::string &sep
+                                                  , const group_info_t &grpInfo
+                                                  , std::size_t sepCalculatedLen
+                                                  , std::size_t &numStrLen
+                                                  , std::size_t &digitsCount
+                                                  , std::size_t maxLen
+                                                  );
+
+    static
+    std::string expandWithGroupSeparatorToNumDigitsImplHelper( std::string numStr
+                                                             , const std::string &sep
+                                                             , const group_info_t &grpInfo
+                                                             , std::size_t &digitsCount
+                                                             , std::size_t maxLen
+                                                             );
     
 }; // struct LocaleInfo
 //#!

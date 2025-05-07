@@ -1,3 +1,9 @@
+**Информация о документе**
+
+**URL**: https://github.com/al-martyn1/umba-md-pp/blob/main/README.md
+
+---
+
 # Библиотека форматирования marty::format
 
 
@@ -17,65 +23,53 @@
 Ограничений на использование библиотеки нет. Требуется только указывать авторство.
 
 
-- [Поддержка стандартов и компиляторов](#user-content-поддержка-стандартов-и-компиляторов)
-- [Возможности библиотеки](#user-content-возможности-библиотеки)
-- [Зависимости](#user-content-зависимости)
-- [Ссылки на референсные спецификации](#user-content-ссылки-на-референсные-спецификации)
-- [Примеры использования](#user-content-примеры-использования)
-  - [Вызов функций форматирования с разными типами списков аргументов](#user-content-вызов-функций-форматирования-с-разными-типами-списков-аргументов)
-    - [Используем std::initializer_list](#user-content-используем-stdinitializer_list)
-    - [Используем std::vector](#user-content-используем-stdvector)
-    - [Используем marty::format::Args](#user-content-используем-martyformatargs)
-    - [Используем marty::format::Args с именоваными параметрами](#user-content-используем-martyformatargs-с-именоваными-параметрами)
-    - [Используем std::vector с парами std::pair<std::string, FormatArgumentVariant>](#user-content-используем-stdvector-с-парами-stdpairstdstring-formatargumentvariant)
-  - [Конвертация и фильтры](#user-content-конвертация-и-фильтры)
-    - [Задаём конвертацию аргумента, также символ заполнения передаём аргументом](#user-content-задаём-конвертацию-аргумента-также-символ-заполнения-передаём-аргументом)
-    - [Используем фильтры для вывода в HTML](#user-content-используем-фильтры-для-вывода-в-html)
-  - [Примеры использования форматной строки](#user-content-примеры-использования-форматной-строки)
-    - [Форматирование строк с различной шириной и точностью](#user-content-форматирование-строк-с-различной-шириной-и-точностью)
-    - [Форматирование булевых значений](#user-content-форматирование-булевых-значений)
-    - [Форматирование указателей (и целых чисел, как указателей)](#user-content-форматирование-указателей-и-целых-чисел-как-указателей)
-    - [Форматирование целых чисел](#user-content-форматирование-целых-чисел)
-    - [Форматирование чисел с плавающей точкой](#user-content-форматирование-чисел-с-плавающей-точкой)
-      - [Форматирование с использованием спецификаторов a/A/e/E/f/F/g/G](#user-content-форматирование-с-использованием-спецификаторов-aaeeffgg)
-      - [Форматирование чисел, процентов, валют](#user-content-форматирование-чисел-процентов-валют)
-- [API библиотеки](#user-content-api-библиотеки)
-  - [Обобщённый тип фильтра BasicFormatValueFilter](#user-content-обобщённый-тип-фильтра-basicformatvaluefilter)
-    - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#user-content-пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
-  - [Тип фильтра FormatValueFilter](#user-content-тип-фильтра-formatvaluefilter)
-  - [Стандартные фильтры](#user-content-стандартные-фильтры)
-  - [Мейкер стандартных фильтров - makeStandardFormatValueFilter](#user-content-мейкер-стандартных-фильтров---makestandardformatvaluefilter)
-  - [Фабрика стандартных фильтров - StdFilterFactory](#user-content-фабрика-стандартных-фильтров---stdfilterfactory)
-  - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#user-content-martyformatformatargumentvariant---variant-тип-аргумента)
-  - [marty::format::BasicArgs](#user-content-martyformatbasicargs)
-    - [Конструктор marty::format::BasicArgs](#user-content-конструктор-martyformatbasicargs)
-    - [Методы marty::format::BasicArgs::arg](#user-content-методы-martyformatbasicargsarg)
-  - [marty::format::Args](#user-content-martyformatargs)
-  - [enum флаги marty::format::FormattingFlags](#user-content-enum-флаги-martyformatformattingflags)
-  - [marty::format::formatMessageImpl](#user-content-martyformatformatmessageimpl)
-  - [marty::format::formatMessage - аргументы передаются в generic-контейнере](#user-content-martyformatformatmessage---аргументы-передаются-в-generic-контейнере)
-  - [marty::format::formatMessage - аргументы передаются в виде std::initializer_list](#user-content-martyformatformatmessage---аргументы-передаются-в-виде-stdinitializer_list)
-  - [Базовая реализация функтора вычисления отображаемой ширины строки](#user-content-базовая-реализация-функтора-вычисления-отображаемой-ширины-строки)
-- [Синтаксис форматной строки](#user-content-синтаксис-форматной-строки)
-  - [Грамматика полей замены](#user-content-грамматика-полей-замены)
-  - [Преобразование типа аргумента - !conversion](#user-content-преобразование-типа-аргумента---conversion)
-  - [Спецификатор формата - format_spec](#user-content-спецификатор-формата---format_spec)
-    - [Символ заполнения fill](#user-content-символ-заполнения-fill)
-    - [Маркер выравнивания align](#user-content-маркер-выравнивания-align)
-    - [Признак знака sign](#user-content-признак-знака-sign)
-  - [Поддерживаемые спецификаторы типа](#user-content-поддерживаемые-спецификаторы-типа)
-    - [Спецификаторы представления строк](#user-content-спецификаторы-представления-строк)
-    - [Спецификаторы представления типа bool](#user-content-спецификаторы-представления-типа-bool)
-      - [Опции форматирования, влияющие на отображение bool в строковом виде](#user-content-опции-форматирования-влияющие-на-отображение-bool-в-строковом-виде)
-      - [Спецификаторы](#user-content-спецификаторы)
-      - [Спецификаторы целых чисел для представления типа bool](#user-content-спецификаторы-целых-чисел-для-представления-типа-bool)
-    - [Спецификаторы представления целочисленных типов](#user-content-спецификаторы-представления-целочисленных-типов)
-    - [Спецификаторы представления типов с плавающей точкой](#user-content-спецификаторы-представления-типов-с-плавающей-точкой)
-    - [Спецификаторы представления указателей](#user-content-спецификаторы-представления-указателей)
-  - [Экранирование строк](#user-content-экранирование-строк)
-    - [](#user-content-)
-    - [](#user-content--1)
-- [Список задач](#user-content-список-задач)
+- [Поддержка стандартов и компиляторов](#поддержка-стандартов-и-компиляторов)
+- [Возможности библиотеки](#возможности-библиотеки)
+- [Зависимости](#зависимости)
+- [Ссылки на референсные спецификации](#ссылки-на-референсные-спецификации)
+- [Примеры использования](#примеры-использования)
+  - [Вызов функций форматирования с разными типами списков аргументов](#вызов-функций-форматирования-с-разными-типами-списков-аргументов)
+  - [Конвертация и фильтры](#конвертация-и-фильтры)
+  - [Примеры использования форматной строки](#примеры-использования-форматной-строки)
+- [API библиотеки](#api-библиотеки)
+  - [Поддержка локализации форматируемых значений](#поддержка-локализации-форматируемых-значений)
+  - [Класс marty::format::LocaleInfo](#класс-martyformatlocaleinfo)
+  - [Обобщённый тип фильтра BasicFormatValueFilter](#обобщённый-тип-фильтра-basicformatvaluefilter)
+    - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
+  - [Тип фильтра FormatValueFilter](#тип-фильтра-formatvaluefilter)
+  - [Стандартные фильтры](#стандартные-фильтры)
+  - [Мейкер стандартных фильтров - makeStandardFormatValueFilter](#мейкер-стандартных-фильтров---makestandardformatvaluefilter)
+  - [Фабрика стандартных фильтров - StdFilterFactory](#фабрика-стандартных-фильтров---stdfilterfactory)
+  - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#martyformatformatargumentvariant---variant-тип-аргумента)
+  - [marty::format::BasicArgs](#martyformatbasicargs)
+    - [Конструктор marty::format::BasicArgs](#конструктор-martyformatbasicargs)
+    - [Методы marty::format::BasicArgs::arg](#методы-martyformatbasicargsarg)
+  - [marty::format::Args](#martyformatargs)
+  - [enum флаги marty::format::FormattingFlags](#enum-флаги-martyformatformattingflags)
+  - [marty::format::formatMessageImpl](#martyformatformatmessageimpl)
+  - [marty::format::formatMessage - аргументы передаются в generic-контейнере](#martyformatformatmessage---аргументы-передаются-в-generic-контейнере)
+  - [marty::format::formatMessage - аргументы передаются в виде std::initializer_list](#martyformatformatmessage---аргументы-передаются-в-виде-stdinitializer_list)
+  - [Базовая реализация функтора вычисления отображаемой ширины строки](#базовая-реализация-функтора-вычисления-отображаемой-ширины-строки)
+- [Синтаксис форматной строки](#синтаксис-форматной-строки)
+  - [Грамматика полей замены](#грамматика-полей-замены)
+  - [Преобразование типа аргумента - !conversion](#преобразование-типа-аргумента---conversion)
+  - [Спецификатор формата - format_spec](#спецификатор-формата---format_spec)
+    - [Символ заполнения fill](#символ-заполнения-fill)
+    - [Маркер выравнивания align](#маркер-выравнивания-align)
+    - [Признак знака sign](#признак-знака-sign)
+  - [Поддерживаемые спецификаторы типа](#поддерживаемые-спецификаторы-типа)
+    - [Спецификаторы представления строк](#спецификаторы-представления-строк)
+    - [Спецификаторы представления типа bool](#спецификаторы-представления-типа-bool)
+      - [Опции форматирования, влияющие на отображение bool в строковом виде](#опции-форматирования-влияющие-на-отображение-bool-в-строковом-виде)
+      - [Спецификаторы](#спецификаторы)
+      - [Спецификаторы целых чисел для представления типа bool](#спецификаторы-целых-чисел-для-представления-типа-bool)
+    - [Спецификаторы представления целочисленных типов](#спецификаторы-представления-целочисленных-типов)
+    - [Спецификаторы представления типов с плавающей точкой](#спецификаторы-представления-типов-с-плавающей-точкой)
+    - [Спецификаторы представления указателей](#спецификаторы-представления-указателей)
+  - [Экранирование строк](#экранирование-строк)
+    - [](#)
+    - [](#-1)
+- [Список задач](#список-задач)
 
 
 
@@ -175,581 +169,224 @@
 
 ### Вызов функций форматирования с разными типами списков аргументов
 
-Все примеры используют стандартный тип аргумента `marty::format::FormatArgumentVariant`.
-При необходимости пользователь может создать свой аналогичный тип и использовать его.
-
-#### Используем std::initializer_list
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
-                     , { 10, "Very long string, does not fit into 20 characters"
-                       , 10, 20, 3.14159
-                       }
-                     ) << "\n";
-```
-
-**Вывод:**
-
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
-
-
-#### Используем std::vector
-
-```cpp
-using std::cout;
-using namespace marty::format;
-auto argsVec = std::vector<FormatArgumentVariant>{ 10, "Very long string, "
-                      "does not fit into 20 characters", 10, 20, 3.14159 };
-cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
-                     , argsVec
-                     ) << "\n";
-```
-
-**Вывод:**
-
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
-
-
-#### Используем marty::format::Args
-
-- Автоматически вычисляемый индекс аргумента
-- Ширину и точность (на самом деле макс ширину строки)
-  задаём также аргументами, а не в форматной строке
-
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
-                     , Args().arg(10)
-                             .arg("Very long string, does not fit into "
-                                  "20 characters")
-                             .arg(10) // задаём ширину поля
-                             .arg(20) // это точность (для чисел), но для строк
-                                      // это максимальная ширина поля
-                             .arg(3.14159)
-                     );
-```
-
-**Вывод:**
-
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
-
-
-#### Используем marty::format::Args с именоваными параметрами
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage(
-    "Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
-     , Args().arg("str", "Very long string, does not fit into 20 characters")
-             .arg("Pi", 3.14159)
-             .arg("strMaxW", 20) // это точность (для чисел), но для строк
-                                 // это максимальная ширина поля
-             .arg("strW", 10) // задаём ширину поля
-             .arg("int", 10)
-     );
-```
-
-**Вывод:**
-
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
-
-
-#### Используем std::vector с парами std::pair<std::string, FormatArgumentVariant>
-
-Использование вектора с парами, где первый элемент строка, а второй - `marty::format::FormatArgumentVariant` 
-аналогично использованию `marty::format::Args`,
-но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
-
-```cpp
-using std::cout;
-using namespace marty::format;
-auto argsVec = std::vector< std::pair<std::string, FormatArgumentVariant> >
-               { {"str", "Very long string, does not fit into 20 characters"}
-               , {"Pi", 3.14159}
-               , {"strMaxW", 20}
-               , {"strW", 10}
-               , {"int", 10}
-               };
-cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, "
-                      "Pi: {Pi:f}\n", argsVec);
-```
-
-**Вывод:**
-
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
-
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src, F:\_github\umba-tools\umba-md-pp\_libs\marty_format, F:\_github\umba-tools\umba-md-pp\_libs\marty_format\md_
+#!doc{raise=-2} usage_samples_args.md_
 
 
 ### Конвертация и фильтры
 
-#### Задаём конвертацию аргумента, также символ заполнения передаём аргументом
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage(
-    "Integer number: {int:d}, string: {str!s:{fill}<{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
-     , Args().arg("str", "Very long string, does not fit into 20 characters")
-             .arg("Pi", 3.14159)
-             .arg("fill", '*')
-             .arg("strMaxW", 20) // это точность (для чисел), но для строк
-                                 // это максимальная ширина поля
-             .arg("strW", 10) // задаём ширину поля
-             .arg("int", 10)
-     );
-```
-
-**Вывод:**
-
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
-
-
-#### Используем фильтры для вывода в HTML
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
-                     , Args().arg("url" , "http://site.com/&q=/'")
-                             .arg("text", "<Some & text>")
-                     );
-```
-
-**Вывод:**
-
-```
-<a href="http://site.com/&amp;q=/&apos;">&lt;Some &amp; text&gt;</a>
-```
-
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src, F:\_github\umba-tools\umba-md-pp\_libs\marty_format, F:\_github\umba-tools\umba-md-pp\_libs\marty_format\md_
+#!doc{raise=-2} usage_samples_filters.md_
 
 
 ### Примеры использования форматной строки
 
-#### Форматирование строк с различной шириной и точностью
-
-При выводе используем как непосредственное задание ширины и точности, так и косвенное.
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage( //---
-                       "Alignment names explicitly taken\n"
-                       "Width: 20, precision: 13, explicit fill chars\n"
-                       "str: |{strL20}|\n"
-                       "Default  aligned: |{strL20:*20.13}|\n"
-                       "Left     aligned: |{strL20:*<20.13}|\n"
-                       "Right    aligned: |{strL20:*>20.13}|\n"
-                       "Center   aligned: |{strL20:*^20.13}|\n"
-                       "//---\n"
-                       "Alignment names indirect taken\n"
-                       "Width: 20, precision: 13, explicit fill chars\n"
-                       "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:$20.13}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:$<20.13}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:$>20.13}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:$^20.13}|\n"
-                       "//---\n"
-                       "Width: 18, precision: 9, default fill char\n"
-                       "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:20.9}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:<20.9}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:>20.9}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:^20.9}|\n"
-                       "//---\n"
-                       "Width (I): {w1}, precision (I): {p1}\n"
-                       "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:@{w1}.{p1}}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:@<{w1}.{p1}}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:@>{w1}.{p1}}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:@^{w1}.{p1}}|\n"
-                       // "//---\n"
-                     , Args().arg("anamew", 8)            // alignment name width
-                             .arg("adname", "Default")    // name for default alignment
-                             .arg("alname", "Left")       // name for left alignment
-                             .arg("arname", "Right")      // name for right alignment
-                             .arg("acname", "Center")     // name for center alignment
-                             //---
-                             .arg("w1", 16).arg("p1", 13) // indirect width & precision #1
-                             //---
-                             .arg("strL20", "String larger than 20")
-                             .arg("strS19", "Str smaler than 19")
-                             .arg("strS4" , "S<4")
-                             .arg("strL5" , "Str > 5")
-                     );
-```
-
-**Вывод:**
-
-```
-Alignment names explicitly taken
-Width: 20, precision: 13, explicit fill chars
-str: |String larger than 20|
-Default  aligned: |String larger*******|
-Left     aligned: |String larger*******|
-Right    aligned: |*******String larger|
-Center   aligned: |***String larger****|
-//---
-Alignment names indirect taken
-Width: 20, precision: 13, explicit fill chars
-str: |String larger than 20|
-Default  aligned: |String larger|
-Left     aligned: |String larger       |
-Right    aligned: |String larger       |
-Center   aligned: |String larger       |
-//---
-Width: 18, precision: 9, default fill char
-str: |String larger than 20|
-Default  aligned: |String la           |
-Left     aligned: |String la           |
-Right    aligned: |           String la|
-Center   aligned: |     String la      |
-//---
-Width (I): 16, precision (I): 13
-str: |String larger than 20|
-Default  aligned: |String larger@@@|
-Left     aligned: |String larger@@@|
-Right    aligned: |@@@String larger|
-Center   aligned: |@String larger@@|
-```
-
-
-#### Форматирование булевых значений
-
-Также выводим целые числа как булевы значения.
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout<<formatMessage
-        ( "Bool as string, true : {bt:s}, false: {bf:s}\n"
-          "Bool as string, upper case: {bt:S}, {bf:S}\n"
-          "Bool as string, mixed case (first char upper): {bt:!s}, {bf:!}\n"
-          "Bool as string, mixed case (first char lower): {bt:!S}, {bf:!S}\n"
-          "Bool as string, single char (using precision): {bt:.1S}, {bf:.1S}\n"
-          "Bool as string, (using spec-t): {bt:t}, {bf:t}\n"
-          "Bool as string, (using spec-T): {bt:T}, {bf:T}\n"
-          "Bool as string, (using spec-y): {bt:y}, {bf:y}\n"
-          "Bool as string, (using spec-Y): {bt:Y}, {bf:Y}\n"
-          "Bool as string, (using spec-t#): {bt:#t}, {bf:#t}\n"
-          "Bool as string, (using spec-T#): {bt:#T}, {bf:#T}\n"
-          "Bool as string, (using spec-y#): {bt:#y}, {bf:#y}\n"
-          "Bool as string, (using spec-Y#): {bt:#Y}, {bf:#Y}\n"
-          "Unsigned as bool string, (using spec-y#): {ut:#y}, {uf:#y}, as native: {ut:d}, {uf:d}\n"
-          "Unsigned as bool string, (using spec-Y#): {ut:#Y}, {uf:#Y}, as native: {ut:d}, {uf:d}\n"
-          "Unsigned as bool string, (using spec-t#): {ut:#t}, {uf:#t}, as native: {ut:d}, {uf:d}\n"
-          "Unsigned as bool string, (using spec-T#): {ut:#T}, {uf:#T}, as native: {ut:d}, {uf:d}\n"
-          "Int as bool string, (using spec-y): {st:y}, {sf:y}, as native: {st:d}, {sf:d}\n"
-          "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
-          "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
-          "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
-        , Args().arg("bt", true).arg("bf", false)
-                .arg("ut", 42u) .arg("uf", 0u)
-                .arg("st", -42) .arg("sf", 0)
-        );
-```
-
-**Вывод:**
-
-```
-Bool as string, true : true, false: false
-Bool as string, upper case: TRUE, FALSE
-Bool as string, mixed case (first char upper): True, False
-Bool as string, mixed case (first char lower): tRUE, fALSE
-Bool as string, single char (using precision): T, F
-Bool as string, (using spec-t): true, false
-Bool as string, (using spec-T): TRUE, FALSE
-Bool as string, (using spec-y): yes, no
-Bool as string, (using spec-Y): YES, NO
-Bool as string, (using spec-t#): t, f
-Bool as string, (using spec-T#): T, F
-Bool as string, (using spec-y#): y, n
-Bool as string, (using spec-Y#): Y, N
-Unsigned as bool string, (using spec-y#): y, n, as native: 42, 0
-Unsigned as bool string, (using spec-Y#): Y, N, as native: 42, 0
-Unsigned as bool string, (using spec-t#): t, f, as native: 42, 0
-Unsigned as bool string, (using spec-T#): T, F, as native: 42, 0
-Int as bool string, (using spec-y): yes, no, as native: -42, 0
-Int as bool string, (using spec-Y): YES, NO, as native: -42, 0
-Int as bool string, (using spec-t): true, false, as native: -42, 0
-Int as bool string, (using spec-T): TRUE, FALSE, as native: -42, 0
-```
-
-
-#### Форматирование указателей (и целых чисел, как указателей)
-
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage( "Argv Pointer: {argv:P}\n"
-                       "Short as ptr: {ptrShort:P}\n"
-                     , Args().arg("argv", (void*)argv)
-                             .arg("ptrShort", short(-1234))
-                     );
-```
-
-**Вывод:**
-
-```
-Argv Pointer: 000001D9EF03EA30
-Short as ptr: FB2E
-```
-
-
-#### Форматирование целых чисел
-
-```cpp
-// Форматирование в 2ую СС
-cout << formatMessage("|{:0b}|",   {-1420})<<"\n"; // |-00000000000000000000010110001100|
-cout << formatMessage("|{:0'b}|",  {-1420})<<"\n"; // |-0000'0000'0000'0000'0000'0101'1000'1100|
-cout << formatMessage("|{:12b}|",  {-1420})<<"\n"; // |-10110001100|
-cout << formatMessage("|{:12'b}|", {-1420})<<"\n"; // |-101'1000'1100|
-cout << formatMessage("|{:#0b}|",  {-1420})<<"\n"; // |-0b00000000000000000000010110001100|
-cout << formatMessage("|{:~0'b}|", {-1420})<<"\n"; // |1111'1111'1111'1111'1111'1010'0111'0100|
-cout << formatMessage("|{:#0'b}|", {-1420})<<"\n"; // |-0b0000'0000'0000'0000'0000'0101'1000'1100|
-cout << formatMessage("|{:#12b}|", {-1420})<<"\n"; // |-0b10110001100|
-cout << formatMessage("|{:#12'b}|",{-1420})<<"\n"; // |-0b101'1000'1100|
-
-// Фрматирование в 16ую СС
-cout << formatMessage("|{:0x}|",        { -1420 }) << "\n"; // |-0000058c|
-cout << formatMessage("|{:0X}|",        { -1420 }) << "\n"; // |-0000058C|
-cout << formatMessage("|{:0'x}|",       { -1420 }) << "\n"; // |-0000'058c|
-cout << formatMessage("|{:12X}|",       { -1420 }) << "\n"; // |-58C        |
-cout << formatMessage("|{:#0h}|",       { -1420 }) << "\n"; // |-0000058ch|
-cout << formatMessage("|{:#12x}|",      { -1420 }) << "\n"; // |-0x58c      |
-cout << formatMessage("|{:!#0X}|",      { -1420 }) << "\n"; // |-0x0000058C|
-cout << formatMessage("|{:~!#0X}|",     { -1420 }) << "\n"; // |0xFFFFFA74|
-cout << formatMessage("|{:~!#0'X}|",    { -1420 }) << "\n"; // |0xFFFF'FA74|
-cout << formatMessage("|{:^12x}|",      { -1420 }) << "\n"; // |    -58c    |
-cout << formatMessage("|{:^12X}|",      { -1420 }) << "\n"; // |    -58C    |
-cout << formatMessage("|{:^~12X}|",     { -1420 }) << "\n"; // |  FFFFFA74  |
-cout << formatMessage("|{:^+~12x}|",    { -1420 }) << "\n"; // | +fffffa74  |
-
-// Форматирование в 10ую СС (по умолчанию спецификатор 'd' можно не указывать)
-cout << formatMessage("|{:12}|",        { -1420 }) << "\n"; // |-1420       |
-cout << formatMessage("|{:12%}|",       { -1420 }) << "\n"; // |-1420%      |
-cout << formatMessage("|{:*=12}|",      { -1420 }) << "\n"; // |-*******1420|
-cout << formatMessage("|{:*<12}|",      { -1420 }) << "\n"; // |-1420*******|
-cout << formatMessage("|{:*<12'}|",     { -1420 }) << "\n"; // |-1'420******|
-cout << formatMessage("|{:*<12'%}|",    { -1420 }) << "\n"; // |-1'420%*****|
-cout << formatMessage("|{:>12%}|",      { -1420 }) << "\n"; // |      -1420%|
-cout << formatMessage("|{:>12'}|",      { -1420 }) << "\n"; // |      -1'420|
-cout << formatMessage("|{:>12'%}|",     { -1420 }) << "\n"; // |     -1'420%|
-cout << formatMessage("|{:^12}|",       { -1420 }) << "\n"; // |   -1420    |
-cout << formatMessage("|{:^12%}|",      { -1420 }) << "\n"; // |   -1420%   |
-cout << formatMessage("|{:^12'}|",      { -1420 }) << "\n"; // |   -1'420   |
-
-// Форматирование по ширине с заполнением fill-символом
-// (без ведущего нуля в поле ширины)
-cout << formatMessage("|{:=12}|",       { -1420 }) << "\n"; // |-       1420|
-cout << formatMessage("|{:=12b}|",      {  1420 }) << "\n"; // | 10110001100|
-cout << formatMessage("|{:=12x}|",      { -1420 }) << "\n"; // |-        58c|
-cout << formatMessage("|{:=12X}|",      { -1420 }) << "\n"; // |-        58C|
-cout << formatMessage("|{:=12%}|",      { -1420 }) << "\n"; // |-      1420%|
-cout << formatMessage("|{:*=12}|",      { -1420 }) << "\n"; // |-*******1420|
-cout << formatMessage("|{:*=12b}|",     {  1420 }) << "\n"; // |*10110001100|
-cout << formatMessage("|{:*=+!#12X}|",  {  1420 }) << "\n"; // |+******0x58C|
-cout << formatMessage("|{:= ~!#012X}|", { -1420 }) << "\n"; // | 0x0FFFFFA74|
-```
-
-
-#### Форматирование чисел с плавающей точкой
-
-Для краткости приводится только форматная строка, использованное при форматировании число (возможно, 
-с отбрасыванием точности), и результат форматирования. обрамлённый символами `'|'` (для более
-наглядного отображения опций выравнивания).
-
-
-##### Форматирование с использованием спецификаторов a/A/e/E/f/F/g/G
-
-Также продемонстрированно использование различного заполнения и выравнивания, и разделения на разряды.
-
-
-```
-{:.05f}         with  3.141593       : |3.14159|
-{:.020f}        with  3.141593       : |3.14159265358979311600|
-{:.05f}         with  -3.141593      : |-3.14159|
-{:.020f}        with  -3.141593      : |-3.14159265358979311600|
-{:.5f}          with  3.141593       : |3.14159|
-{:.20f}         with  3.141593       : |3.14159265358979311600|
-
-{:09.05f}       with  3.141593       : |003.14159|
-{:010.05f}      with  -3.141593      : |-003.14159|
-{:010.05f}      with  -3.141593      : |-003.14159|
-{:+010.05f}     with  3.141593       : |+003.14159|
-
-{:= 010.05f}    with  3.141593       : | 003.14159|
-{:=+010.05f}    with  3.141593       : |+003.14159|
-{:=-010.05f}    with  3.141593       : |0003.14159|
-{:= 010.05f}    with  -3.141593      : |-003.14159|
-{:=+010.05f}    with  -3.141593      : |-003.14159|
-{:=-010.05f}    with  -3.141593      : |-003.14159|
-
-{:= 10.05f}     with  3.141593       : |   3.14159|
-{:=+10.05f}     with  3.141593       : |+  3.14159|
-{:=-10.05f}     with  3.141593       : |   3.14159|
-{:= 10.05f}     with  -3.141593      : |-  3.14159|
-{:=+10.05f}     with  -3.141593      : |-  3.14159|
-{:=-10.05f}     with  -3.141593      : |-  3.14159|
-
-{:= 10.05f}     with  3.141593       : |   3.14159|
-{:=+10.05f}     with  3.141593       : |+  3.14159|
-{:=-10.05f}     with  3.141593       : |   3.14159|
-{:= 10.05f}     with  -3.141593      : |-  3.14159|
-{:=+10.05f}     with  -3.141593      : |-  3.14159|
-{:=-10.05f}     with  -3.141593      : |-  3.14159|
-
-{:< 10.05f}     with  3.141593       : | 3.14159  |
-{:<+10.05f}     with  3.141593       : |+3.14159  |
-{:<-10.05f}     with  3.141593       : |3.14159   |
-{:< 10.05f}     with  -3.141593      : |-3.14159  |
-{:<+10.05f}     with  -3.141593      : |-3.14159  |
-{:<-10.05f}     with  -3.141593      : |-3.14159  |
-
-{:> 10.05f}     with  3.141593       : |   3.14159|
-{:>+10.05f}     with  3.141593       : |  +3.14159|
-{:>-10.05f}     with  3.141593       : |   3.14159|
-{:> 10.05f}     with  -3.141593      : |  -3.14159|
-{:>+10.05f}     with  -3.141593      : |  -3.14159|
-{:>-10.05f}     with  -3.141593      : |  -3.14159|
-
-{:^ 010.05f}    with  3.141593       : |  3.14159 |
-{:^+010.05f}    with  3.141593       : | +3.14159 |
-{:^-010.05f}    with  3.141593       : | 3.14159  |
-{:^ 010.05f}    with  -3.141593      : | -3.14159 |
-{:^+010.05f}    with  -3.141593      : | -3.14159 |
-{:^-010.05f}    with  -3.141593      : | -3.14159 |
-
-{:.05f}         with  2.718282       : |2.71828|
-{:.020f}        with  2.718282       : |2.71828182845904509080|
-
-{:012'.05f}     with  2.718282       : |00'002.71828|
-{:012'.018f}    with  2.718282       : |2.718281828459045091|
-{:012'.05'f}    with  2.718282       : |0'002.718'28|
-{:012'.018'f}   with  2.718282       : |2.718'281'828'459'045'091|
-{:012'.5'f}     with  2.718282       : |0'002.718'28|
-{:012'.18'f}    with  2.718282       : |2.718'281'828'459'045'091|
-```
-
-##### Форматирование чисел, процентов, валют
-
-Также продемонстрированно использование пользовательской локали, получаемой из системы.
-
-```
-//---------------------
-// n - десятичное число, форматирование с использованием локали.
-// Точность не задана, берётся из текущей локали пользователя
-// (русская под Win - 2 десятичных знака)
-{:n}            with  3.141593       : |3.14|
-
-// n - десятичное число, форматирование с использованием локали.
-// Точность задана явно, .4.
-{:.4n}          with  3.141593       : |3.1416|
-
-// n - десятичное число, форматирование с использованием локали.
-// Точность задана явно, .6.
-// Указано разделение на разряды дробной части.
-// Разделитель используется из локали пользователя в ОС.
-{:.6_n}         with  3.141593       : |3.141 593|
-
-//---------------------
-// d - число. Точность не задана, берётся из локали
-// (дефолтная "C"/invariant локаль - 3 символа)
-{:d}            with  3.141593       : |3.142|
-
-// d - число. Точность не задана, берётся из пользовательской локали
-// (русская под Win - 2 десятичных знака)
-// Маркер локали 'L' указывает использовать локаль из ОС
-{:Ld}           with  3.141593       : |3.14|
-
-// d - число. Точность не задана, альтер маркер '#' указывает
-// выбрать точность автоматически
-{:#d}           with  3.141593       : |3.141593|
-
-//---------------------
-// % - проценты - число умножается на 100.
-// Точность не задана, берётся из invariant локали - 3 символа
-{:%}            with  3.141593       : |314.159%|
-
-// % - проценты - число умножается на 100.
-// Точность не задана, берётся из пользовательской локали - 2 символа
-{:L%}           with  3.141593       : |314.16%|
-
-// % - проценты, альтернативная форма, знак '%' опускается, invariant локаль, .3.
-{:#%}           with  3.141593       : |314.159|
-
-// % - проценты, альтернативная форма, знак '%' опускается, пользовательская локаль, .2.
-{:#L%}          with  3.141593       : |314.16|
-
-// % - проценты, точность задаётся явно.
-{:.4%}          with  3.141593       : |314.1593%|
-
-//---------------------
-// $ - валюта.
-// Точность не задана, берётся из invariant локали - 2 символа
-{:$}            with  3.141593       : |$3.14|
-
-// $ - валюта.
-// Точность не задана, берётся из пользовательской локали - 2 символа
-{:L$}           with  3.141593       : |3.14 ₽|
-
-// $ - валюта, альтернативная форма, знак валюты опускается, invariant локаль, .2.
-{:#$}           with  3.141593       : |3.14|
-
-// $ - валюта, альтернативная форма, знак '$' опускается, пользовательская локаль, .2.
-{:#L$}          with  3.141593       : |3.14|
-
-// $ - валюта, точность задаётся явно.
-{:.4$}          with  3.141593       : |$3.1416|
-
-
-//---------------------
-// Краткий сводный пример форматирования чисел, процентов, валюты.
-
-{:n}            with  3.141593       : |3.14|
-
-// 9 знаков после запятой, разбиение дробной части по разрядам.
-// Используется локаль пользователя системы.
-// Разделитель - неразрывный пробел (&nbsp;) - локаль RU-ru.
-{:.9'n}         with  3.141593       : |3.141 592 654|
-
-{:d}            with  3.141593       : |3.142|
-{:.9'd}         with  3.141593       : |3.141'592'654|
-{:f}            with  3.141593       : |3.142|
-{:.9'f}         with  3.141593       : |3.141'592'654|
-{:%}            with  3.141593       : |314.159%|
-{:L%}           with  3.141593       : |314.16%|
-{:#L%}          with  3.141593       : |314.16|
-{:$}            with  3.141593       : |$3.14|
-{:L$}           with  3.141593       : |3.14 ₽|
-{:#L$}          with  3.141593       : |3.14|
-```
-
-
-
-
-
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src, F:\_github\umba-tools\umba-md-pp\_libs\marty_format, F:\_github\umba-tools\umba-md-pp\_libs\marty_format\md_
+#!doc{raise=-2} usage_samples_fmt.md_
 
 
 
 
 ## API библиотеки
+
+### Поддержка локализации форматируемых значений
+
+### Класс marty::format::LocaleInfo
+
+Класс `LocaleInfo` является интерфейсом, 
+через который библиотека форматирования получает locale-зависимую информацию.
+
+Всё получение locale-зависимой информации производится через виртуальные методы
+класса `LocaleInfo`.
+
+
+
+
+```cpp
+class LocaleInfo
+{
+
+public: // constructors
+
+    LocaleInfo();
+
+    LocaleInfo(const LocaleInfo &) = default;
+    LocaleInfo& operator=(const LocaleInfo &) = default;
+    LocaleInfo(LocaleInfo &&) = default;
+    LocaleInfo& operator=(LocaleInfo &&) = default;
+
+
+public: // types
+
+// Для отладки удобнее std::vector<std::uint8_t>, а в релизе std::basic_string<std::uint8_t> гораздо быстрее
+#if defined(DEBUG) || defined(_DEBUG)
+    using group_info_t = std::vector<std::uint8_t>;
+    static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u) { gi.resize(gi.size()+n, u); }
+#else
+    using group_info_t = std::basic_string<std::uint8_t>;
+    static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u) { gi.append(n, u); }
+#endif
+
+
+public: // virtual methods
+
+    virtual ~LocaleInfo() {}
+
+    //! Обрабатывает только LocaleInfoValueType::thousandSeparator и LocaleInfoValueType::fractionalSeparator
+    virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //!
+                                         , NumeralSystem ns       //!
+                                         ) const;
+
+    //! Обрабатывает LocaleInfoValueType::sign* и LocaleInfoValueType::format*
+    virtual std::string getLocaleInfoValue(LocaleInfoValueType vt) const;
+
+    virtual group_info_t getGroupInfo(NumeralSystem ns, bool bFractionalPart) const;
+
+    virtual std::string substFormatString( const std::string &fmt
+                                         , const std::string &numStr
+                                         , PositiveNumbersMode pm
+                                         ) const;
+
+    // digitsDecimal / digitsCurrency
+    virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
+
+
+public: // members
+
+    // Integer part/Fractional part
+    group_info_t groupInfoCur[2]; // Currency
+    group_info_t groupInfoBin[2];
+    group_info_t groupInfoOct[2];
+    group_info_t groupInfoDec[2];
+    group_info_t groupInfoHex[2];
+
+    // Integer part/Fractional part
+    std::string groupSeparatorCur[2];
+    std::string groupSeparatorBin[2];
+    std::string groupSeparatorOct[2];
+    std::string groupSeparatorDec[2];
+    std::string groupSeparatorHex[2];
+
+    std::string signDecimal            = ".";
+    std::string signPlus               = "+";
+    std::string signMinus              = "-";
+    std::string signPercent            = "%";
+    std::string signCurrency           = "$";
+
+    std::string formatPercentNegative       = "-#%";
+    std::string formatPercentPositive       = "+#%";
+    std::string formatPercentShortNegative  = "-#" ;
+    std::string formatPercentShortPositive  = "+#" ;
+    std::string formatCurrencyNegative      = "-$#";
+    std::string formatCurrencyPositive      = "+$#";
+    std::string formatCurrencyShortNegative = "-#" ;
+    std::string formatCurrencyShortPositive = "+#" ;
+
+    // Числа любой СС форматируем по тем же правилам.
+    // Только перед подстановкой в форматную строку строки числа могут быть дополнены
+    // или пробелами или нулями, в зависимости от режима выравнивания
+    std::string formatNumberNegative   = "-#";
+    std::string formatNumberPositive   = "+#";
+
+    unsigned digitsNumber              = 3;
+    unsigned digitsCurrency            = 2;
+
+
+public: // static helper methods
+
+    //! Подстановка локализованных символов в шаблон форматной строки
+    static
+    std::string substFormatString( const std::string &fmt
+                                 , const std::string &numStr
+                                 , const std::string &symbolPlus
+                                 , const std::string &symbolMinus
+                                 , const std::string &symbolPercent
+                                 , const std::string &symbolCurrency
+                                 , PositiveNumbersMode pm
+                                 );
+
+    //! Нулем может быть только последний элемент.
+    /*! Данная функция фиксит разобранное из строки описание групп
+        При дальнейшей работе с группами элемент с нулевым размером
+        будет считаться последним
+     */
+    static group_info_t fixGroupInfo(group_info_t &&grpInfo);
+
+    //! Разбор строк вида "3;2;0" в group_info_t
+    static group_info_t parseGroupingString(const std::string &str);
+
+    //! Восстановление group_info_t в строку
+    static std::string composeGroupingString(const group_info_t &grpInfo);
+
+
+    // 3;0     3,000,000,000,000
+    // 3;2;0   30,00,00,00,00,000
+    // 3       3000000000,000
+    // 3;2     30000000,00,000
+    static bool testAppendGroupSeparator(std::size_t curDigitIndex, const group_info_t &grpInfo);
+
+    static std::string insertGroupSeparators( std::string numStr
+                                            , std::string sep
+                                            , const group_info_t &grpInfo
+                                            , bool bFractionalPart
+                                            );
+
+    // полная длина дополняемой строки, включает разделители разрядов
+    static
+    std::string expandWithGroupSeparator
+            ( std::string numStr, std::string sep, const group_info_t &grpInfo
+            , bool bFractionalPart
+            , std::size_t sepCalculatedLen // Посчитанная снаружи длина разделителя
+            , std::size_t &numStrLen       // Посчитанная снаружи полная длина дополняемой строки
+            , std::size_t &digitsCount
+            , std::size_t maxLen
+            );
+
+    // maxLen - Макс длина в цифрах
+    static
+    std::string expandWithGroupSeparatorToNumDigits( std::string numStr
+                                                   , std::string sep
+                                                   , const group_info_t &grpInfo
+                                                   , bool bFractionalPart
+                                                   , std::size_t &digitsCount
+                                                   , std::size_t maxLen
+                                                   );
+
+protected: // static helper methods
+
+    static
+    std::string insertGroupSeparatorsImplHelper( const std::string &numStr
+                                               , const std::string &sep
+                                               , const group_info_t &grpInfo
+                                               );
+
+    /*!
+        @param sepCalculatedLen Посчитанная снаружи длина разделителя
+        @param numStrLen Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+    */
+    static
+    std::string expandWithGroupSeparatorImplHelper( std::string numStr
+                                                  , const std::string &sep
+                                                  , const group_info_t &grpInfo
+                                                  , std::size_t sepCalculatedLen
+                                                  , std::size_t &numStrLen
+                                                  , std::size_t &digitsCount
+                                                  , std::size_t maxLen
+                                                  );
+
+    static
+    std::string expandWithGroupSeparatorToNumDigitsImplHelper( std::string numStr
+                                                             , const std::string &sep
+                                                             , const group_info_t &grpInfo
+                                                             , std::size_t &digitsCount
+                                                             , std::size_t maxLen
+                                                             );
+
+}; // struct LocaleInfo
+```
+
+
+
 
 
 ### Обобщённый тип фильтра BasicFormatValueFilter
