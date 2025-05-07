@@ -3,15 +3,18 @@
 
 ## Вызов функций форматирования с разными типами списков аргументов
 
-#!doc{raise=-2} usage_samples_args.md_
+#// !doc{raise=-2} usage_samples_args.md_
+#!subsection usage_samples_args.md_
 
 
 ## Конвертация и фильтры
 
-#!doc{raise=-2} usage_samples_filters.md_
+#// !doc{raise=-2} usage_samples_filters.md_
+#!subsection usage_samples_filters.md_
 
 
 ## Примеры использования форматной строки
 
-#!doc{raise=-2} usage_samples_fmt.md_
+#// !doc{raise=-2} usage_samples_fmt.md_
+#!subsection usage_samples_fmt.md_
 

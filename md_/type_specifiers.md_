@@ -3,13 +3,18 @@
 Символами `Py` обозначаются спецификаторы типа `Python`, `C++` - `C++`, соответственно, спецификаторы, которые 
 поддерживаются обоими языками, будут обозначены как `Py`/`C++`.
 
-#!insert{no-fail,doc,raise=-1} type_specifiers_string.md_
+#// !insert{no-fail,doc,raise=-1} type_specifiers_string.md_
+#!subsection{fail} type_specifiers_string.md_
 
-#!insert{no-fail,doc,raise=-1} type_specifiers_bool.md_
+#// !insert{no-fail,doc,raise=-1} type_specifiers_bool.md_
+#!subsection{fail} type_specifiers_bool.md_
 
-#!insert{no-fail,doc,raise=-1} type_specifiers_integer.md_
+#// !insert{no-fail,doc,raise=-1} type_specifiers_integer.md_
+#!subsection{fail} type_specifiers_integer.md_
 
-#!insert{no-fail,doc,raise=-1} type_specifiers_floating.md_
+#// !insert{no-fail,doc,raise=-1} type_specifiers_floating.md_
+#!subsection{fail} type_specifiers_floating.md_
 
-#!insert{no-fail,doc,raise=-1} type_specifiers_pointer.md_
+#// !insert{no-fail,doc,raise=-1} type_specifiers_pointer.md_
+#!subsection{fail} type_specifiers_pointer.md_
 

@@ -33,7 +33,8 @@
   - [Примеры использования форматной строки](#примеры-использования-форматной-строки)
 - [API библиотеки](#api-библиотеки)
   - [Поддержка локализации форматируемых значений](#поддержка-локализации-форматируемых-значений)
-  - [Класс marty::format::LocaleInfo](#класс-martyformatlocaleinfo)
+    - [Класс marty::format::LocaleInfo](#класс-martyformatlocaleinfo)
+    - [Получение стандартной локали - marty::format::getLocaleInfo](#получение-стандартной-локали---martyformatgetlocaleinfo)
   - [Обобщённый тип фильтра BasicFormatValueFilter](#обобщённый-тип-фильтра-basicformatvaluefilter)
     - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
   - [Тип фильтра FormatValueFilter](#тип-фильтра-formatvaluefilter)
@@ -170,19 +171,19 @@
 ### Вызов функций форматирования с разными типами списков аргументов
 
 !!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src, F:\_github\umba-tools\umba-md-pp\_libs\marty_format, F:\_github\umba-tools\umba-md-pp\_libs\marty_format\md_
-#!doc{raise=-2} usage_samples_args.md_
+#!subsection usage_samples_args.md_
 
 
 ### Конвертация и фильтры
 
 !!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src, F:\_github\umba-tools\umba-md-pp\_libs\marty_format, F:\_github\umba-tools\umba-md-pp\_libs\marty_format\md_
-#!doc{raise=-2} usage_samples_filters.md_
+#!subsection usage_samples_filters.md_
 
 
 ### Примеры использования форматной строки
 
 !!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src, F:\_github\umba-tools\umba-md-pp\_libs\marty_format, F:\_github\umba-tools\umba-md-pp\_libs\marty_format\md_
-#!doc{raise=-2} usage_samples_fmt.md_
+#!subsection usage_samples_fmt.md_
 
 
 
@@ -191,16 +192,26 @@
 
 ### Поддержка локализации форматируемых значений
 
-### Класс marty::format::LocaleInfo
+#### Класс marty::format::LocaleInfo
 
 Класс `LocaleInfo` является интерфейсом, 
 через который библиотека форматирования получает locale-зависимую информацию.
 
-Всё получение locale-зависимой информации производится через виртуальные методы
-класса `LocaleInfo`.
+Всё получение locale-зависимой информации функциями форматирования производится 
+через виртуальные методы класса `LocaleInfo`.
 
+Функции форматирования принимают указатель на класс `LocaleInfo` для
+переопределения локали, получаемой из системы. Данный указатель
+позволяет передать собственную настроенную локаль в функции форматирования.
 
+Если в функции форматирования передаётся нулевой указатель на `LocaleInfo`,
+то используется либо пользовательская, либо системная локаль текущего пользовательского окружения.
+По умолчанию используется пользовательская локаль текущего окружения пользователя.
+Для использования системной локали текущего окружения пользователя следует указывать флаг 
+`FormattingFlags::localeUseSystem`.
 
+Если в форматной строке не задано использование локали, то для форматирования 
+используется `invariant`/"C"-локаль.
 
 ```cpp
 class LocaleInfo
@@ -232,7 +243,6 @@ public: // virtual methods
 
     virtual ~LocaleInfo() {}
 
-    //! Обрабатывает только LocaleInfoValueType::thousandSeparator и LocaleInfoValueType::fractionalSeparator
     virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //!
                                          , NumeralSystem ns       //!
                                          ) const;
@@ -384,6 +394,24 @@ protected: // static helper methods
 
 }; // struct LocaleInfo
 ```
+
+
+#### Получение стандартной локали - marty::format::getLocaleInfo
+
+Функция для получения одной из стандартных локалей.
+
+```cpp
+const LocaleInfo* getLocaleInfo(LocaleInfoType lt);
+```
+
+Запрашиваемые локали имеют тип `marty::format::LocaleInfoType` и могут принимать следующие значения:
+
+
+|Значение|Описание|
+|:-------|:-------|
+|**invariant**|возвращает указатель на неизменяемую "C" локаль;|
+|**user**|возвращает указатель на пользовательскую локаль текущего окружения;|
+|**system**|возвращает указатель на системную локаль текущего окружения.|
 
 
 
