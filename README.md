@@ -939,7 +939,8 @@ protected: // static helper methods
 
     /*!
         @param sepCalculatedLen Посчитанная снаружи длина разделителя
-        @param numStrLen Посчитанная снаружи полная длина строки, которую дополняем, включая сепараторы
+        @param numStrLen Посчитанная снаружи полная длина строки, которую дополняем,
+        включая сепараторы
     */
     static
     std::string expandWithGroupSeparatorImplHelper( std::string numStr
