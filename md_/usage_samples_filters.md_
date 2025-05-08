@@ -1,0 +1,16 @@
+#//---------
+# Задаём конвертацию аргумента, также символ заполнения передаём аргументом
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFillRefAndConvert
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingFillRefAndConvert
+
+
+#//---------
+# Используем фильтры для вывода в HTML
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingHtmlFilters
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingHtmlFilters

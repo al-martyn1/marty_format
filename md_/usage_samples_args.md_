@@ -1,0 +1,55 @@
+Все примеры используют стандартный тип аргумента `marty::format::FormatArgumentVariant`.
+При необходимости пользователь может создать свой аналогичный тип и использовать его.
+
+#//---------
+# Используем std::initializer_list
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingInitializerList
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingInitializerList
+
+
+#//---------
+# Используем std::vector
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFlatVector
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingFlatVector
+
+
+#//---------
+# Используем marty::format::Args
+
+- Автоматически вычисляемый индекс аргумента
+- Ширину и точность (на самом деле макс ширину строки)
+  задаём также аргументами, а не в форматной строке
+
+
+#!snippet{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingArgs
+
+**Вывод:**
+#!snippet{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingArgs
+
+
+#//---------
+# Используем marty::format::Args с именоваными параметрами
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingNamedArgs
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingNamedArgs
+
+
+#//---------
+# Используем std::vector с парами std::pair<std::string, FormatArgumentVariant>
+
+Использование вектора с парами, где первый элемент строка, а второй - `marty::format::FormatArgumentVariant` 
+аналогично использованию `marty::format::Args`,
+но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingVectorOfNameValuePairs
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingVectorOfNameValuePairs

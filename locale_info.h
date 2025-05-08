@@ -105,6 +105,7 @@ public: // virtual methods
 
     virtual ~LocaleInfo() {}
 
+//#! LocaleInfoVirtualFunctions
     virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //! 
                                          , NumeralSystem ns       //!
                                          ) const;
@@ -121,10 +122,12 @@ public: // virtual methods
 
     // digitsDecimal / digitsCurrency
     virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
+//#!
 
 
 public: // members
 
+//#! LocaleInfoMembers
     // Integer part/Fractional part
     group_info_t groupInfoCur[2]; // Currency
     group_info_t groupInfoBin[2];
@@ -162,7 +165,7 @@ public: // members
 
     unsigned digitsNumber              = 3;
     unsigned digitsCurrency            = 2;
-
+//#!
 
 public: // static helper methods
 
@@ -254,7 +257,7 @@ protected: // static helper methods
                                                              , std::size_t maxLen
                                                              );
     
-}; // struct LocaleInfo
+}; // class LocaleInfo
 //#!
 
 #include "impl/internal_locale_info_impl_base.h"

@@ -1,0 +1,68 @@
+#//---------
+# Форматирование строк с различной шириной и точностью
+
+При выводе используем как непосредственное задание ширины и точности, так и косвенное.
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#StringWidthPrecision01
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#StringWidthPrecision01
+
+
+#//---------
+# Форматирование булевых значений
+
+Также выводим целые числа как булевы значения.
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#FormattingBool
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingBool
+
+
+#//---------
+# Форматирование указателей (и целых чисел, как указателей)
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#FormattingPointers
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingPointers
+
+
+#//---------
+# Форматирование целых чисел
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} integer_format_sampes.cpp
+
+
+#//---------
+# Форматирование чисел с плавающей точкой
+
+Для краткости приводится только форматная строка, использованное при форматировании число (возможно, 
+с отбрасыванием точности), и результат форматирования. обрамлённый символами `'|'` (для более
+наглядного отображения опций выравнивания).
+
+
+## Форматирование с использованием спецификаторов a/A/e/E/f/F/g/G
+
+Также продемонстрированно использование различного заполнения и выравнивания, и разделения на разряды.
+
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} float_test_smp_output.txt
+
+## Форматирование чисел, процентов, валют
+
+Также продемонстрированно использование пользовательской локали, получаемой из системы.
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} float_test_locale_output.txt
+
+
+#// #//---------
+#// # Используем 
+#//
+#// #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#
+#// 
+#// **Вывод:**
+#// #!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#
+
+

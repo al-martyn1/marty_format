@@ -166,6 +166,7 @@ enum class LocaleInfoType : std::uint32_t
     invalid     = (std::uint32_t)(-1) /*!<  */,
     unknown     = (std::uint32_t)(-1) /*!<  */,
     invariant   = 0x00 /*!<  */,
+    c           = 0x00 /*!<  */,
     user        = 0x01 /*!<  */,
     system      = 0x02 /*!<  */
 
@@ -185,6 +186,7 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( LocaleInfoType, std::map, 1 )
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoType::invalid     , "invalid"   );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoType::invalid     , "unknown"   );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoType::invariant   , "invariant" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoType::invariant   , "c"         );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoType::user        , "user"      );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( LocaleInfoType::system      , "system"    );
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoType, std::map, 1 )
