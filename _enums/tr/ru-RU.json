@@ -98,6 +98,7 @@
     },
     "_generated-enums_/marty/format/positivenumbersmode": {
       "___description___": "",
+      "none": "Do not insert anything.",
       "sign": "Insert sign itself.",
       "space": "Insert space instead of sign."
     },
@@ -106,6 +107,7 @@
       "html": "HTML - фильтр для теста тэгов или значений атрибутов.",
       "htmlattr": "HTML фильтр для значений атрибутов.",
       "htmltag": "HTML фильтр для теста тэгов.",
+      "none": "Фильтрация не производится.",
       "sql": "Фильтр для значений SQL.",
       "xml": "Any XML - фильтр для теста тэгов или значений атрибутов.",
       "xmlattr": "XML фильтр для значений атрибутов.",

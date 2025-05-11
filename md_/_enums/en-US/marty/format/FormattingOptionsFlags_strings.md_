@@ -25,48 +25,48 @@ Mutually exclusive with signPlus & signSpace.
 Mutually exclusive with signMinus & signPlus.
 
 - sign-z,sign_z,signz
-`-`.
+`-`
 
 - sign-alter-form,sign_alter_form,signalterform
-`-`.
+`-`
 
 - sign-zero,sign_zero,signzero
-`-`.
+`-`
 
 - filling-taken,filling_taken,fillingtaken
-`-`.
+`-`
 
 - filling-indirect,filling_indirect,fillingindirect
-`-`.
+`-`
 
 - locale-formatting,locale_formatting,localeformatting
-`-`.
+`-`
 
 - precision-taken,precision_taken,precisiontaken
-`-`.
+`-`
 
 - precision-indirect,precision_indirect,precisionindirect
-`-`.
+`-`
 
 - case-invert,case_invert,caseinvert
-`-`.
+`-`
 
 - bit-cast,bit_cast,bitcast
-`-`.
+`-`
 
 - internal-signed,internal_signed,internalsigned
-`-`.
+`-`
 
 - internal-negative,internal_negative,internalnegative
-`-`.
+`-`
 
 - field-width-indirect-taken,field_width_indirect_taken,fieldwidthindirecttaken
-`-`.
+`-`
 
 - precision-indirect-taken,precision_indirect_taken,precisionindirecttaken
-`-`.
+`-`
 
 - filling-indirect-taken,filling_indirect_taken,fillingindirecttaken
-`-`.
+`-`
 
 </val-list>

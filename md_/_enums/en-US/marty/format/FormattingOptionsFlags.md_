@@ -40,62 +40,62 @@ Mutually exclusive with signMinus & signPlus.
 
 - signZ
 0x40
-`-`.
+`-`
 
 - signAlterForm
 0x80
-`-`.
+`-`
 
 - signZero
 0x100
-`-`.
+`-`
 
 - fillingTaken
 0x200
-`-`.
+`-`
 
 - fillingIndirect
 0x400
-`-`.
+`-`
 
 - localeFormatting
 0x800
-`-`.
+`-`
 
 - precisionTaken
 0x1000
-`-`.
+`-`
 
 - precisionIndirect
 0x2000
-`-`.
+`-`
 
 - caseInvert
 0x4000
-`-`.
+`-`
 
 - bitCast
 0x8000
-`-`.
+`-`
 
 - internalSigned
 0x10000
-`-`.
+`-`
 
 - internalNegative
 0x20000
-`-`.
+`-`
 
 - fieldWidthIndirectTaken
 fieldWidthTaken | fieldWidthIndirect
-`-`.
+`-`
 
 - precisionIndirectTaken
 precisionTaken | precisionIndirect
-`-`.
+`-`
 
 - fillingIndirectTaken
 fillingTaken | fillingIndirect
-`-`.
+`-`
 
 </val-list>

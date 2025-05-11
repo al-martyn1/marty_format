@@ -98,6 +98,7 @@
     },
     "_generated-enums_/marty/format/positivenumbersmode": {
       "___description___": "",
+      "none": "Do not insert anything.",
       "sign": "Insert sign itself.",
       "space": "Insert space instead of sign."
     },
@@ -106,6 +107,7 @@
       "html": "Any HTML - tag text or attribute text filter.",
       "htmlattr": "HTML attribute filter.",
       "htmltag": "HTML tag text filter.",
+      "none": "No filtration at all.",
       "sql": "SQL value filter.",
       "xml": "Any XML - tag text or attribute text filter.",
       "xmlattr": "XML attribute filter.",
