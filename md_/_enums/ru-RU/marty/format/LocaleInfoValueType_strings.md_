@@ -1,0 +1,57 @@
+
+Значения являются независимыми от регистра символов.
+
+<val-list title="Значение|Описание" value-style=backtick-quote>
+
+- invalid,unknown
+Недопустимое/неизвестное значение.
+
+- none
+Пустое/отсутствующее значение.
+
+- sign-decimal,sign_decimal,signdecimal
+Aka decimal separator, decimal mark, decimal point.
+
+- sign-plus,sign_plus,signplus
+`-`.
+
+- sign-minus,sign_minus,signminus
+`-`.
+
+- sign-percent,sign_percent,signpercent
+`-`.
+
+- sign-currency,sign_currency,signcurrency
+`-`.
+
+- format-percent-negative,format_percent_negative,formatpercentnegative
+`-`.
+
+- format-percent-positive,format_percent_positive,formatpercentpositive
+`-`.
+
+- format-percent-short-negative,format_percent_short_negative,formatpercentshortnegative
+`-`.
+
+- format-percent-short-positive,format_percent_short_positive,formatpercentshortpositive
+`-`.
+
+- format-currency-negative,format_currency_negative,formatcurrencynegative
+`-`.
+
+- format-currency-positive,format_currency_positive,formatcurrencypositive
+`-`.
+
+- format-currency-short-negative,format_currency_short_negative,formatcurrencyshortnegative
+`-`.
+
+- format-currency-short-positive,format_currency_short_positive,formatcurrencyshortpositive
+`-`.
+
+- format-number-negative,format_number_negative,formatnumbernegative
+`-`.
+
+- format-number-positive,format_number_positive,formatnumberpositive
+`-`.
+
+</val-list>

@@ -1,0 +1,27 @@
+
+Значения являются независимыми от регистра символов.
+
+<val-list title="Значение|Описание" value-style=backtick-quote>
+
+- invalid,unknown
+Недопустимое/неизвестное значение.
+
+- none
+Пустое/отсутствующее значение.
+
+- currency
+Base - 10.
+
+- bin
+Binary numeral system.
+
+- oct
+Octal numeral system.
+
+- dec
+Decimal numeral system.
+
+- hex
+Hexadecimal numeral system.
+
+</val-list>

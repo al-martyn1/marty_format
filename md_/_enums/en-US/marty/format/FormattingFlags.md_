@@ -1,0 +1,91 @@
+# marty::format::FormattingFlags flags
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- unknown,invalid
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- none
+0x00
+Empty/none value.
+
+- ignoreFormatStringErrors
+0x01
+Ignore errors in format string.
+
+- ignoreArgumentErrors
+0x02
+Ignore errors while searching for arguments.
+
+- ignoreFormattingErrors
+0x04
+Ignore errors while formatting values.
+
+- ignoreFillIndirectErrors
+0x08
+Ignore errors while searching for arguments for fill char.
+
+- ignoreWidthIndirectErrors
+0x10
+Ignore errors while searching for arguments for width.
+
+- ignorePrecisionIndirectErrors
+0x20
+Ignore errors while searching for arguments for precision.
+
+- ignoreConversionErrors
+0x40
+Ignore formatting type specifications and allow automatic type conversion.
+
+- ignoreTypeMismatchErrors
+0x80
+Ignore formatting type specification char mismatch errors.
+
+- ignoreNotFilterErrors
+0x100
+Ignore errors - non-filter value used as filter.
+
+- considerZeroWidthSpaces
+0x200
+Учитывать пробелы нулевой ширины.
+
+- considerCombiningChars
+0x400
+Учитывать комбинированные символы.
+
+- fractionalGroupping
+0x800
+Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа.
+
+- ignoreOptionsIndirectErrors
+ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
+`-`.
+
+- ignoreErrors
+ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors
+`-`.
+
+- considerUnicodeFeatures
+considerZeroWidthSpaces  | considerCombiningChars
+`-`.
+
+- allBase
+ignoreErrors | considerUnicodeFeatures
+`-`.
+
+- all
+allBase | fractionalGroupping
+`-`.
+
+- localeForceCustom
+0x1000
+`-`.
+
+- localeUseSystem
+0x2000
+Instead of user.
+
+</val-list>

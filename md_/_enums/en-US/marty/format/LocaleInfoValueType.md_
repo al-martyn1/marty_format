@@ -1,0 +1,75 @@
+# marty::format::LocaleInfoValueType enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- invalid,unknown
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- none
+0x00
+Empty/none value.
+
+- signDecimal
+0x01
+Aka decimal separator, decimal mark, decimal point.
+
+- signPlus
+0x02
+`-`.
+
+- signMinus
+0x03
+`-`.
+
+- signPercent
+0x04
+`-`.
+
+- signCurrency
+0x05
+`-`.
+
+- formatPercentNegative
+0x06
+`-`.
+
+- formatPercentPositive
+0x07
+`-`.
+
+- formatPercentShortNegative
+0x08
+`-`.
+
+- formatPercentShortPositive
+0x09
+`-`.
+
+- formatCurrencyNegative
+0x0A
+`-`.
+
+- formatCurrencyPositive
+0x0B
+`-`.
+
+- formatCurrencyShortNegative
+0x0C
+`-`.
+
+- formatCurrencyShortPositive
+0x0D
+`-`.
+
+- formatNumberNegative
+0x0E
+`-`.
+
+- formatNumberPositive
+0x0F
+`-`.
+
+</val-list>

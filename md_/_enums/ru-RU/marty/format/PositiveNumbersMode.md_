@@ -1,0 +1,23 @@
+# marty::format::PositiveNumbersMode перечисление
+
+Базовый тип: `std::uint32_t`.
+
+<val-list title="Имя|Значение|Описание">
+
+- unknown,invalid
+(std::uint32_t)(-1)
+Недопустимое/неизвестное значение.
+
+- none
+0x00
+Пустое/отсутствующее значение.
+
+- space
+0x01
+Insert space instead of sign.
+
+- sign
+0x02
+Insert sign itself.
+
+</val-list>

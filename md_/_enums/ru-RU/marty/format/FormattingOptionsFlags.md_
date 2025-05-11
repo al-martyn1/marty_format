@@ -1,0 +1,99 @@
+# marty::format::FormattingOptionsFlags флаги
+
+Базовый тип: `std::uint32_t`.
+
+<val-list title="Имя|Значение|Описание">
+
+- unknown,invalid
+(std::uint32_t)(-1)
+Недопустимое/неизвестное значение.
+
+- none
+0x00
+Пустое/отсутствующее значение.
+
+- argIdTaken
+0x01
+fieldWidth value is set.
+
+- fieldWidthTaken
+0x02
+fieldWidth value is set.
+
+- fieldWidthIndirect
+0x04
+Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value.
+
+- signPlus
+0x08
+Mutually exclusive with signMinus & signSpace.
+
+- signMinus
+0x10
+Mutually exclusive with signPlus & signSpace.
+
+- signSpace
+0x20
+Mutually exclusive with signMinus & signPlus.
+
+- signZ
+0x40
+`-`.
+
+- signAlterForm
+0x80
+`-`.
+
+- signZero
+0x100
+`-`.
+
+- fillingTaken
+0x200
+`-`.
+
+- fillingIndirect
+0x400
+`-`.
+
+- localeFormatting
+0x800
+`-`.
+
+- precisionTaken
+0x1000
+`-`.
+
+- precisionIndirect
+0x2000
+`-`.
+
+- caseInvert
+0x4000
+`-`.
+
+- bitCast
+0x8000
+`-`.
+
+- internalSigned
+0x10000
+`-`.
+
+- internalNegative
+0x20000
+`-`.
+
+- fieldWidthIndirectTaken
+fieldWidthTaken | fieldWidthIndirect
+`-`.
+
+- precisionIndirectTaken
+precisionTaken | precisionIndirect
+`-`.
+
+- fillingIndirectTaken
+fillingTaken | fillingIndirect
+`-`.
+
+</val-list>

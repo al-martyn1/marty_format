@@ -1,0 +1,33 @@
+
+Values are case insensitive.
+
+<val-list title="Value|Description" value-style=backtick-quote>
+
+- invalid,unknown
+Invalid/unknown value.
+
+- none
+Empty/none value.
+
+- xml
+`-`.
+
+- xml-text,xml_text,xmltext
+`-`.
+
+- xml-attr,xml_attr,xmlattr
+`-`.
+
+- html
+`-`.
+
+- html-text,html_text,htmltext
+`-`.
+
+- html-attr,html_attr,htmlattr
+`-`.
+
+- sql
+`-`.
+
+</val-list>

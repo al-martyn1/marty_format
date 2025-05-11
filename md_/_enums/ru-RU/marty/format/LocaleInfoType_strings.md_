@@ -1,0 +1,18 @@
+
+Значения являются независимыми от регистра символов.
+
+<val-list title="Значение|Описание" value-style=backtick-quote>
+
+- invalid,unknown
+Недопустимое/неизвестное значение.
+
+- c,invariant
+`-`.
+
+- user
+`-`.
+
+- system
+`-`.
+
+</val-list>

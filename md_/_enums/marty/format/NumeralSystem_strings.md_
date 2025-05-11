@@ -1,0 +1,27 @@
+
+Values are case insensitive.
+
+<val-list title="Value|Description" value-style=backtick-quote>
+
+- invalid,unknown
+Invalid/unknown value.
+
+- none
+Empty/none value.
+
+- currency
+Base - 10.
+
+- bin
+Binary numeral system.
+
+- oct
+Octal numeral system.
+
+- dec
+Decimal numeral system.
+
+- hex
+Hexadecimal numeral system.
+
+</val-list>

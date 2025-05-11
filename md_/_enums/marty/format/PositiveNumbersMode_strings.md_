@@ -1,0 +1,18 @@
+
+Values are case insensitive.
+
+<val-list title="Value|Description" value-style=backtick-quote>
+
+- invalid,unknown
+Invalid/unknown value.
+
+- none
+Empty/none value.
+
+- space
+Insert space instead of sign.
+
+- sign
+Insert sign itself.
+
+</val-list>

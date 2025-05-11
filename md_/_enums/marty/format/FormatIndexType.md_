@@ -1,0 +1,31 @@
+# marty::format::FormatIndexType enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- unknown,invalid
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- argId
+0x00
+`-`.
+
+- fillRef
+0x01
+`-`.
+
+- widthRef
+0x02
+`-`.
+
+- precisionRef
+0x03
+`-`.
+
+- filterRef
+0x04
+`-`.
+
+</val-list>

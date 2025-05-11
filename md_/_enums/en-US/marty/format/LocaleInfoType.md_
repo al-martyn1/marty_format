@@ -1,0 +1,23 @@
+# marty::format::LocaleInfoType enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- invalid,unknown
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- invariant,c
+0x00
+`-`.
+
+- user
+0x01
+`-`.
+
+- system
+0x02
+`-`.
+
+</val-list>

@@ -1,0 +1,43 @@
+# marty::format::StdFilterType enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- unknown,invalid
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- none
+0x00
+Empty/none value.
+
+- xml
+0x01
+`-`.
+
+- xmlText
+0x02
+`-`.
+
+- xmlAttr
+0x03
+`-`.
+
+- html
+0x04
+`-`.
+
+- htmlText
+0x05
+`-`.
+
+- htmlAttr
+0x06
+`-`.
+
+- sql
+0x07
+`-`.
+
+</val-list>

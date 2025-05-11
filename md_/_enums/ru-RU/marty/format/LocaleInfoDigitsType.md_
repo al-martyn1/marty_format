@@ -1,0 +1,19 @@
+# marty::format::LocaleInfoDigitsType перечисление
+
+Базовый тип: `std::uint32_t`.
+
+<val-list title="Имя|Значение|Описание">
+
+- invalid,unknown
+(std::uint32_t)(-1)
+Недопустимое/неизвестное значение.
+
+- number
+0x01
+`-`.
+
+- currency
+0x02
+`-`.
+
+</val-list>

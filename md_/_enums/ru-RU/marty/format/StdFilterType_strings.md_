@@ -1,0 +1,33 @@
+
+Значения являются независимыми от регистра символов.
+
+<val-list title="Значение|Описание" value-style=backtick-quote>
+
+- invalid,unknown
+Недопустимое/неизвестное значение.
+
+- none
+Пустое/отсутствующее значение.
+
+- xml
+`-`.
+
+- xml-text,xml_text,xmltext
+`-`.
+
+- xml-attr,xml_attr,xmlattr
+`-`.
+
+- html
+`-`.
+
+- html-text,html_text,htmltext
+`-`.
+
+- html-attr,html_attr,htmlattr
+`-`.
+
+- sql
+`-`.
+
+</val-list>

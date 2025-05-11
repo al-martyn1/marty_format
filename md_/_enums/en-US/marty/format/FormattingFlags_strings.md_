@@ -1,0 +1,69 @@
+
+Values are case insensitive.
+
+<val-list title="Value|Description" value-style=backtick-quote>
+
+- invalid,unknown
+Invalid/unknown value.
+
+- none
+Empty/none value.
+
+- ignore-format-string-errors,ignore_format_string_errors,ignoreformatstringerrors
+Ignore errors in format string.
+
+- ignore-argument-errors,ignore_argument_errors,ignoreargumenterrors
+Ignore errors while searching for arguments.
+
+- ignore-formatting-errors,ignore_formatting_errors,ignoreformattingerrors
+Ignore errors while formatting values.
+
+- ignore-fill-indirect-errors,ignore_fill_indirect_errors,ignorefillindirecterrors
+Ignore errors while searching for arguments for fill char.
+
+- ignore-width-indirect-errors,ignore_width_indirect_errors,ignorewidthindirecterrors
+Ignore errors while searching for arguments for width.
+
+- ignore-precision-indirect-errors,ignore_precision_indirect_errors,ignoreprecisionindirecterrors
+Ignore errors while searching for arguments for precision.
+
+- ignore-conversion-errors,ignore_conversion_errors,ignoreconversionerrors
+Ignore formatting type specifications and allow automatic type conversion.
+
+- ignore-type-mismatch-errors,ignore_type_mismatch_errors,ignoretypemismatcherrors
+Ignore formatting type specification char mismatch errors.
+
+- ignore-not-filter-errors,ignore_not_filter_errors,ignorenotfiltererrors
+Ignore errors - non-filter value used as filter.
+
+- consider-zero-width-spaces,consider_zero_width_spaces,considerzerowidthspaces
+Учитывать пробелы нулевой ширины.
+
+- consider-combining-chars,consider_combining_chars,considercombiningchars
+Учитывать комбинированные символы.
+
+- fractional-groupping,fractional_groupping,fractionalgroupping
+Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа.
+
+- ignore-options-indirect-errors,ignore_options_indirect_errors,ignoreoptionsindirecterrors
+`-`.
+
+- ignore-errors,ignore_errors,ignoreerrors
+`-`.
+
+- consider-unicode-features,consider_unicode_features,considerunicodefeatures
+`-`.
+
+- all-base,all_base,allbase
+`-`.
+
+- all
+`-`.
+
+- locale-force-custom,locale_force_custom,localeforcecustom
+`-`.
+
+- locale-use-system,locale_use_system,localeusesystem
+Instead of user.
+
+</val-list>

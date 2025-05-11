@@ -1,0 +1,23 @@
+# marty::format::LocaleInfoType перечисление
+
+Базовый тип: `std::uint32_t`.
+
+<val-list title="Имя|Значение|Описание">
+
+- invalid,unknown
+(std::uint32_t)(-1)
+Недопустимое/неизвестное значение.
+
+- invariant,c
+0x00
+`-`.
+
+- user
+0x01
+`-`.
+
+- system
+0x02
+`-`.
+
+</val-list>

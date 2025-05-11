@@ -27,14 +27,17 @@
 @set SERIALIZE_PASCAL=--serialize-style=PascalStyle
 @set SERIALIZE_HYPHEN=--serialize-style=HyphenStyle
 
-@set TR=--tr-lang=en-US,ru-RU --tr-template-language=en-US --tr-template-output=./tr-en-US.json
+@set TR=--tr-lang=en-US,ru-RU --tr-template-language=en-US --tr-template-output=./tr/en-US.json --translation=./enum-translations.json
 @set MD=--md-output-path=../md_/_enums
 
 @set SNIPPETOPTIONS_GEN_FLAGS=--enum-flags=0 --enum-flags=type-decl,serialize,deserialize,lowercase,enum-class,fmt-hex %VALUES_CAMEL% %SERIALIZE_PASCAL% --enum-serialize-style=All
 
 @set FLAGS=--enum-flags=flags
 
-@call %~dp0\tr.bat
+@rem call %~dp0\tr.bat
+umba-tr --help > umba-tr-help.txt
+umba-tr --lang-tag-format=langTag --overwrite --scan=./tr --include-files=*.json enum-translations.json >umba-tr.log 2>&1
+
 
 umba-enum-gen %TR% %MD% %GEN_OPTS% %HEX2% %TPL_OVERRIDE% %SNIPPETOPTIONS_GEN_FLAGS%              ^
     %UINT32% %HEX2% -E=FormatIndexType          -F=@FormatIndexType.txt                ^

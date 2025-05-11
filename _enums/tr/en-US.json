@@ -1,0 +1,66 @@
+{
+  "en-US": {
+    "_generated-enums_/marty/format/formatindextype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/formattingflags": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/formattingoptionsflags": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfodigitstype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfoseparatortype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfotype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfovaluetype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/numeralsystem": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/positivenumbersmode": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/stdfiltertype": {
+      "___description___": ""
+    }
+  },
+  "ru-RU": {
+    "_generated-enums_/marty/format/formatindextype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/formattingflags": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/formattingoptionsflags": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfodigitstype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfoseparatortype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfotype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/localeinfovaluetype": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/numeralsystem": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/positivenumbersmode": {
+      "___description___": ""
+    },
+    "_generated-enums_/marty/format/stdfiltertype": {
+      "___description___": ""
+    }
+  }
+}

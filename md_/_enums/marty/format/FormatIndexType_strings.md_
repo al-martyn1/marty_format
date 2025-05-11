@@ -1,0 +1,24 @@
+
+Values are case insensitive.
+
+<val-list title="Value|Description" value-style=backtick-quote>
+
+- invalid,unknown
+Invalid/unknown value.
+
+- arg-id,arg_id,argid
+`-`.
+
+- fill-ref,fill_ref,fillref
+`-`.
+
+- width-ref,width_ref,widthref
+`-`.
+
+- precision-ref,precision_ref,precisionref
+`-`.
+
+- filter-ref,filter_ref,filterref
+`-`.
+
+</val-list>

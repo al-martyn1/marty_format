@@ -1,0 +1,228 @@
+{
+  "0409": {
+    "_generated-enums_/marty/format/formatindextype": {
+      "___description___": "",
+      "argid": "`-`",
+      "fillref": "`-`",
+      "filterref": "`-`",
+      "precisionref": "`-`",
+      "widthref": "`-`"
+    },
+    "_generated-enums_/marty/format/formattingflags": {
+      "___description___": "",
+      "all": "`-`",
+      "allbase": "`-`",
+      "considercombiningchars": "Учитывать комбинированные символы.",
+      "considerunicodefeatures": "`-`",
+      "considerzerowidthspaces": "Учитывать пробелы нулевой ширины.",
+      "fractionalgroupping": "Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа.",
+      "ignoreargumenterrors": "Ignore errors while searching for arguments.",
+      "ignoreconversionerrors": "Ignore formatting type specifications and allow automatic type conversion.",
+      "ignoreerrors": "`-`",
+      "ignorefillindirecterrors": "Ignore errors while searching for arguments for fill char.",
+      "ignoreformatstringerrors": "Ignore errors in format string.",
+      "ignoreformattingerrors": "Ignore errors while formatting values.",
+      "ignorenotfiltererrors": "Ignore errors - non-filter value used as filter.",
+      "ignoreoptionsindirecterrors": "`-`",
+      "ignoreprecisionindirecterrors": "Ignore errors while searching for arguments for precision.",
+      "ignoretypemismatcherrors": "Ignore formatting type specification char mismatch errors.",
+      "ignorewidthindirecterrors": "Ignore errors while searching for arguments for width.",
+      "localeforcecustom": "`-`",
+      "localeusesystem": "Instead of user."
+    },
+    "_generated-enums_/marty/format/formattingoptionsflags": {
+      "___description___": "",
+      "argidtaken": "fieldWidth value is set.",
+      "bitcast": "`-`",
+      "caseinvert": "`-`",
+      "fieldwidthindirect": "Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value.",
+      "fieldwidthindirecttaken": "`-`",
+      "fieldwidthtaken": "fieldWidth value is set.",
+      "fillingindirect": "`-`",
+      "fillingindirecttaken": "`-`",
+      "fillingtaken": "`-`",
+      "internalnegative": "`-`",
+      "internalsigned": "`-`",
+      "localeformatting": "`-`",
+      "precisionindirect": "`-`",
+      "precisionindirecttaken": "`-`",
+      "precisiontaken": "`-`",
+      "signalterform": "`-`",
+      "signminus": "Mutually exclusive with signPlus & signSpace.",
+      "signplus": "Mutually exclusive with signMinus & signSpace.",
+      "signspace": "Mutually exclusive with signMinus & signPlus.",
+      "signz": "`-`",
+      "signzero": "`-`"
+    },
+    "_generated-enums_/marty/format/localeinfodigitstype": {
+      "___description___": "",
+      "currency": "`-`",
+      "number": "`-`"
+    },
+    "_generated-enums_/marty/format/localeinfoseparatortype": {
+      "___description___": "",
+      "fractional": "same as decimal, but for fractional part of floating point numbers.",
+      "thousands": "Separately for each numeral system."
+    },
+    "_generated-enums_/marty/format/localeinfotype": {
+      "___description___": "",
+      "invariant": "`-`",
+      "system": "`-`",
+      "user": "`-`"
+    },
+    "_generated-enums_/marty/format/localeinfovaluetype": {
+      "___description___": "",
+      "formatcurrencynegative": "`-`",
+      "formatcurrencypositive": "`-`",
+      "formatcurrencyshortnegative": "`-`",
+      "formatcurrencyshortpositive": "`-`",
+      "formatnumbernegative": "`-`",
+      "formatnumberpositive": "`-`",
+      "formatpercentnegative": "`-`",
+      "formatpercentpositive": "`-`",
+      "formatpercentshortnegative": "`-`",
+      "formatpercentshortpositive": "`-`",
+      "signcurrency": "`-`",
+      "signdecimal": "Aka decimal separator, decimal mark, decimal point.",
+      "signminus": "`-`",
+      "signpercent": "`-`",
+      "signplus": "`-`"
+    },
+    "_generated-enums_/marty/format/numeralsystem": {
+      "___description___": "",
+      "bin": "Binary numeral system.",
+      "currency": "Base - 10.",
+      "dec": "Decimal numeral system.",
+      "hex": "Hexadecimal numeral system.",
+      "oct": "Octal numeral system."
+    },
+    "_generated-enums_/marty/format/positivenumbersmode": {
+      "___description___": "",
+      "sign": "Insert sign itself.",
+      "space": "Insert space instead of sign."
+    },
+    "_generated-enums_/marty/format/stdfiltertype": {
+      "___description___": "",
+      "html": "`-`",
+      "htmlattr": "`-`",
+      "htmltext": "`-`",
+      "sql": "`-`",
+      "xml": "`-`",
+      "xmlattr": "`-`",
+      "xmltext": "`-`"
+    }
+  },
+  "0419": {
+    "_generated-enums_/marty/format/formatindextype": {
+      "___description___": "",
+      "argid": "`-`",
+      "fillref": "`-`",
+      "filterref": "`-`",
+      "precisionref": "`-`",
+      "widthref": "`-`"
+    },
+    "_generated-enums_/marty/format/formattingflags": {
+      "___description___": "",
+      "all": "`-`",
+      "allbase": "`-`",
+      "considercombiningchars": "Учитывать комбинированные символы.",
+      "considerunicodefeatures": "`-`",
+      "considerzerowidthspaces": "Учитывать пробелы нулевой ширины.",
+      "fractionalgroupping": "Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа.",
+      "ignoreargumenterrors": "Ignore errors while searching for arguments.",
+      "ignoreconversionerrors": "Ignore formatting type specifications and allow automatic type conversion.",
+      "ignoreerrors": "`-`",
+      "ignorefillindirecterrors": "Ignore errors while searching for arguments for fill char.",
+      "ignoreformatstringerrors": "Ignore errors in format string.",
+      "ignoreformattingerrors": "Ignore errors while formatting values.",
+      "ignorenotfiltererrors": "Ignore errors - non-filter value used as filter.",
+      "ignoreoptionsindirecterrors": "`-`",
+      "ignoreprecisionindirecterrors": "Ignore errors while searching for arguments for precision.",
+      "ignoretypemismatcherrors": "Ignore formatting type specification char mismatch errors.",
+      "ignorewidthindirecterrors": "Ignore errors while searching for arguments for width.",
+      "localeforcecustom": "`-`",
+      "localeusesystem": "Instead of user."
+    },
+    "_generated-enums_/marty/format/formattingoptionsflags": {
+      "___description___": "",
+      "argidtaken": "fieldWidth value is set.",
+      "bitcast": "`-`",
+      "caseinvert": "`-`",
+      "fieldwidthindirect": "Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value.",
+      "fieldwidthindirecttaken": "`-`",
+      "fieldwidthtaken": "fieldWidth value is set.",
+      "fillingindirect": "`-`",
+      "fillingindirecttaken": "`-`",
+      "fillingtaken": "`-`",
+      "internalnegative": "`-`",
+      "internalsigned": "`-`",
+      "localeformatting": "`-`",
+      "precisionindirect": "`-`",
+      "precisionindirecttaken": "`-`",
+      "precisiontaken": "`-`",
+      "signalterform": "`-`",
+      "signminus": "Mutually exclusive with signPlus & signSpace.",
+      "signplus": "Mutually exclusive with signMinus & signSpace.",
+      "signspace": "Mutually exclusive with signMinus & signPlus.",
+      "signz": "`-`",
+      "signzero": "`-`"
+    },
+    "_generated-enums_/marty/format/localeinfodigitstype": {
+      "___description___": "",
+      "currency": "`-`",
+      "number": "`-`"
+    },
+    "_generated-enums_/marty/format/localeinfoseparatortype": {
+      "___description___": "",
+      "fractional": "same as decimal, but for fractional part of floating point numbers.",
+      "thousands": "Separately for each numeral system."
+    },
+    "_generated-enums_/marty/format/localeinfotype": {
+      "___description___": "",
+      "invariant": "`-`",
+      "system": "`-`",
+      "user": "`-`"
+    },
+    "_generated-enums_/marty/format/localeinfovaluetype": {
+      "___description___": "",
+      "formatcurrencynegative": "`-`",
+      "formatcurrencypositive": "`-`",
+      "formatcurrencyshortnegative": "`-`",
+      "formatcurrencyshortpositive": "`-`",
+      "formatnumbernegative": "`-`",
+      "formatnumberpositive": "`-`",
+      "formatpercentnegative": "`-`",
+      "formatpercentpositive": "`-`",
+      "formatpercentshortnegative": "`-`",
+      "formatpercentshortpositive": "`-`",
+      "signcurrency": "`-`",
+      "signdecimal": "Aka decimal separator, decimal mark, decimal point.",
+      "signminus": "`-`",
+      "signpercent": "`-`",
+      "signplus": "`-`"
+    },
+    "_generated-enums_/marty/format/numeralsystem": {
+      "___description___": "",
+      "bin": "Binary numeral system.",
+      "currency": "Base - 10.",
+      "dec": "Decimal numeral system.",
+      "hex": "Hexadecimal numeral system.",
+      "oct": "Octal numeral system."
+    },
+    "_generated-enums_/marty/format/positivenumbersmode": {
+      "___description___": "",
+      "sign": "Insert sign itself.",
+      "space": "Insert space instead of sign."
+    },
+    "_generated-enums_/marty/format/stdfiltertype": {
+      "___description___": "",
+      "html": "`-`",
+      "htmlattr": "`-`",
+      "htmltext": "`-`",
+      "sql": "`-`",
+      "xml": "`-`",
+      "xmlattr": "`-`",
+      "xmltext": "`-`"
+    }
+  }
+}

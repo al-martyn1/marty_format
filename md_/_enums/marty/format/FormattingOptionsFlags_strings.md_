@@ -1,0 +1,75 @@
+
+Values are case insensitive.
+
+<val-list title="Value|Description" value-style=backtick-quote>
+
+- invalid,unknown
+Invalid/unknown value.
+
+- none
+Empty/none value.
+
+- arg-id-taken,arg_id_taken,argidtaken
+fieldWidth value is set.
+
+- field-width-taken,field_width_taken,fieldwidthtaken
+fieldWidth value is set.
+
+- field-width-indirect,field_width_indirect,fieldwidthindirect
+Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value.
+
+- sign-plus,sign_plus,signplus
+Mutually exclusive with signMinus & signSpace.
+
+- sign-minus,sign_minus,signminus
+Mutually exclusive with signPlus & signSpace.
+
+- sign-space,sign_space,signspace
+Mutually exclusive with signMinus & signPlus.
+
+- sign-z,sign_z,signz
+`-`.
+
+- sign-alter-form,sign_alter_form,signalterform
+`-`.
+
+- sign-zero,sign_zero,signzero
+`-`.
+
+- filling-taken,filling_taken,fillingtaken
+`-`.
+
+- filling-indirect,filling_indirect,fillingindirect
+`-`.
+
+- locale-formatting,locale_formatting,localeformatting
+`-`.
+
+- precision-taken,precision_taken,precisiontaken
+`-`.
+
+- precision-indirect,precision_indirect,precisionindirect
+`-`.
+
+- case-invert,case_invert,caseinvert
+`-`.
+
+- bit-cast,bit_cast,bitcast
+`-`.
+
+- internal-signed,internal_signed,internalsigned
+`-`.
+
+- internal-negative,internal_negative,internalnegative
+`-`.
+
+- field-width-indirect-taken,field_width_indirect_taken,fieldwidthindirecttaken
+`-`.
+
+- precision-indirect-taken,precision_indirect_taken,precisionindirecttaken
+`-`.
+
+- filling-indirect-taken,filling_indirect_taken,fillingindirecttaken
+`-`.
+
+</val-list>

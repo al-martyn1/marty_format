@@ -1,0 +1,19 @@
+# marty::format::LocaleInfoDigitsType enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- invalid,unknown
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- number
+0x01
+`-`.
+
+- currency
+0x02
+`-`.
+
+</val-list>

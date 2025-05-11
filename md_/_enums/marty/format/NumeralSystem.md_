@@ -1,0 +1,35 @@
+# marty::format::NumeralSystem enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- invalid,unknown
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- none
+0x00
+Empty/none value.
+
+- currency
+0x01
+Base - 10.
+
+- bin
+0x02
+Binary numeral system.
+
+- oct
+0x08
+Octal numeral system.
+
+- dec
+0x0A
+Decimal numeral system.
+
+- hex
+0x10
+Hexadecimal numeral system.
+
+</val-list>

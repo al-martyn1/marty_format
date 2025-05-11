@@ -1,0 +1,19 @@
+# marty::format::LocaleInfoSeparatorType enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- invalid,unknown
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- thousands
+0x01
+Separately for each numeral system.
+
+- fractional
+0x02
+same as decimal, but for fractional part of floating point numbers.
+
+</val-list>

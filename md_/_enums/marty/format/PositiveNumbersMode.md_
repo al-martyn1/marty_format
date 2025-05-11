@@ -1,0 +1,23 @@
+# marty::format::PositiveNumbersMode enumeration
+
+Underlying type: `std::uint32_t`.
+
+<val-list title="Name|Value|Description">
+
+- unknown,invalid
+(std::uint32_t)(-1)
+Invalid/unknown value.
+
+- none
+0x00
+Empty/none value.
+
+- space
+0x01
+Insert space instead of sign.
+
+- sign
+0x02
+Insert sign itself.
+
+</val-list>
