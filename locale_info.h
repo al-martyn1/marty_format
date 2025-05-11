@@ -91,7 +91,8 @@ public: // constructors
 
 public: // types
 
-// Для отладки удобнее std::vector<std::uint8_t>, а в релизе std::basic_string<std::uint8_t> гораздо быстрее
+// Для отладки удобнее std::vector<std::uint8_t>,
+//а в релизе std::basic_string<std::uint8_t> гораздо быстрее
 #if defined(DEBUG) || defined(_DEBUG)
     using group_info_t = std::vector<std::uint8_t>;
     static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u) { gi.resize(gi.size()+n, u); }
