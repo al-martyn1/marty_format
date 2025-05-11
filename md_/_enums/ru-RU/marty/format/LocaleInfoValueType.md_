@@ -14,62 +14,62 @@
 
 - signDecimal
 0x01
-Aka decimal separator, decimal mark, decimal point.
+Decimal separator, decimal mark, decimal point.
 
 - signPlus
 0x02
-`-`.
+Localized plus sign.
 
 - signMinus
 0x03
-`-`.
+Localized plus sign.
 
 - signPercent
 0x04
-`-`.
+Localized percent sign.
 
 - signCurrency
 0x05
-`-`.
+Localized currency sign.
 
 - formatPercentNegative
 0x06
-`-`.
+Format string for negaive percent values.
 
 - formatPercentPositive
 0x07
-`-`.
+Format string for positive percent values.
 
 - formatPercentShortNegative
 0x08
-`-`.
+Format string for negaive percent values (short representation).
 
 - formatPercentShortPositive
 0x09
-`-`.
+Format string for positive percent values (short representation).
 
 - formatCurrencyNegative
 0x0A
-`-`.
+Format string for negaive currency values.
 
 - formatCurrencyPositive
 0x0B
-`-`.
+Format string for positive currency values.
 
 - formatCurrencyShortNegative
 0x0C
-`-`.
+Format string for negaive currency values (short representation).
 
 - formatCurrencyShortPositive
 0x0D
-`-`.
+Format string for positive currency values (short representation).
 
 - formatNumberNegative
 0x0E
-`-`.
+Format string for negaive number values.
 
 - formatNumberPositive
 0x0F
-`-`.
+Format string for positive number values.
 
 </val-list>

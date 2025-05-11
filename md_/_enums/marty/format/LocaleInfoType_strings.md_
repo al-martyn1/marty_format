@@ -3,16 +3,13 @@ Values are case insensitive.
 
 <val-list title="Value|Description" value-style=backtick-quote>
 
-- invalid,unknown
-Invalid/unknown value.
-
 - c,invariant
-`-`.
+Invariant locale ("C" locale).
 
 - user
-`-`.
+User locale (from system).
 
 - system
-`-`.
+System-wide locale (from system).
 
 </val-list>

@@ -3,13 +3,10 @@ Values are case insensitive.
 
 <val-list title="Value|Description" value-style=backtick-quote>
 
-- invalid,unknown
-Invalid/unknown value.
-
 - number
-`-`.
+Number locale info.
 
 - currency
-`-`.
+Currency locale info.
 
 </val-list>

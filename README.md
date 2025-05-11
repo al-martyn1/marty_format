@@ -43,6 +43,7 @@
   - [Поддержка локализации форматируемых значений](#поддержка-локализации-форматируемых-значений)
     - [Класс marty::format::LocaleInfo](#класс-martyformatlocaleinfo)
     - [Функция marty::format::getLocaleInfo - получение стандартной локали](#функция-martyformatgetlocaleinfo---получение-стандартной-локали)
+      - [marty::format::LocaleInfoType enumeration](#martyformatlocaleinfotype-enumeration)
     - [Создание/формирование собственной локали](#созданиеформирование-собственной-локали)
       - [Модификация предопределённой локали](#модификация-предопределённой-локали)
       - [Переопределение виртуальных методов класса marty::format::LocaleInfo](#переопределение-виртуальных-методов-класса-martyformatlocaleinfo)
@@ -972,14 +973,21 @@ protected: // static helper methods
 const LocaleInfo* getLocaleInfo(LocaleInfoType lt);
 ```
 
-Запрашиваемые локали имеют тип `marty::format::LocaleInfoType` и могут принимать следующие значения:
+Запрашиваемые локали имеют тип `marty::format::LocaleInfoType`.
+
+##### marty::format::LocaleInfoType enumeration
+
+Underlying type: `std::uint32_t`.
 
 
-|Значение|Описание|
-|:-------|:-------|
-|**invariant**, **c**|возвращает указатель на неизменяемую "C" локаль|
-|**user**|возвращает указатель на пользовательскую локаль текущего окружения|
-|**system**|возвращает указатель на системную локаль текущего окружения|
+|Name|Value|Description|
+|-------|-------|-------|
+|**invalid**, **unknown**|(std::uint32_t)(-1)|Invalid/unknown value.|
+|**invariant**, **c**|0x00|Invariant locale ("C" locale).|
+|**user**|0x01|User locale (from system).|
+|**system**|0x02|System-wide locale (from system).|
+
+
 
 
 
@@ -1145,16 +1153,25 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 
 ### Стандартные фильтры
 
-Стандартные фильтры располагаются в пространстве имён `marty::format::filters`.
 
 Стандартные фильтры:
 
 
-|Тип|Описание|
+Values are case insensitive.
+
+
+|Value|Description|
 |-------|-------|
-|**XmlTextFilter**|производит преобразование символов, которые недопустимы в тексте `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.|
-|**XmlAttrFilter**|производит преобразование символов, которые недопустимы в атрибутах `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.|
-|**SqlValueFilter**|производит преобразование символов, которые недопустимы в значениях в тексте `SQL`-запросов.|
+|`'none'`|Empty/none value.|
+|`'xml'`|Any XML - tag text or attribute text filter.|
+|`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML tag text filter.|
+|`'xml-attr'`, `'xml_attr'`, `'xmlattr'`|XML attribute filter.|
+|`'html'`|Any HTML - tag text or attribute text filter.|
+|`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML tag text filter.|
+|`'html-attr'`, `'html_attr'`, `'htmlattr'`|HTML attribute filter.|
+|`'sql'`|SQL value filter.|
+
+
 
 
 

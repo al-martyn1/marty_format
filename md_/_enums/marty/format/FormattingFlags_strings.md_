@@ -3,9 +3,6 @@ Values are case insensitive.
 
 <val-list title="Value|Description" value-style=backtick-quote>
 
-- invalid,unknown
-Invalid/unknown value.
-
 - none
 Empty/none value.
 
@@ -37,33 +34,33 @@ Ignore formatting type specification char mismatch errors.
 Ignore errors - non-filter value used as filter.
 
 - consider-zero-width-spaces,consider_zero_width_spaces,considerzerowidthspaces
-Учитывать пробелы нулевой ширины.
+Consider zero-width spaces.
 
 - consider-combining-chars,consider_combining_chars,considercombiningchars
-Учитывать комбинированные символы.
+Consider combining Unicode chars.
 
 - fractional-groupping,fractional_groupping,fractionalgroupping
-Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа.
+Group fractional part (floating point numbers) same as integer part.
 
 - ignore-options-indirect-errors,ignore_options_indirect_errors,ignoreoptionsindirecterrors
-`-`.
+Ignore errors in indirect options.
 
 - ignore-errors,ignore_errors,ignoreerrors
-`-`.
+Ignore all errors.
 
 - consider-unicode-features,consider_unicode_features,considerunicodefeatures
-`-`.
+Consider options.
 
 - all-base,all_base,allbase
-`-`.
+All, but no fractional groupping.
 
 - all
-`-`.
+All.
 
 - locale-force-custom,locale_force_custom,localeforcecustom
-`-`.
+Force use passed locale.
 
 - locale-use-system,locale_use_system,localeusesystem
-Instead of user.
+Use system locale instead of user.
 
 </val-list>

@@ -3,22 +3,19 @@
 
 <val-list title="Значение|Описание" value-style=backtick-quote>
 
-- invalid,unknown
-Недопустимое/неизвестное значение.
-
 - arg-id,arg_id,argid
-`-`.
+Arggument identifier.
 
 - fill-ref,fill_ref,fillref
-`-`.
+Reference to fill char.
 
 - width-ref,width_ref,widthref
-`-`.
+Reference to width value.
 
 - precision-ref,precision_ref,precisionref
-`-`.
+Reference to precision value.
 
 - filter-ref,filter_ref,filterref
-`-`.
+Reference to filter value.
 
 </val-list>

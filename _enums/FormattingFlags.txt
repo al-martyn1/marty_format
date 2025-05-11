@@ -1,4 +1,6 @@
-unknown,invalid             = -1
+// Option flags for `marty::format::formatMessage` functions family
+
+unknown,invalid             = -1   // !
 none                        = 0
 ignoreFormatStringErrors    = 1    // Ignore errors in format string
 ignoreArgumentErrors               // Ignore errors while searching for arguments
@@ -10,20 +12,24 @@ ignoreConversionErrors             // Ignore formatting type specifications and 
 ignoreTypeMismatchErrors           // Ignore formatting type specification char mismatch errors
 ignoreNotFilterErrors              // Ignore errors - non-filter value used as filter
 
-considerZeroWidthSpaces            // Учитывать пробелы нулевой ширины
-considerCombiningChars             // Учитывать комбинированные символы
+considerZeroWidthSpaces            // Consider zero-width spaces
+# Учитывать пробелы нулевой ширины
 
-fractionalGroupping                // Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа
+considerCombiningChars             // Consider combining Unicode chars
+# Учитывать комбинированные символы
 
-ignoreOptionsIndirectErrors = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
-ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors
-considerUnicodeFeatures     = considerZeroWidthSpaces  | considerCombiningChars
+fractionalGroupping                // Group fractional part (floating point numbers) same as integer part
+# Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа
 
-allBase = ignoreErrors | considerUnicodeFeatures
-all     = allBase | fractionalGroupping
+ignoreOptionsIndirectErrors = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors // Ignore errors in indirect options
+ignoreErrors                = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors // Ignore all errors
+considerUnicodeFeatures     = considerZeroWidthSpaces  | considerCombiningChars // Consider options
 
-localeForceCustom
-localeUseSystem     // Instead of user
+allBase = ignoreErrors | considerUnicodeFeatures   // All, but no fractional groupping
+all     = allBase | fractionalGroupping            // All
+
+localeForceCustom                                  // Force use passed locale
+localeUseSystem                                    // Use system locale instead of user
 
 
 

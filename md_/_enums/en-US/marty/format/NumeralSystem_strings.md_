@@ -3,14 +3,11 @@ Values are case insensitive.
 
 <val-list title="Value|Description" value-style=backtick-quote>
 
-- invalid,unknown
-Invalid/unknown value.
-
 - none
 Empty/none value.
 
 - currency
-Base - 10.
+Currency numeral system. Base for currency values - 10.
 
 - bin
 Binary numeral system.

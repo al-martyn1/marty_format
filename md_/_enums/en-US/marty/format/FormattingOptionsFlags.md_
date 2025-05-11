@@ -2,6 +2,8 @@
 
 Underlying type: `std::uint32_t`.
 
+Internal format option flags.
+
 <val-list title="Name|Value|Description">
 
 - unknown,invalid

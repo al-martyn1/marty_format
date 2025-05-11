@@ -2,6 +2,8 @@
 
 Базовый тип: `std::uint32_t`.
 
+Флаги опций для семейства функций `marty::format::formatMessage`.
+
 <val-list title="Имя|Значение|Описание">
 
 - unknown,invalid
@@ -50,42 +52,42 @@ Ignore errors - non-filter value used as filter.
 
 - considerZeroWidthSpaces
 0x200
-Учитывать пробелы нулевой ширины.
+Consider zero-width spaces.
 
 - considerCombiningChars
 0x400
-Учитывать комбинированные символы.
+Consider combining Unicode chars.
 
 - fractionalGroupping
 0x800
-Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа.
+Group fractional part (floating point numbers) same as integer part.
 
 - ignoreOptionsIndirectErrors
 ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
-`-`.
+Ignore errors in indirect options.
 
 - ignoreErrors
 ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors
-`-`.
+Ignore all errors.
 
 - considerUnicodeFeatures
 considerZeroWidthSpaces  | considerCombiningChars
-`-`.
+Consider options.
 
 - allBase
 ignoreErrors | considerUnicodeFeatures
-`-`.
+All, but no fractional groupping.
 
 - all
 allBase | fractionalGroupping
-`-`.
+All.
 
 - localeForceCustom
 0x1000
-`-`.
+Force use passed locale.
 
 - localeUseSystem
 0x2000
-Instead of user.
+Use system locale instead of user.
 
 </val-list>

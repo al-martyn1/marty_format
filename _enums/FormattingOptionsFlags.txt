@@ -1,4 +1,7 @@
-unknown,invalid          = -1
+//Internal format option flags
+
+unknown,invalid          = -1 // !
+
 none                     = 0
 argIdTaken               = 1  // fieldWidth value is set
 fieldWidthTaken               // fieldWidth value is set

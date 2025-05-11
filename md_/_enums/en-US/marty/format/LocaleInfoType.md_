@@ -10,14 +10,14 @@ Invalid/unknown value.
 
 - invariant,c
 0x00
-`-`.
+Invariant locale ("C" locale).
 
 - user
 0x01
-`-`.
+User locale (from system).
 
 - system
 0x02
-`-`.
+System-wide locale (from system).
 
 </val-list>

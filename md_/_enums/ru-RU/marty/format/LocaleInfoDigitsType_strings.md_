@@ -3,13 +3,10 @@
 
 <val-list title="Значение|Описание" value-style=backtick-quote>
 
-- invalid,unknown
-Недопустимое/неизвестное значение.
-
 - number
-`-`.
+Number locale info.
 
 - currency
-`-`.
+Currency locale info.
 
 </val-list>

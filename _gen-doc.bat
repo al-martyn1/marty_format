@@ -20,8 +20,10 @@
 @set GRAPHVIZ_OPTIONS=
 @rem "--graphviz-output-path=%~dp0\..\doc\.generated_images"
 @rem
+@set LANG=--document-language=ru-RU
+                                   
 @rem set TEMP_OPTS=--graphviz-keep-temp-dot-files
-@set OPTIONS= %TEMP_OPTS% %COMMON% %VARS% %EXCLUDE_DIRS% %GRAPHVIZ_OPTIONS% %ARGLIST_OPTIONS% %VALLIST_OPTIONS% %UMBA_MDPP_EXTRA_OPTIONS% %EXAMPLES_INCLUDE% "--batch-scan-recurse=%~dp0\."
+@set OPTIONS= %TEMP_OPTS% %COMMON% %LANG% %VARS% %EXCLUDE_DIRS% %GRAPHVIZ_OPTIONS% %ARGLIST_OPTIONS% %VALLIST_OPTIONS% %UMBA_MDPP_EXTRA_OPTIONS% %EXAMPLES_INCLUDE% "--batch-scan-recurse=%~dp0\."
 umba-md-pp %OPTIONS%
 
 @umba-md-pp --help > umba-md-pp-help.txt 2>&1

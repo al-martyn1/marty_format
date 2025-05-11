@@ -3,31 +3,28 @@
 
 <val-list title="Значение|Описание" value-style=backtick-quote>
 
-- invalid,unknown
-Недопустимое/неизвестное значение.
-
 - none
 Пустое/отсутствующее значение.
 
 - xml
-`-`.
+Any XML - фильтр для теста тэгов или значений атрибутов.
 
-- xml-text,xml_text,xmltext
-`-`.
+- xml-tag,xml-text,xml_tag,xml_text,xmltag,xmltext
+XML фильтр для теста тэгов.
 
 - xml-attr,xml_attr,xmlattr
-`-`.
+XML фильтр для значений атрибутов.
 
 - html
-`-`.
+HTML - фильтр для теста тэгов или значений атрибутов.
 
-- html-text,html_text,htmltext
-`-`.
+- html-tag,html-text,html_tag,html_text,htmltag,htmltext
+HTML фильтр для теста тэгов.
 
 - html-attr,html_attr,htmlattr
-`-`.
+HTML фильтр для значений атрибутов.
 
 - sql
-`-`.
+Фильтр для значений SQL.
 
 </val-list>

@@ -10,10 +10,10 @@ Invalid/unknown value.
 
 - number
 0x01
-`-`.
+Number locale info.
 
 - currency
 0x02
-`-`.
+Currency locale info.
 
 </val-list>

@@ -3,55 +3,52 @@
 
 <val-list title="Значение|Описание" value-style=backtick-quote>
 
-- invalid,unknown
-Недопустимое/неизвестное значение.
-
 - none
 Пустое/отсутствующее значение.
 
 - sign-decimal,sign_decimal,signdecimal
-Aka decimal separator, decimal mark, decimal point.
+Decimal separator, decimal mark, decimal point.
 
 - sign-plus,sign_plus,signplus
-`-`.
+Localized plus sign.
 
 - sign-minus,sign_minus,signminus
-`-`.
+Localized plus sign.
 
 - sign-percent,sign_percent,signpercent
-`-`.
+Localized percent sign.
 
 - sign-currency,sign_currency,signcurrency
-`-`.
+Localized currency sign.
 
 - format-percent-negative,format_percent_negative,formatpercentnegative
-`-`.
+Format string for negaive percent values.
 
 - format-percent-positive,format_percent_positive,formatpercentpositive
-`-`.
+Format string for positive percent values.
 
 - format-percent-short-negative,format_percent_short_negative,formatpercentshortnegative
-`-`.
+Format string for negaive percent values (short representation).
 
 - format-percent-short-positive,format_percent_short_positive,formatpercentshortpositive
-`-`.
+Format string for positive percent values (short representation).
 
 - format-currency-negative,format_currency_negative,formatcurrencynegative
-`-`.
+Format string for negaive currency values.
 
 - format-currency-positive,format_currency_positive,formatcurrencypositive
-`-`.
+Format string for positive currency values.
 
 - format-currency-short-negative,format_currency_short_negative,formatcurrencyshortnegative
-`-`.
+Format string for negaive currency values (short representation).
 
 - format-currency-short-positive,format_currency_short_positive,formatcurrencyshortpositive
-`-`.
+Format string for positive currency values (short representation).
 
 - format-number-negative,format_number_negative,formatnumbernegative
-`-`.
+Format string for negaive number values.
 
 - format-number-positive,format_number_positive,formatnumberpositive
-`-`.
+Format string for positive number values.
 
 </val-list>

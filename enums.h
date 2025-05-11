@@ -25,13 +25,13 @@ namespace format{
 //#!FormatIndexType
 enum class FormatIndexType : std::uint32_t
 {
-    unknown        = (std::uint32_t)(-1) /*!<  */,
-    invalid        = (std::uint32_t)(-1) /*!<  */,
-    argId          = 0x00 /*!<  */,
-    fillRef        = 0x01 /*!<  */,
-    widthRef       = 0x02 /*!<  */,
-    precisionRef   = 0x03 /*!<  */,
-    filterRef      = 0x04 /*!<  */
+    unknown        = (std::uint32_t)(-1) /*!< ! */,
+    invalid        = (std::uint32_t)(-1) /*!< ! */,
+    argId          = 0x00 /*!< Arggument identifier */,
+    fillRef        = 0x01 /*!< Reference to fill char */,
+    widthRef       = 0x02 /*!< Reference to width value */,
+    precisionRef   = 0x03 /*!< Reference to precision value */,
+    filterRef      = 0x04 /*!< Reference to filter value */
 
 }; // enum 
 //#!
@@ -68,19 +68,23 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( FormatIndexType, std::map, 1 )
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( FormatIndexType, std::map, 1 )
 
 
+
+/*! Standard filters enumeration */
 //#!StdFilterType
 enum class StdFilterType : std::uint32_t
 {
-    unknown    = (std::uint32_t)(-1) /*!<  */,
-    invalid    = (std::uint32_t)(-1) /*!<  */,
+    unknown    = (std::uint32_t)(-1) /*!< ! */,
+    invalid    = (std::uint32_t)(-1) /*!< ! */,
     none       = 0x00 /*!<  */,
-    xml        = 0x01 /*!<  */,
-    xmlText    = 0x02 /*!<  */,
-    xmlAttr    = 0x03 /*!<  */,
-    html       = 0x04 /*!<  */,
-    htmlText   = 0x05 /*!<  */,
-    htmlAttr   = 0x06 /*!<  */,
-    sql        = 0x07 /*!<  */
+    xml        = 0x01 /*!< Any XML - tag text or attribute text filter */,
+    xmlTag     = 0x02 /*!< XML tag text filter */,
+    xmlText    = 0x02 /*!< XML tag text filter */,
+    xmlAttr    = 0x03 /*!< XML attribute filter */,
+    html       = 0x04 /*!< Any HTML - tag text or attribute text filter */,
+    htmlTag    = 0x05 /*!< HTML tag text filter */,
+    htmlText   = 0x05 /*!< HTML tag text filter */,
+    htmlAttr   = 0x06 /*!< HTML attribute filter */,
+    sql        = 0x07 /*!< SQL value filter */
 
 }; // enum 
 //#!
@@ -91,11 +95,11 @@ MARTY_CPP_ENUM_CLASS_SERIALIZE_BEGIN( StdFilterType, std::map, 1 )
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::unknown    , "Unknown"  );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::htmlAttr   , "HtmlAttr" );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::none       , "None"     );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::xmlTag     , "XmlTag"   );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::xml        , "Xml"      );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::xmlAttr    , "XmlAttr"  );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::xmlText    , "XmlText"  );
+    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::htmlTag    , "HtmlTag"  );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::html       , "Html"     );
-    MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::htmlText   , "HtmlText" );
     MARTY_CPP_ENUM_CLASS_SERIALIZE_ITEM( StdFilterType::sql        , "Sql"      );
 MARTY_CPP_ENUM_CLASS_SERIALIZE_END( StdFilterType, std::map, 1 )
 
@@ -106,28 +110,36 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( StdFilterType, std::map, 1 )
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlAttr   , "html_attr" );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlAttr   , "htmlattr"  );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::none       , "none"      );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlTag     , "xml-tag"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlTag     , "xml_tag"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlTag     , "xmltag"    );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlTag     , "xml-text"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlTag     , "xml_text"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlTag     , "xmltext"   );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xml        , "xml"       );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlAttr    , "xml-attr"  );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlAttr    , "xml_attr"  );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlAttr    , "xmlattr"   );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlText    , "xml-text"  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlText    , "xml_text"  );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::xmlText    , "xmltext"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlTag    , "html-tag"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlTag    , "html_tag"  );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlTag    , "html-text" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlTag    , "htmltag"   );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlTag    , "html_text" );
+    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlTag    , "htmltext"  );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::html       , "html"      );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlText   , "html-text" );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlText   , "html_text" );
-    MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::htmlText   , "htmltext"  );
     MARTY_CPP_ENUM_CLASS_DESERIALIZE_ITEM( StdFilterType::sql        , "sql"       );
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( StdFilterType, std::map, 1 )
 
 
+
+/*! Numeral system enumeration */
 //#!NumeralSystem
 enum class NumeralSystem : std::uint32_t
 {
-    invalid    = (std::uint32_t)(-1) /*!<  */,
-    unknown    = (std::uint32_t)(-1) /*!<  */,
+    invalid    = (std::uint32_t)(-1) /*!< ! */,
+    unknown    = (std::uint32_t)(-1) /*!< ! */,
     none       = 0x00 /*!<  */,
-    currency   = 0x01 /*!< Base - 10 */,
+    currency   = 0x01 /*!< Currency numeral system. Base for currency values - 10 */,
     bin        = 0x02 /*!< Binary numeral system */,
     oct        = 0x08 /*!< Octal numeral system */,
     dec        = 0x0A /*!< Decimal numeral system */,
@@ -163,12 +175,12 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( NumeralSystem, std::map, 1 )
 //#!LocaleInfoType
 enum class LocaleInfoType : std::uint32_t
 {
-    invalid     = (std::uint32_t)(-1) /*!<  */,
-    unknown     = (std::uint32_t)(-1) /*!<  */,
-    invariant   = 0x00 /*!<  */,
-    c           = 0x00 /*!<  */,
-    user        = 0x01 /*!<  */,
-    system      = 0x02 /*!<  */
+    invalid     = (std::uint32_t)(-1) /*!< ! */,
+    unknown     = (std::uint32_t)(-1) /*!< ! */,
+    invariant   = 0x00 /*!< Invariant locale ("C" locale) */,
+    c           = 0x00 /*!< Invariant locale ("C" locale) */,
+    user        = 0x01 /*!< User locale (from system) */,
+    system      = 0x02 /*!< System-wide locale (from system) */
 
 }; // enum 
 //#!
@@ -195,24 +207,24 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoType, std::map, 1 )
 //#!LocaleInfoValueType
 enum class LocaleInfoValueType : std::uint32_t
 {
-    invalid                       = (std::uint32_t)(-1) /*!<  */,
-    unknown                       = (std::uint32_t)(-1) /*!<  */,
+    invalid                       = (std::uint32_t)(-1) /*!< ! */,
+    unknown                       = (std::uint32_t)(-1) /*!< ! */,
     none                          = 0x00 /*!<  */,
-    signDecimal                   = 0x01 /*!< Aka decimal separator, decimal mark, decimal point */,
-    signPlus                      = 0x02 /*!<  */,
-    signMinus                     = 0x03 /*!<  */,
-    signPercent                   = 0x04 /*!<  */,
-    signCurrency                  = 0x05 /*!<  */,
-    formatPercentNegative         = 0x06 /*!<  */,
-    formatPercentPositive         = 0x07 /*!<  */,
-    formatPercentShortNegative    = 0x08 /*!<  */,
-    formatPercentShortPositive    = 0x09 /*!<  */,
-    formatCurrencyNegative        = 0x0A /*!<  */,
-    formatCurrencyPositive        = 0x0B /*!<  */,
-    formatCurrencyShortNegative   = 0x0C /*!<  */,
-    formatCurrencyShortPositive   = 0x0D /*!<  */,
-    formatNumberNegative          = 0x0E /*!<  */,
-    formatNumberPositive          = 0x0F /*!<  */
+    signDecimal                   = 0x01 /*!< Decimal separator, decimal mark, decimal point */,
+    signPlus                      = 0x02 /*!< Localized plus sign */,
+    signMinus                     = 0x03 /*!< Localized plus sign */,
+    signPercent                   = 0x04 /*!< Localized percent sign */,
+    signCurrency                  = 0x05 /*!< Localized currency sign */,
+    formatPercentNegative         = 0x06 /*!< Format string for negaive percent values */,
+    formatPercentPositive         = 0x07 /*!< Format string for positive percent values */,
+    formatPercentShortNegative    = 0x08 /*!< Format string for negaive percent values (short representation) */,
+    formatPercentShortPositive    = 0x09 /*!< Format string for positive percent values (short representation) */,
+    formatCurrencyNegative        = 0x0A /*!< Format string for negaive currency values */,
+    formatCurrencyPositive        = 0x0B /*!< Format string for positive currency values */,
+    formatCurrencyShortNegative   = 0x0C /*!< Format string for negaive currency values (short representation) */,
+    formatCurrencyShortPositive   = 0x0D /*!< Format string for positive currency values (short representation) */,
+    formatNumberNegative          = 0x0E /*!< Format string for negaive number values */,
+    formatNumberPositive          = 0x0F /*!< Format string for positive number values */
 
 }; // enum 
 //#!
@@ -294,10 +306,10 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoValueType, std::map, 1 )
 //#!LocaleInfoSeparatorType
 enum class LocaleInfoSeparatorType : std::uint32_t
 {
-    invalid      = (std::uint32_t)(-1) /*!<  */,
-    unknown      = (std::uint32_t)(-1) /*!<  */,
-    thousands    = 0x01 /*!< Separately for each numeral system */,
-    fractional   = 0x02 /*!< same as decimal, but for fractional part of floating point numbers */
+    invalid      = (std::uint32_t)(-1) /*!< ! */,
+    unknown      = (std::uint32_t)(-1) /*!< ! */,
+    thousands    = 0x01 /*!< Thousands separator (for integer part of floating point values). Separately for each numeral system. */,
+    fractional   = 0x02 /*!< Separator for fractional part of floating point values. */
 
 }; // enum 
 //#!
@@ -321,10 +333,10 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoSeparatorType, std::map, 1 )
 //#!LocaleInfoDigitsType
 enum class LocaleInfoDigitsType : std::uint32_t
 {
-    invalid    = (std::uint32_t)(-1) /*!<  */,
-    unknown    = (std::uint32_t)(-1) /*!<  */,
-    number     = 0x01 /*!<  */,
-    currency   = 0x02 /*!<  */
+    invalid    = (std::uint32_t)(-1) /*!< ! */,
+    unknown    = (std::uint32_t)(-1) /*!< ! */,
+    number     = 0x01 /*!< Number locale info */,
+    currency   = 0x02 /*!< Currency locale info */
 
 }; // enum 
 //#!
@@ -348,8 +360,8 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( LocaleInfoDigitsType, std::map, 1 )
 //#!PositiveNumbersMode
 enum class PositiveNumbersMode : std::uint32_t
 {
-    unknown   = (std::uint32_t)(-1) /*!<  */,
-    invalid   = (std::uint32_t)(-1) /*!<  */,
+    unknown   = (std::uint32_t)(-1) /*!< ! */,
+    invalid   = (std::uint32_t)(-1) /*!< ! */,
     none      = 0x00 /*!< Do not insert anything */,
     space     = 0x01 /*!< Insert space instead of sign */,
     sign      = 0x02 /*!< Insert sign itself */
@@ -375,11 +387,13 @@ MARTY_CPP_ENUM_CLASS_DESERIALIZE_BEGIN( PositiveNumbersMode, std::map, 1 )
 MARTY_CPP_ENUM_CLASS_DESERIALIZE_END( PositiveNumbersMode, std::map, 1 )
 
 
+
+/*! Internal format option flags */
 //#!FormattingOptionsFlags
 enum class FormattingOptionsFlags : std::uint32_t
 {
-    unknown                   = (std::uint32_t)(-1) /*!<  */,
-    invalid                   = (std::uint32_t)(-1) /*!<  */,
+    unknown                   = (std::uint32_t)(-1) /*!< ! */,
+    invalid                   = (std::uint32_t)(-1) /*!< ! */,
     none                      = 0x00 /*!<  */,
     argIdTaken                = 0x01 /*!< fieldWidth value is set */,
     fieldWidthTaken           = 0x02 /*!< fieldWidth value is set */,
@@ -508,11 +522,13 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_SET(FormattingOptionsFlags, std::set)
 MARTY_CPP_ENUM_FLAGS_DESERIALIZE_SET(FormattingOptionsFlags, std::set)
 
 
+
+/*! Option flags for `marty::format::formatMessage` functions family */
 //#!FormattingFlags
 enum class FormattingFlags : std::uint32_t
 {
-    unknown                         = (std::uint32_t)(-1) /*!<  */,
-    invalid                         = (std::uint32_t)(-1) /*!<  */,
+    unknown                         = (std::uint32_t)(-1) /*!< ! */,
+    invalid                         = (std::uint32_t)(-1) /*!< ! */,
     none                            = 0x00 /*!<  */,
     ignoreFormatStringErrors        = 0x01 /*!< Ignore errors in format string */,
     ignoreArgumentErrors            = 0x02 /*!< Ignore errors while searching for arguments */,
@@ -523,16 +539,16 @@ enum class FormattingFlags : std::uint32_t
     ignoreConversionErrors          = 0x40 /*!< Ignore formatting type specifications and allow automatic type conversion */,
     ignoreTypeMismatchErrors        = 0x80 /*!< Ignore formatting type specification char mismatch errors */,
     ignoreNotFilterErrors           = 0x100 /*!< Ignore errors - non-filter value used as filter */,
-    considerZeroWidthSpaces         = 0x200 /*!< Учитывать пробелы нулевой ширины */,
-    considerCombiningChars          = 0x400 /*!< Учитывать комбинированные символы */,
-    fractionalGroupping             = 0x800 /*!< Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа */,
-    ignoreOptionsIndirectErrors     = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!<  */,
-    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors /*!<  */,
-    considerUnicodeFeatures         = considerZeroWidthSpaces  | considerCombiningChars /*!<  */,
-    allBase                         = ignoreErrors | considerUnicodeFeatures /*!<  */,
-    all                             = allBase | fractionalGroupping /*!<  */,
-    localeForceCustom               = 0x1000 /*!<  */,
-    localeUseSystem                 = 0x2000 /*!< Instead of user */
+    considerZeroWidthSpaces         = 0x200 /*!< Consider zero-width spaces */,
+    considerCombiningChars          = 0x400 /*!< Consider combining Unicode chars */,
+    fractionalGroupping             = 0x800 /*!< Group fractional part (floating point numbers) same as integer part */,
+    ignoreOptionsIndirectErrors     = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!< Ignore errors in indirect options */,
+    ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors /*!< Ignore all errors */,
+    considerUnicodeFeatures         = considerZeroWidthSpaces  | considerCombiningChars /*!< Consider options */,
+    allBase                         = ignoreErrors | considerUnicodeFeatures /*!< All, but no fractional groupping */,
+    all                             = allBase | fractionalGroupping /*!< All */,
+    localeForceCustom               = 0x1000 /*!< Force use passed locale */,
+    localeUseSystem                 = 0x2000 /*!< Use system locale instead of user */
 
 }; // enum 
 //#!

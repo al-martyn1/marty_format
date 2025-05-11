@@ -3,13 +3,10 @@
 
 <val-list title="Значение|Описание" value-style=backtick-quote>
 
-- invalid,unknown
-Недопустимое/неизвестное значение.
-
 - thousands
-Separately for each numeral system.
+Thousands separator (for integer part of floating point values). Separately for each numeral system.
 
 - fractional
-same as decimal, but for fractional part of floating point numbers.
+Separator for fractional part of floating point values.
 
 </val-list>

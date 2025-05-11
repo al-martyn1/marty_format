@@ -10,22 +10,22 @@
 
 - argId
 0x00
-`-`.
+Arggument identifier.
 
 - fillRef
 0x01
-`-`.
+Reference to fill char.
 
 - widthRef
 0x02
-`-`.
+Reference to width value.
 
 - precisionRef
 0x03
-`-`.
+Reference to precision value.
 
 - filterRef
 0x04
-`-`.
+Reference to filter value.
 
 </val-list>

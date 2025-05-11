@@ -1,4 +1,4 @@
-invalid,unknown          = -1
-invariant,c              = 0
-user
-system
+invalid,unknown          = -1  // !
+invariant,c              = 0   // Invariant locale ("C" locale)
+user                           // User locale (from system)
+system                         // System-wide locale (from system)

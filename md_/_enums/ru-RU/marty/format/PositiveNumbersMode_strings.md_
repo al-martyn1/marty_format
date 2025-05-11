@@ -3,9 +3,6 @@
 
 <val-list title="Значение|Описание" value-style=backtick-quote>
 
-- invalid,unknown
-Недопустимое/неизвестное значение.
-
 - none
 Пустое/отсутствующее значение.
 

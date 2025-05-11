@@ -2,6 +2,8 @@
 
 Underlying type: `std::uint32_t`.
 
+Standard filters enumeration.
+
 <val-list title="Name|Value|Description">
 
 - unknown,invalid
@@ -14,30 +16,30 @@ Empty/none value.
 
 - xml
 0x01
-`-`.
+Any XML - tag text or attribute text filter.
 
-- xmlText
+- xmlTag,xmlText
 0x02
-`-`.
+XML tag text filter.
 
 - xmlAttr
 0x03
-`-`.
+XML attribute filter.
 
 - html
 0x04
-`-`.
+Any HTML - tag text or attribute text filter.
 
-- htmlText
+- htmlTag,htmlText
 0x05
-`-`.
+HTML tag text filter.
 
 - htmlAttr
 0x06
-`-`.
+HTML attribute filter.
 
 - sql
 0x07
-`-`.
+SQL value filter.
 
 </val-list>

@@ -1,6 +1,7 @@
-invalid,unknown          = -1
+// Numeral system enumeration
+invalid,unknown          = -1  // !
 none                     = 0
-currency                 = 1   // Base - 10
+currency                 = 1   // Currency numeral system. Base for currency values - 10
 bin                      = 2   // Binary numeral system
 oct                      = 8   // Octal numeral system
 dec                      = 10  // Decimal numeral system

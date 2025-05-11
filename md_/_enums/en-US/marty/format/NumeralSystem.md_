@@ -2,6 +2,8 @@
 
 Underlying type: `std::uint32_t`.
 
+Numeral system enumeration.
+
 <val-list title="Name|Value|Description">
 
 - invalid,unknown
@@ -14,7 +16,7 @@ Empty/none value.
 
 - currency
 0x01
-Base - 10.
+Currency numeral system. Base for currency values - 10.
 
 - bin
 0x02

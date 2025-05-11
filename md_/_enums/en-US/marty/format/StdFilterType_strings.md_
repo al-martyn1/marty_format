@@ -3,31 +3,28 @@ Values are case insensitive.
 
 <val-list title="Value|Description" value-style=backtick-quote>
 
-- invalid,unknown
-Invalid/unknown value.
-
 - none
 Empty/none value.
 
 - xml
-`-`.
+Any XML - tag text or attribute text filter.
 
-- xml-text,xml_text,xmltext
-`-`.
+- xml-tag,xml-text,xml_tag,xml_text,xmltag,xmltext
+XML tag text filter.
 
 - xml-attr,xml_attr,xmlattr
-`-`.
+XML attribute filter.
 
 - html
-`-`.
+Any HTML - tag text or attribute text filter.
 
-- html-text,html_text,htmltext
-`-`.
+- html-tag,html-text,html_tag,html_text,htmltag,htmltext
+HTML tag text filter.
 
 - html-attr,html_attr,htmlattr
-`-`.
+HTML attribute filter.
 
 - sql
-`-`.
+SQL value filter.
 
 </val-list>

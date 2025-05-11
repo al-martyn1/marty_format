@@ -2,6 +2,8 @@
 
 Базовый тип: `std::uint32_t`.
 
+Перечисление для систем счисления.
+
 <val-list title="Имя|Значение|Описание">
 
 - invalid,unknown
@@ -14,22 +16,22 @@
 
 - currency
 0x01
-Base - 10.
+Система счисления валюты. Основание сс валюты - 10.
 
 - bin
 0x02
-Binary numeral system.
+Двоичная система счисления.
 
 - oct
 0x08
-Octal numeral system.
+Восьмеричная система счисления.
 
 - dec
 0x0A
-Decimal numeral system.
+Десятичная система счисления.
 
 - hex
 0x10
-Hexadecimal numeral system.
+Шестнадцатиричная система счисления.
 
 </val-list>

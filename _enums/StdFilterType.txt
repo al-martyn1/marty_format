@@ -1,9 +1,11 @@
-unknown,invalid = -1
+// Standard filters enumeration
+
+unknown,invalid = -1  // !
 none            = 0
-xml
-xmlText
-xmlAttr
-html
-htmlText
-htmlAttr
-sql
+xml                   // Any XML - tag text or attribute text filter
+xmlTag,xmlText        // XML tag text filter
+xmlAttr               // XML attribute filter
+html                  // Any HTML - tag text or attribute text filter
+htmlTag,htmlText      // HTML tag text filter
+htmlAttr              // HTML attribute filter
+sql                   // SQL value filter

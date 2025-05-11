@@ -1,23 +1,23 @@
-invalid,unknown          = -1
+invalid,unknown          = -1 //  !
 none                     = 0
 
 # Symbols
-signDecimal                   // Aka decimal separator, decimal mark, decimal point
-signPlus
-signMinus
-signPercent
-signCurrency
+signDecimal                   // Decimal separator, decimal mark, decimal point
+signPlus                      // Localized plus sign
+signMinus                     // Localized plus sign
+signPercent                   // Localized percent sign
+signCurrency                  // Localized currency sign
 
 # Format strings
-formatPercentNegative
-formatPercentPositive
-formatPercentShortNegative
-formatPercentShortPositive
-formatCurrencyNegative
-formatCurrencyPositive
-formatCurrencyShortNegative
-formatCurrencyShortPositive
-formatNumberNegative
-formatNumberPositive
+formatPercentNegative         // Format string for negaive percent values
+formatPercentPositive         // Format string for positive percent values
+formatPercentShortNegative    // Format string for negaive percent values (short representation)
+formatPercentShortPositive    // Format string for positive percent values (short representation)
+formatCurrencyNegative        // Format string for negaive currency values 
+formatCurrencyPositive        // Format string for positive currency values
+formatCurrencyShortNegative   // Format string for negaive currency values (short representation)
+formatCurrencyShortPositive   // Format string for positive currency values (short representation)
+formatNumberNegative          // Format string for negaive number values 
+formatNumberPositive          // Format string for positive number values
 
 

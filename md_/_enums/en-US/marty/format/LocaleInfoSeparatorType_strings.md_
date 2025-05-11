@@ -3,13 +3,10 @@ Values are case insensitive.
 
 <val-list title="Value|Description" value-style=backtick-quote>
 
-- invalid,unknown
-Invalid/unknown value.
-
 - thousands
-Separately for each numeral system.
+Thousands separator (for integer part of floating point values). Separately for each numeral system.
 
 - fractional
-same as decimal, but for fractional part of floating point numbers.
+Separator for fractional part of floating point values.
 
 </val-list>

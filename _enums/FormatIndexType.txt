@@ -1,6 +1,6 @@
-unknown,invalid = -1
-argId           = 0
-fillRef
-widthRef
-precisionRef
-filterRef
+unknown,invalid = -1  // !
+argId           = 0   // Arggument identifier
+fillRef               // Reference to fill char
+widthRef              // Reference to width value
+precisionRef          // Reference to precision value
+filterRef             // Reference to filter value

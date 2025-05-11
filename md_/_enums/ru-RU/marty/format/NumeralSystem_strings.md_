@@ -3,25 +3,22 @@
 
 <val-list title="Значение|Описание" value-style=backtick-quote>
 
-- invalid,unknown
-Недопустимое/неизвестное значение.
-
 - none
 Пустое/отсутствующее значение.
 
 - currency
-Base - 10.
+Система счисления валюты. Основание сс валюты - 10.
 
 - bin
-Binary numeral system.
+Двоичная система счисления.
 
 - oct
-Octal numeral system.
+Восьмеричная система счисления.
 
 - dec
-Decimal numeral system.
+Десятичная система счисления.
 
 - hex
-Hexadecimal numeral system.
+Шестнадцатиричная система счисления.
 
 </val-list>
