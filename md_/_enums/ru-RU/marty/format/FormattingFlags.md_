@@ -4,7 +4,7 @@
 
 Флаги опций для семейства функций `marty::format::formatMessage`.
 
-<val-list title="Имя|Значение|Описание">
+<val-list title=":Имя|:Значение|:Описание">
 
 - unknown,invalid
 (std::uint32_t)(-1)

@@ -2,7 +2,7 @@
 
 Underlying type: `std::uint32_t`.
 
-<val-list title="Name|Value|Description">
+<val-list title=":Name|:Value|:Description">
 
 - unknown,invalid
 (std::uint32_t)(-1)
@@ -10,7 +10,7 @@ Invalid/unknown value.
 
 - none
 0x00
-Empty/none value.
+Do not insert anything.
 
 - space
 0x01

@@ -1,7 +1,7 @@
 
 Values are case insensitive.
 
-<val-list title="Value|Description" value-style=backtick-quote>
+<val-list title=":Value|:Description" value-style=backtick-quote>
 
 - c,invariant
 Invariant locale ("C" locale).

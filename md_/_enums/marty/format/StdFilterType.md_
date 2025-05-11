@@ -4,7 +4,7 @@ Underlying type: `std::uint32_t`.
 
 Standard filters enumeration.
 
-<val-list title="Name|Value|Description">
+<val-list title=":Name|:Value|:Description">
 
 - unknown,invalid
 (std::uint32_t)(-1)
@@ -12,7 +12,7 @@ Invalid/unknown value.
 
 - none
 0x00
-Empty/none value.
+No filtration at all.
 
 - xml
 0x01

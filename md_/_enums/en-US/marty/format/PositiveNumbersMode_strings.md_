@@ -1,10 +1,10 @@
 
 Values are case insensitive.
 
-<val-list title="Value|Description" value-style=backtick-quote>
+<val-list title=":Value|:Description" value-style=backtick-quote>
 
 - none
-Empty/none value.
+Do not insert anything.
 
 - space
 Insert space instead of sign.

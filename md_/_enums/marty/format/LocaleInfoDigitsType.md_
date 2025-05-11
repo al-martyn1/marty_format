@@ -2,7 +2,7 @@
 
 Underlying type: `std::uint32_t`.
 
-<val-list title="Name|Value|Description">
+<val-list title=":Name|:Value|:Description">
 
 - invalid,unknown
 (std::uint32_t)(-1)

@@ -1,10 +1,10 @@
 
 Значения являются независимыми от регистра символов.
 
-<val-list title="Значение|Описание" value-style=backtick-quote>
+<val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - xml
-Any XML - фильтр для теста тэгов или значений атрибутов.
+XML - фильтр для теста тэгов или значений атрибутов.
 
 - xml-tag,xml-text,xml_tag,xml_text,xmltag,xmltext
 XML фильтр для теста тэгов.

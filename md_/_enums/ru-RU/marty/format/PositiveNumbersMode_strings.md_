@@ -1,10 +1,10 @@
 
 Значения являются независимыми от регистра символов.
 
-<val-list title="Значение|Описание" value-style=backtick-quote>
+<val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - none
-Пустое/отсутствующее значение.
+Do not insert anything.
 
 - space
 Insert space instead of sign.

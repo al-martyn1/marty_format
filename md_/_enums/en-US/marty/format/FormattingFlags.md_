@@ -4,7 +4,7 @@ Underlying type: `std::uint32_t`.
 
 Option flags for `marty::format::formatMessage` functions family.
 
-<val-list title="Name|Value|Description">
+<val-list title=":Name|:Value|:Description">
 
 - unknown,invalid
 (std::uint32_t)(-1)

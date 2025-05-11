@@ -4,7 +4,7 @@ Underlying type: `std::uint32_t`.
 
 Numeral system enumeration.
 
-<val-list title="Name|Value|Description">
+<val-list title=":Name|:Value|:Description">
 
 - invalid,unknown
 (std::uint32_t)(-1)

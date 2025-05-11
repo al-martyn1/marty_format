@@ -1,7 +1,7 @@
 
 Значения являются независимыми от регистра символов.
 
-<val-list title="Значение|Описание" value-style=backtick-quote>
+<val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - thousands
 Thousands separator (for integer part of floating point values). Separately for each numeral system.

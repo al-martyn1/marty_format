@@ -1,4 +1,119 @@
 {
+  "en-US": {
+    "_generated-enums_/marty/format/formatindextype": {
+      "___description___": "",
+      "argid": "Arggument identifier.",
+      "fillref": "Reference to fill char.",
+      "filterref": "Reference to filter value.",
+      "precisionref": "Reference to precision value.",
+      "widthref": "Reference to width value."
+    },
+    "_generated-enums_/marty/format/formattingflags": {
+      "___description___": "Option flags for `marty::format::formatMessage` functions family",
+      "all": "All.",
+      "allbase": "All, but no fractional groupping.",
+      "considercombiningchars": "Consider combining Unicode chars.",
+      "considerunicodefeatures": "Consider options.",
+      "considerzerowidthspaces": "Consider zero-width spaces.",
+      "fractionalgroupping": "Group fractional part (floating point numbers) same as integer part.",
+      "ignoreargumenterrors": "Ignore errors while searching for arguments.",
+      "ignoreconversionerrors": "Ignore formatting type specifications and allow automatic type conversion.",
+      "ignoreerrors": "Ignore all errors.",
+      "ignorefillindirecterrors": "Ignore errors while searching for arguments for fill char.",
+      "ignoreformatstringerrors": "Ignore errors in format string.",
+      "ignoreformattingerrors": "Ignore errors while formatting values.",
+      "ignorenotfiltererrors": "Ignore errors - non-filter value used as filter.",
+      "ignoreoptionsindirecterrors": "Ignore errors in indirect options.",
+      "ignoreprecisionindirecterrors": "Ignore errors while searching for arguments for precision.",
+      "ignoretypemismatcherrors": "Ignore formatting type specification char mismatch errors.",
+      "ignorewidthindirecterrors": "Ignore errors while searching for arguments for width.",
+      "localeforcecustom": "Force use passed locale.",
+      "localeusesystem": "Use system locale instead of user."
+    },
+    "_generated-enums_/marty/format/formattingoptionsflags": {
+      "___description___": "Internal format option flags",
+      "argidtaken": "fieldWidth value is set.",
+      "bitcast": "`-`",
+      "caseinvert": "`-`",
+      "fieldwidthindirect": "Indirect field width - fieldWidth member contains index of argument with actual fieldWidth value.",
+      "fieldwidthindirecttaken": "`-`",
+      "fieldwidthtaken": "fieldWidth value is set.",
+      "fillingindirect": "`-`",
+      "fillingindirecttaken": "`-`",
+      "fillingtaken": "`-`",
+      "internalnegative": "`-`",
+      "internalsigned": "`-`",
+      "localeformatting": "`-`",
+      "precisionindirect": "`-`",
+      "precisionindirecttaken": "`-`",
+      "precisiontaken": "`-`",
+      "signalterform": "`-`",
+      "signminus": "Mutually exclusive with signPlus & signSpace.",
+      "signplus": "Mutually exclusive with signMinus & signSpace.",
+      "signspace": "Mutually exclusive with signMinus & signPlus.",
+      "signz": "`-`",
+      "signzero": "`-`"
+    },
+    "_generated-enums_/marty/format/localeinfodigitstype": {
+      "___description___": "",
+      "currency": "Currency locale info.",
+      "number": "Number locale info."
+    },
+    "_generated-enums_/marty/format/localeinfoseparatortype": {
+      "___description___": "",
+      "fractional": "Separator for fractional part of floating point values.",
+      "thousands": "Thousands separator (for integer part of floating point values). Separately for each numeral system."
+    },
+    "_generated-enums_/marty/format/localeinfotype": {
+      "___description___": "",
+      "invariant": "Invariant locale (\"C\" locale).",
+      "system": "System-wide locale (from system).",
+      "user": "User locale (from system)."
+    },
+    "_generated-enums_/marty/format/localeinfovaluetype": {
+      "___description___": "",
+      "formatcurrencynegative": "Format string for negaive currency values.",
+      "formatcurrencypositive": "Format string for positive currency values.",
+      "formatcurrencyshortnegative": "Format string for negaive currency values (short representation).",
+      "formatcurrencyshortpositive": "Format string for positive currency values (short representation).",
+      "formatnumbernegative": "Format string for negaive number values.",
+      "formatnumberpositive": "Format string for positive number values.",
+      "formatpercentnegative": "Format string for negaive percent values.",
+      "formatpercentpositive": "Format string for positive percent values.",
+      "formatpercentshortnegative": "Format string for negaive percent values (short representation).",
+      "formatpercentshortpositive": "Format string for positive percent values (short representation).",
+      "signcurrency": "Localized currency sign.",
+      "signdecimal": "Decimal separator, decimal mark, decimal point.",
+      "signminus": "Localized plus sign.",
+      "signpercent": "Localized percent sign.",
+      "signplus": "Localized plus sign."
+    },
+    "_generated-enums_/marty/format/numeralsystem": {
+      "___description___": "Numeral system enumeration",
+      "bin": "Binary numeral system.",
+      "currency": "Currency numeral system. Base for currency values - 10.",
+      "dec": "Decimal numeral system.",
+      "hex": "Hexadecimal numeral system.",
+      "oct": "Octal numeral system."
+    },
+    "_generated-enums_/marty/format/positivenumbersmode": {
+      "___description___": "",
+      "none": "Do not insert anything.",
+      "sign": "Insert sign itself.",
+      "space": "Insert space instead of sign."
+    },
+    "_generated-enums_/marty/format/stdfiltertype": {
+      "___description___": "Standard filters enumeration",
+      "html": "Any HTML - tag text or attribute text filter.",
+      "htmlattr": "HTML attribute filter.",
+      "htmltag": "HTML tag text filter.",
+      "none": "No filtration at all.",
+      "sql": "SQL value filter.",
+      "xml": "Any XML - tag text or attribute text filter.",
+      "xmlattr": "XML attribute filter.",
+      "xmltag": "XML tag text filter."
+    }
+  },
   "ru-RU": {
     "_generated-enums_/marty/format/formatindextype": {
       "___description___": "",
@@ -98,6 +213,7 @@
     },
     "_generated-enums_/marty/format/positivenumbersmode": {
       "___description___": "",
+      "none": "Do not insert anything.",
       "sign": "Insert sign itself.",
       "space": "Insert space instead of sign."
     },
@@ -106,8 +222,9 @@
       "html": "HTML - фильтр для теста тэгов или значений атрибутов.",
       "htmlattr": "HTML фильтр для значений атрибутов.",
       "htmltag": "HTML фильтр для теста тэгов.",
+      "none": "Фильтрация не производится.",
       "sql": "Фильтр для значений SQL.",
-      "xml": "Any XML - фильтр для теста тэгов или значений атрибутов.",
+      "xml": "XML - фильтр для теста тэгов или значений атрибутов.",
       "xmlattr": "XML фильтр для значений атрибутов.",
       "xmltag": "XML фильтр для теста тэгов."
     }
