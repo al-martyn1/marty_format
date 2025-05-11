@@ -60,8 +60,8 @@
     - [Конструктор marty::format::BasicArgs](#конструктор-martyformatbasicargs)
     - [Методы marty::format::BasicArgs::arg](#методы-martyformatbasicargsarg)
   - [marty::format::Args](#martyformatargs)
-  - [enum флаги marty::format::FormattingFlags](#enum-флаги-martyformatformattingflags)
   - [marty::format::formatMessageImpl](#martyformatformatmessageimpl)
+  - [marty::format::FormattingFlags флаги](#martyformatformattingflags-флаги)
   - [marty::format::formatMessage - аргументы передаются в generic-контейнере](#martyformatformatmessage---аргументы-передаются-в-generic-контейнере)
   - [marty::format::formatMessage - аргументы передаются в виде std::initializer_list](#martyformatformatmessage---аргументы-передаются-в-виде-stdinitializer_list)
   - [Базовая реализация функтора вычисления отображаемой ширины строки](#базовая-реализация-функтора-вычисления-отображаемой-ширины-строки)
@@ -1406,29 +1406,6 @@ using Args = BasicArgs< FormatArgumentVariant
                       >;
 ```
 
-### enum флаги marty::format::FormattingFlags
-
-Флаги marty::format::FormattingFlags могут принимать следующие значения:
-
-
-|Значение|Описание|
-|:-------|:-------|
-|**none**|флаги не установлены.|
-|**ignoreFormatStringErrors**|игнорировать ошибки в форматной строке.|
-|**ignoreArgumentErrors**|игнорировать ошибки поиска аргументов.|
-|**ignoreFormattingErrors**|игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.|
-|**ignoreFillIndirectErrors**|игнорировать ошибку поиска аргумента, содержащего символ заполнения.|
-|**ignoreWidthIndirectErrors**|игнорировать ошибку поиска аргумента, содержащего ширину поля.|
-|**ignorePrecisionIndirectErrors**|игнорировать ошибку поиска аргумента, содержащего точность.|
-|**ignoreConversionErrors**|игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип.|
-|**fractionalGroupping**|Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа. Без указания данного флага для дробной части числа следует явно указывать спецификатор разделителя разрядов.|
-|**ignoreOptionsIndirectErrors**|игнорировать ошибки косвенного задания опций форматирования. Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors \| ignoreWidthIndirectErrors \| ignorePrecisionIndirectErrors`).|
-|**ignoreErrors**|игнорировать все ошибки. Групповое значение для всех типов ошибок (`ignoreFormatStringErrors \| ignoreArgumentErrors \| ignoreFormattingErrors \| ignoreOptionsIndirectErrors \| ignoreConversionErrors`).|
-|**all**|все флаги установлены (`ignoreErrors \| fractionalGroupping`).|
-
-
-
-
 
 ### marty::format::formatMessageImpl
 
@@ -1448,6 +1425,39 @@ StringType formatMessageImpl( const StringType &fmt
                             , FormattingFlags   formattingFlags=FormattingFlags::allBase
                             )
 ```
+
+
+### marty::format::FormattingFlags флаги
+
+Базовый тип: `std::uint32_t`.
+
+Флаги опций для семейства функций `marty::format::formatMessage`.
+
+
+|Имя|Значение|Описание|
+|:-------|:-------|:-------|
+|**unknown**, **invalid**|(std::uint32_t)(-1)|Недопустимое/неизвестное значение.|
+|**none**|0x00|Пустое/отсутствующее значение.|
+|**ignoreFormatStringErrors**|0x01|Игнорировать ошибки в форматной строке.|
+|**ignoreArgumentErrors**|0x02|Игнорировать ошибки поиска аргументов.|
+|**ignoreFormattingErrors**|0x04|Игнорировать ошибки при форматировании значений - например, некорректные значения ширины или точности.|
+|**ignoreFillIndirectErrors**|0x08|Игнорировать ошибку поиска аргумента, содержащего символ заполнения.|
+|**ignoreWidthIndirectErrors**|0x10|Игнорировать ошибку поиска аргумента, содержащего ширину поля.|
+|**ignorePrecisionIndirectErrors**|0x20|Игнорировать ошибку поиска аргумента, содержащего точность.|
+|**ignoreConversionErrors**|0x40|Игнорировать ошибки спецификатора типа и автоматически конвертировать данные в требуемый тип..|
+|**ignoreTypeMismatchErrors**|0x80|Ignore formatting type specification char mismatch errors.|
+|**ignoreNotFilterErrors**|0x100|Игнорировать ошибки - попытка использовать как фильтр значения других (примитивных) типов.|
+|**considerZeroWidthSpaces**|0x200|Consider zero-width spaces.|
+|**considerCombiningChars**|0x400|Consider combining Unicode chars.|
+|**fractionalGroupping**|0x800|Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа. Без указания данного флага для дробной части числа следует явно указывать спецификатор разделителя разрядов.|
+|**ignoreOptionsIndirectErrors**|ignoreFillIndirectErrors \| ignoreWidthIndirectErrors \| ignorePrecisionIndirectErrors|Игнорировать ошибки косвенного задания опций форматирования. Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors \| ignoreWidthIndirectErrors \| ignorePrecisionIndirectErrors`).|
+|**ignoreErrors**|ignoreFormatStringErrors \| ignoreArgumentErrors \| ignoreFormattingErrors \| ignoreOptionsIndirectErrors \| ignoreConversionErrors \| ignoreNotFilterErrors \| ignoreTypeMismatchErrors|Игнорировать все ошибки. Групповое значение для всех типов ошибок (`ignoreFormatStringErrors \| ignoreArgumentErrors \| ignoreFormattingErrors \| ignoreOptionsIndirectErrors \| ignoreConversionErrors`).|
+|**considerUnicodeFeatures**|considerZeroWidthSpaces  \| considerCombiningChars|Consider options.|
+|**allBase**|ignoreErrors \| considerUnicodeFeatures|Все флаги установлены, кроме флага группировки разрядов дробной части.|
+|**all**|allBase \| fractionalGroupping|Все флаги установлены (`ignoreErrors \| fractionalGroupping`).|
+|**localeForceCustom**|0x1000|Принудительно использовать переданную локаль.|
+|**localeUseSystem**|0x2000|Использовать локаль системы вместо локали текущего пользователя.|
+
 
 
 
