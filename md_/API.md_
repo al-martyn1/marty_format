@@ -38,14 +38,25 @@
 
 Специализация базового фильтра `BasicFormatValueFilter` для UTF-8 строк: 
 
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#FormatValueFilter
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#FormatValueFilter
 
 
 ## Мейкер стандартных фильтров по типу StdFilterType - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его StdFilterType-идентификатору.
 
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilterId
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilterId
+
+<arg-list>
+
+- filterType
+Тип фильтра (`marty::format::StdFilterType`).
+
+- pNoneReturned
+Опциональный указатель на `bool` переменную, принимающую признак, был ли возвращён `none` фильтр.
+Если данный указатель задан нулевым, то вместо возвращения `none` фильтра будет выброшено исключение.
+</arg-list>
+
 
 #!subsec ./_enums/$(Lang)/marty/format/StdFilterType.md_
 
@@ -55,6 +66,16 @@
 Возвращает стандартный фильтр по его имени.
 
 #!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilterStr
+
+<arg-list>
+
+- filterName
+Имя фильтра (строка).
+
+- pNoneReturned
+Опциональный указатель на `bool` переменную, принимающую признак, был ли возвращён `none` фильтр.
+Если данный указатель задан нулевым, то вместо возвращения `none` фильтра будет выброшено исключение.
+</arg-list>
 
 
 Допустимые фильтры:

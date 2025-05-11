@@ -19,7 +19,7 @@
 `FormattingFlags::localeUseSystem`.
 
 Если в форматной строке не задано использование локали, то для форматирования 
-используется `invariant`/"C"-локаль.
+используется `invariant`/`"C"`-локаль.
 
 #!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} locale_info.h#LocaleInfo
 
@@ -31,6 +31,9 @@
 #!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} locale_info.h#getLocaleInfo
 
 Запрашиваемые локали имеют тип `marty::format::LocaleInfoType`.
+
+При получении неизвестного типа локали данная функция выбросит исключение.
+
 #// и могут принимать следующие значения:
 
 #!subsec ./_enums/$(Lang)/marty/format/LocaleInfoType.md_

@@ -247,12 +247,16 @@ struct StdSqlFilter
 
 //----------------------------------------------------------------------------
 //#! makeStandardFormatValueFilterId
-FormatValueFilter makeStandardFormatValueFilter(StdFilterType filterType, bool *pNoneReturned=0);
+FormatValueFilter makeStandardFormatValueFilter( StdFilterType filterType
+                                               , bool *pNoneReturned=0
+                                               );
 //#!
 
 //#! makeStandardFormatValueFilterStr
 template<typename StringType>
-FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName, bool *pNoneReturned=0);
+FormatValueFilter makeStandardFormatValueFilter( const StringType &filterName
+                                               , bool *pNoneReturned=0
+                                               );
 //#!
 
 FormatValueFilter makeStandardFormatValueFilter(StdFilterType filterType, bool *pNoneReturned)
