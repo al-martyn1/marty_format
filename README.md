@@ -43,7 +43,7 @@
   - [Поддержка локализации форматируемых значений](#поддержка-локализации-форматируемых-значений)
     - [Класс marty::format::LocaleInfo](#класс-martyformatlocaleinfo)
     - [Функция marty::format::getLocaleInfo - получение стандартной локали](#функция-martyformatgetlocaleinfo---получение-стандартной-локали)
-      - [marty::format::LocaleInfoType enumeration](#martyformatlocaleinfotype-enumeration)
+      - [marty::format::LocaleInfoType перечисление](#martyformatlocaleinfotype-перечисление)
     - [Создание/формирование собственной локали](#созданиеформирование-собственной-локали)
       - [Модификация предопределённой локали](#модификация-предопределённой-локали)
       - [Переопределение виртуальных методов класса marty::format::LocaleInfo](#переопределение-виртуальных-методов-класса-martyformatlocaleinfo)
@@ -975,17 +975,17 @@ const LocaleInfo* getLocaleInfo(LocaleInfoType lt);
 
 Запрашиваемые локали имеют тип `marty::format::LocaleInfoType`.
 
-##### marty::format::LocaleInfoType enumeration
+##### marty::format::LocaleInfoType перечисление
 
-Underlying type: `std::uint32_t`.
+Базовый тип: `std::uint32_t`.
 
 
-|Name|Value|Description|
+|Имя|Значение|Описание|
 |-------|-------|-------|
-|**invalid**, **unknown**|(std::uint32_t)(-1)|Invalid/unknown value.|
-|**invariant**, **c**|0x00|Invariant locale ("C" locale).|
-|**user**|0x01|User locale (from system).|
-|**system**|0x02|System-wide locale (from system).|
+|**invalid**, **unknown**|(std::uint32_t)(-1)|Недопустимое/неизвестное значение.|
+|**invariant**, **c**|0x00|Инвариантная (неизменная) локаль ("C"-локаль).|
+|**user**|0x01|Пользовательская локаль в операционной системе.|
+|**system**|0x02|Системная локаль (локаль операционной системы).|
 
 
 
@@ -1157,19 +1157,19 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 Стандартные фильтры:
 
 
-Values are case insensitive.
+Значения являются независимыми от регистра символов.
 
 
-|Value|Description|
+|Значение|Описание|
 |-------|-------|
-|`'none'`|Empty/none value.|
-|`'xml'`|Any XML - tag text or attribute text filter.|
-|`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML tag text filter.|
-|`'xml-attr'`, `'xml_attr'`, `'xmlattr'`|XML attribute filter.|
-|`'html'`|Any HTML - tag text or attribute text filter.|
-|`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML tag text filter.|
-|`'html-attr'`, `'html_attr'`, `'htmlattr'`|HTML attribute filter.|
-|`'sql'`|SQL value filter.|
+|`'none'`|Пустое/отсутствующее значение.|
+|`'xml'`|Any XML - фильтр для теста тэгов или значений атрибутов.|
+|`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML фильтр для теста тэгов.|
+|`'xml-attr'`, `'xml_attr'`, `'xmlattr'`|XML фильтр для значений атрибутов.|
+|`'html'`|HTML - фильтр для теста тэгов или значений атрибутов.|
+|`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML фильтр для теста тэгов.|
+|`'html-attr'`, `'html_attr'`, `'htmlattr'`|HTML фильтр для значений атрибутов.|
+|`'sql'`|Фильтр для значений SQL.|
 
 
 

@@ -3,9 +3,6 @@ Values are case insensitive.
 
 <val-list title="Value|Description" value-style=backtick-quote>
 
-- none
-Empty/none value.
-
 - xml
 Any XML - tag text or attribute text filter.
 

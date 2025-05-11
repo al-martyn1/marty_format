@@ -1,7 +1,7 @@
 // Standard filters enumeration
 
 unknown,invalid = -1  // !
-none            = 0
+none            = 0   // !No filtration at all
 xml                   // Any XML - tag text or attribute text filter
 xmlTag,xmlText        // XML tag text filter
 xmlAttr               // XML attribute filter

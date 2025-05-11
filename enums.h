@@ -75,7 +75,7 @@ enum class StdFilterType : std::uint32_t
 {
     unknown    = (std::uint32_t)(-1) /*!< ! */,
     invalid    = (std::uint32_t)(-1) /*!< ! */,
-    none       = 0x00 /*!<  */,
+    none       = 0x00 /*!< !No filtration at all */,
     xml        = 0x01 /*!< Any XML - tag text or attribute text filter */,
     xmlTag     = 0x02 /*!< XML tag text filter */,
     xmlText    = 0x02 /*!< XML tag text filter */,
