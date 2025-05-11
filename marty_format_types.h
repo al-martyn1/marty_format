@@ -246,16 +246,21 @@ struct StdSqlFilter
 };
 
 //----------------------------------------------------------------------------
-//#! makeStandardFormatValueFilter
+//#! makeStandardFormatValueFilterId
+FormatValueFilter makeStandardFormatValueFilter(StdFilterType filterType, bool *pNoneReturned=0);
+//#!
+
+//#! makeStandardFormatValueFilterStr
 template<typename StringType>
-FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNoneReturned=0)
+FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName, bool *pNoneReturned=0);
+//#!
+
+FormatValueFilter makeStandardFormatValueFilter(StdFilterType filterType, bool *pNoneReturned)
 {
     if (pNoneReturned)
         *pNoneReturned = false;
 
-    auto e = enum_deserialize(filterName, StdFilterType::unknown);
-
-    switch(e)
+    switch(filterType)
     {
         case StdFilterType::none    : break;
 
@@ -280,20 +285,38 @@ FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNo
     return StdNoneFilter();
    
 }
-//#!
+
+template<typename StringType>
+FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName, bool *pNoneReturned)
+{
+    auto e = enum_deserialize(filterName, StdFilterType::unknown);
+    return makeStandardFormatValueFilter(e, pNoneReturned);
+}
 
 //----------------------------------------------------------------------------
 //#! StdFilterFactory
 struct StdFilterFactory
 {
     template<typename StringType>
-    FormatValueFilter operator()(StringType filterName) const
+    FormatValueFilter operator()(StdFilterType filterType) const
+    {
+        return makeStandardFormatValueFilter(filterType);
+    }
+
+    template<typename StringType>
+    FormatValueFilter operator()(StdFilterType filterType, bool *pNoneReturned) const
+    {
+        return makeStandardFormatValueFilter(filterType, pNoneReturned);
+    }
+
+    template<typename StringType>
+    FormatValueFilter operator()(const StringType &filterName) const
     {
         return makeStandardFormatValueFilter(filterName);
     }
 
     template<typename StringType>
-    FormatValueFilter operator()(StringType filterName, bool *pNoneReturned) const
+    FormatValueFilter operator()(const StringType &filterName, bool *pNoneReturned) const
     {
         return makeStandardFormatValueFilter(filterName, pNoneReturned);
     }

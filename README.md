@@ -51,8 +51,9 @@
   - [Обобщённый тип фильтра BasicFormatValueFilter](#обобщённый-тип-фильтра-basicformatvaluefilter)
     - [Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter](#пример-реализации-методов-inputiteratortype-для-использования-совместно-с-basicformatvaluefilter)
   - [Тип фильтра FormatValueFilter](#тип-фильтра-formatvaluefilter)
+  - [Мейкер стандартных фильтров по типу StdFilterType - makeStandardFormatValueFilter](#мейкер-стандартных-фильтров-по-типу-stdfiltertype---makestandardformatvaluefilter)
     - [marty::format::StdFilterType перечисление](#martyformatstdfiltertype-перечисление)
-  - [Мейкер стандартных фильтров - makeStandardFormatValueFilter](#мейкер-стандартных-фильтров---makestandardformatvaluefilter)
+  - [Мейкер стандартных фильтров по строке - makeStandardFormatValueFilter](#мейкер-стандартных-фильтров-по-строке---makestandardformatvaluefilter)
   - [Фабрика стандартных фильтров - StdFilterFactory](#фабрика-стандартных-фильтров---stdfilterfactory)
   - [marty::format::FormatArgumentVariant - Variant-тип аргумента](#martyformatformatargumentvariant---variant-тип-аргумента)
   - [marty::format::BasicArgs](#martyformatbasicargs)
@@ -82,13 +83,23 @@
     - [Спецификаторы представления указателей](#спецификаторы-представления-указателей)
   - [Встроенные фильтры (поле спецификатора формата filter)](#встроенные-фильтры-поле-спецификатора-формата-filter)
   - [Экранирование строк](#экранирование-строк)
-    - [](#)
-    - [](#-1)
-- [Список задач](#список-задач)
 
 
 
 ## Поддержка стандартов и компиляторов
+
+Поддерживаются компиляторы, соответсвующие стандарту языка `C++` - `C++17`.
+
+Для компиляторов `MSVC` и `GCC` есть исключения.
+Данные компиляторы языка `C++` не всегда соответсвуют заявленному ими стандарту `C++`,
+и для них сделаны исключения и обходные реализации некоторых возможностей.
+
+Поддерживаемые версии `MSVC` и `GCC`:
+
+- `MSVC` - MS Visual Studio 2019 и соответсвующий данной версии MSVS компилятор `C++` от Microsoft.
+- `GCC` - Поддерживается `GCC` вплоть до версии 7.3. Это сделано для возможности работы с библиотекой Qt старых версий (до 5.12 включительно)
+
+Всё прочие компиляторы должны безусловно поддерживать стандарт языка `C++` - `C++17` для использования данной библиотеки.
 
 
 ## Возможности библиотеки
@@ -1159,7 +1170,13 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 ```
 
 
+### Мейкер стандартных фильтров по типу StdFilterType - makeStandardFormatValueFilter
 
+Возвращает стандартный фильтр по его StdFilterType-идентификатору.
+
+```cpp
+FormatValueFilter makeStandardFormatValueFilter(StdFilterType filterType, bool *pNoneReturned=0);
+```
 
 #### marty::format::StdFilterType перечисление
 
@@ -1172,57 +1189,24 @@ using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<c
 |:-------|:-------|:-------|
 |**unknown**, **invalid**|(std::uint32_t)(-1)|Недопустимое/неизвестное значение.|
 |**none**|0x00|Фильтрация не производится.|
-|**xml**|0x01|XML - фильтр для теста тэгов или значений атрибутов.|
-|**xmlTag**, **xmlText**|0x02|XML фильтр для теста тэгов.|
+|**xml**|0x01|XML - фильтр для текста тэгов или значений атрибутов.|
+|**xmlTag**, **xmlText**|0x02|XML фильтр для текста тэгов.|
 |**xmlAttr**|0x03|XML фильтр для значений атрибутов.|
-|**html**|0x04|HTML - фильтр для теста тэгов или значений атрибутов.|
-|**htmlTag**, **htmlText**|0x05|HTML фильтр для теста тэгов.|
+|**html**|0x04|HTML - фильтр для текста тэгов или значений атрибутов.|
+|**htmlTag**, **htmlText**|0x05|HTML фильтр для текста тэгов.|
 |**htmlAttr**|0x06|HTML фильтр для значений атрибутов.|
 |**sql**|0x07|Фильтр для значений SQL.|
 
 
 
 
-
-
-### Мейкер стандартных фильтров - makeStandardFormatValueFilter
+### Мейкер стандартных фильтров по строке - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его имени.
 
 ```cpp
 template<typename StringType>
-FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNoneReturned=0)
-{
-    if (pNoneReturned)
-        *pNoneReturned = false;
-
-    auto e = enum_deserialize(filterName, StdFilterType::unknown);
-
-    switch(e)
-    {
-        case StdFilterType::none    : break;
-
-        case StdFilterType::xml     : [[fallthrough]];
-        case StdFilterType::xmlText : [[fallthrough]];
-        case StdFilterType::xmlAttr : [[fallthrough]];
-        case StdFilterType::html    : [[fallthrough]];
-        case StdFilterType::htmlText: [[fallthrough]];
-        case StdFilterType::htmlAttr: return StdXmlHtmlFilter();
-
-        case StdFilterType::sql     : return StdSqlFilter();
-
-        case StdFilterType::invalid : [[fallthrough]];
-        default: {}
-    }
-
-    if (!pNoneReturned)
-        throw unknown_value_filter("unknown value filter");
-
-    *pNoneReturned = true;
-
-    return StdNoneFilter();
-
-}
+FormatValueFilter makeStandardFormatValueFilter(const StringType &filterName, bool *pNoneReturned=0);
 ```
 
 
@@ -1232,11 +1216,11 @@ FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNo
 
 |Значение|Описание|
 |:-------|:-------|
-|`'xml'`|XML - фильтр для теста тэгов или значений атрибутов.|
-|`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML фильтр для теста тэгов.|
+|`'xml'`|XML - фильтр для текста тэгов или значений атрибутов.|
+|`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML фильтр для текста тэгов.|
 |`'xml-attr'`, `'xml_attr'`, `'xmlattr'`|XML фильтр для значений атрибутов.|
-|`'html'`|HTML - фильтр для теста тэгов или значений атрибутов.|
-|`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML фильтр для теста тэгов.|
+|`'html'`|HTML - фильтр для текста тэгов или значений атрибутов.|
+|`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML фильтр для текста тэгов.|
 |`'html-attr'`, `'html_attr'`, `'htmlattr'`|HTML фильтр для значений атрибутов.|
 |`'sql'`|Фильтр для значений SQL.|
 
@@ -1255,13 +1239,25 @@ FormatValueFilter makeStandardFormatValueFilter(StringType filterName, bool *pNo
 struct StdFilterFactory
 {
     template<typename StringType>
-    FormatValueFilter operator()(StringType filterName) const
+    FormatValueFilter operator()(StdFilterType filterType) const
+    {
+        return makeStandardFormatValueFilter(filterType);
+    }
+
+    template<typename StringType>
+    FormatValueFilter operator()(StdFilterType filterType, bool *pNoneReturned) const
+    {
+        return makeStandardFormatValueFilter(filterType, pNoneReturned);
+    }
+
+    template<typename StringType>
+    FormatValueFilter operator()(const StringType &filterName) const
     {
         return makeStandardFormatValueFilter(filterName);
     }
 
     template<typename StringType>
-    FormatValueFilter operator()(StringType filterName, bool *pNoneReturned) const
+    FormatValueFilter operator()(const StringType &filterName, bool *pNoneReturned) const
     {
         return makeStandardFormatValueFilter(filterName, pNoneReturned);
     }
@@ -1608,6 +1604,8 @@ format_spec       ::= format_spec_expr
 Надо разобраться, что делают режимы преобразования в оригинальной реализации форматирования в `Python`,
 и продумать, что они будут делать в данной библиотеке.
 
+**NOT_IMPLEMENTED** - в данный момент не реализовано, но обрабатывается в форматной строке.
+
 
 |Значение|Описание|
 |:-------|:-------|
@@ -1732,8 +1730,11 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 
 ### Поддерживаемые спецификаторы типа
 
-Символами `Py` обозначаются спецификаторы типа `Python`, `C++` - `C++`, соответственно, спецификаторы, которые 
+Строкой `Py` обозначаются спецификаторы типа из языка `Python`, строкой `C++` - спецификаторы типа из языка `C++`, соответственно, спецификаторы, которые 
 поддерживаются обоими языками, будут обозначены как `Py`/`C++`.
+
+Спецификаторы, не поддерживаемые ни языком `Python`, ни языком `C++`, обозначаются как `-`.
+
 
 #### Спецификаторы представления строк
 
@@ -1867,11 +1868,11 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 
 |Значение|Описание|
 |:-------|:-------|
-|`'xml'`|XML - фильтр для теста тэгов или значений атрибутов.|
-|`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML фильтр для теста тэгов.|
+|`'xml'`|XML - фильтр для текста тэгов или значений атрибутов.|
+|`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML фильтр для текста тэгов.|
 |`'xml-attr'`, `'xml_attr'`, `'xmlattr'`|XML фильтр для значений атрибутов.|
-|`'html'`|HTML - фильтр для теста тэгов или значений атрибутов.|
-|`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML фильтр для теста тэгов.|
+|`'html'`|HTML - фильтр для текста тэгов или значений атрибутов.|
+|`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML фильтр для текста тэгов.|
 |`'html-attr'`, `'html_attr'`, `'htmlattr'`|HTML фильтр для значений атрибутов.|
 |`'sql'`|Фильтр для значений SQL.|
 
@@ -1883,14 +1884,7 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 
 ### Экранирование строк
 
-См. https://en.cppreference.com/w/cpp/utility/format/spec,
-раздел "Formatting escaped characters and strings".
-
-
-#### 
-
-
-#### 
+**NOT_IMPLEMENTED** - в данный момент не реализовано, но обрабатывается в форматной строке.
 
 
 
@@ -1900,9 +1894,11 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 
 
 
-## Список задач
 
-Список задач по библиотеке - [TODO](todo.md_).
+
+
+
+
 
 
 

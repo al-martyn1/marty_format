@@ -41,60 +41,21 @@
 #!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#FormatValueFilter
 
 
-#//## Стандартные фильтры
+## Мейкер стандартных фильтров по типу StdFilterType - makeStandardFormatValueFilter
 
-#//Стандартные фильтры располагаются в пространстве имён `marty::format::filters`.
+Возвращает стандартный фильтр по его StdFilterType-идентификатору.
+
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilterId
 
 #!subsec ./_enums/$(Lang)/marty/format/StdFilterType.md_
 
-#// Стандартные фильтры:
 
-#// <val-list title="Тип|Описание">
-#// 
-#// - XmlTextFilter
-#// производит преобразование символов, которые недопустимы в тексте `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.
-#// 
-#// - XmlAttrFilter
-#// производит преобразование символов, которые недопустимы в атрибутах `XML`/`HTML` тэгов в стандартные сущности (`entity`) - `&apos`, `&quot`, `&lt`, `&gt`.
-#// 
-#// - SqlValueFilter
-#// производит преобразование символов, которые недопустимы в значениях в тексте `SQL`-запросов.
-#// 
-#// </val-list>
-
-
-## Мейкер стандартных фильтров - makeStandardFormatValueFilter
+## Мейкер стандартных фильтров по строке - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его имени.
 
-#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilter
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilterStr
 
-#// Допустимые имена фильтров:
-#// 
-#// <val-list value-style=backtick-quote>
-#// 
-#// - xml
-#// возвращает экземпляр фильтра для `XML`, как для текста, так и для атрибутов.
-#// 
-#// - xml_text
-#// возвращает экземпляр фильтра для текста `XML`.
-#// 
-#// - xml_attr
-#// возвращает экземпляр фильтра для атрибутов `XML`.
-#// 
-#// - html
-#// возвращает экземпляр фильтра для `HTML`, как для текста, так и для атрибутов.
-#// 
-#// - html_text
-#// возвращает экземпляр фильтра для текста `HTML`.
-#// 
-#// - html_attr
-#// возвращает экземпляр фильтра для атрибутов `HTML`.
-#// 
-#// - sql
-#// возвращает экземпляр фильтра для значений `SQL`-запросов.
-#// 
-#// </val-list>
 
 Допустимые фильтры:
 
