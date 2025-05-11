@@ -1,6 +1,4 @@
 
-Значения являются независимыми от регистра символов.
-
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - none
@@ -64,3 +62,6 @@ Force use passed locale.
 Use system locale instead of user.
 
 </val-list>
+
+Значения являются независимыми от регистра символов.
+

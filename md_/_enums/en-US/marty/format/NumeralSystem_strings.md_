@@ -1,6 +1,4 @@
 
-Values are case insensitive.
-
 <val-list title=":Value|:Description" value-style=backtick-quote>
 
 - none
@@ -22,3 +20,6 @@ Decimal numeral system.
 Hexadecimal numeral system.
 
 </val-list>
+
+Values are case insensitive.
+

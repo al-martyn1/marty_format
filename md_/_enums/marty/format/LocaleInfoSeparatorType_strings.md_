@@ -1,6 +1,4 @@
 
-Values are case insensitive.
-
 <val-list title=":Value|:Description" value-style=backtick-quote>
 
 - thousands
@@ -10,3 +8,6 @@ Thousands separator (for integer part of floating point values). Separately for 
 Separator for fractional part of floating point values.
 
 </val-list>
+
+Values are case insensitive.
+

@@ -1,6 +1,4 @@
 
-Values are case insensitive.
-
 <val-list title=":Value|:Description" value-style=backtick-quote>
 
 - none
@@ -13,3 +11,6 @@ Insert space instead of sign.
 Insert sign itself.
 
 </val-list>
+
+Values are case insensitive.
+

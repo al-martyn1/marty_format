@@ -1,6 +1,4 @@
 
-Values are case insensitive.
-
 <val-list title=":Value|:Description" value-style=backtick-quote>
 
 - none
@@ -52,3 +50,6 @@ Format string for negaive number values.
 Format string for positive number values.
 
 </val-list>
+
+Values are case insensitive.
+

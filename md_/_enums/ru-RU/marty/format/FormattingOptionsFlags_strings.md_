@@ -1,6 +1,4 @@
 
-Значения являются независимыми от регистра символов.
-
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - none
@@ -70,3 +68,6 @@ Mutually exclusive with signMinus & signPlus.
 `-`.
 
 </val-list>
+
+Значения являются независимыми от регистра символов.
+

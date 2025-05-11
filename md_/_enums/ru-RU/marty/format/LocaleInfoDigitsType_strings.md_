@@ -1,6 +1,4 @@
 
-Значения являются независимыми от регистра символов.
-
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - number
@@ -10,3 +8,6 @@ Number locale info.
 Currency locale info.
 
 </val-list>
+
+Значения являются независимыми от регистра символов.
+

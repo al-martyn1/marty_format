@@ -1,6 +1,4 @@
 
-Значения являются независимыми от регистра символов.
-
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - arg-id,arg_id,argid
@@ -19,3 +17,6 @@ Reference to precision value.
 Reference to filter value.
 
 </val-list>
+
+Значения являются независимыми от регистра символов.
+

@@ -1,6 +1,4 @@
 
-Values are case insensitive.
-
 <val-list title=":Value|:Description" value-style=backtick-quote>
 
 - none
@@ -64,3 +62,6 @@ Force use passed locale.
 Use system locale instead of user.
 
 </val-list>
+
+Values are case insensitive.
+

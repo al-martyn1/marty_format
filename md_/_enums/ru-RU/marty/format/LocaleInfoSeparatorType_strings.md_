@@ -1,6 +1,4 @@
 
-Значения являются независимыми от регистра символов.
-
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - thousands
@@ -10,3 +8,6 @@ Thousands separator (for integer part of floating point values). Separately for 
 Separator for fractional part of floating point values.
 
 </val-list>
+
+Значения являются независимыми от регистра символов.
+

@@ -1,6 +1,4 @@
 
-Значения являются независимыми от регистра символов.
-
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - none
@@ -13,3 +11,6 @@ Insert space instead of sign.
 Insert sign itself.
 
 </val-list>
+
+Значения являются независимыми от регистра символов.
+

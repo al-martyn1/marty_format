@@ -1,6 +1,4 @@
 
-Values are case insensitive.
-
 <val-list title=":Value|:Description" value-style=backtick-quote>
 
 - xml
@@ -25,3 +23,6 @@ HTML attribute filter.
 SQL value filter.
 
 </val-list>
+
+Values are case insensitive.
+
