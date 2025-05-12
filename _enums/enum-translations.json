@@ -104,12 +104,12 @@
     },
     "_generated-enums_/marty/format/stdfiltertype": {
       "___description___": "Standard filters enumeration",
-      "html": "Any HTML - tag text or attribute text filter.",
+      "html": "HTML tag text or attribute text filter.",
       "htmlattr": "HTML attribute filter.",
       "htmltag": "HTML tag text filter.",
       "none": "No filtration at all.",
       "sql": "SQL value filter.",
-      "xml": "Any XML - tag text or attribute text filter.",
+      "xml": "XML tag text or attribute text filter.",
       "xmlattr": "XML attribute filter.",
       "xmltag": "XML tag text filter."
     }
@@ -219,12 +219,12 @@
     },
     "_generated-enums_/marty/format/stdfiltertype": {
       "___description___": "Перечисление для стандартных фильтров",
-      "html": "HTML - фильтр для текста тэгов или значений атрибутов.",
+      "html": "HTML фильтр для текста тэгов или значений атрибутов.",
       "htmlattr": "HTML фильтр для значений атрибутов.",
       "htmltag": "HTML фильтр для текста тэгов.",
       "none": "Фильтрация не производится.",
       "sql": "Фильтр для значений SQL.",
-      "xml": "XML - фильтр для текста тэгов или значений атрибутов.",
+      "xml": "XML фильтр для текста тэгов или значений атрибутов.",
       "xmlattr": "XML фильтр для значений атрибутов.",
       "xmltag": "XML фильтр для текста тэгов."
     }

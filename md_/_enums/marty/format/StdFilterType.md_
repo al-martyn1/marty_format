@@ -16,7 +16,7 @@ No filtration at all.
 
 - xml
 0x01
-Any XML - tag text or attribute text filter.
+XML tag text or attribute text filter.
 
 - xmlTag,xmlText
 0x02
@@ -28,7 +28,7 @@ XML attribute filter.
 
 - html
 0x04
-Any HTML - tag text or attribute text filter.
+HTML tag text or attribute text filter.
 
 - htmlTag,htmlText
 0x05

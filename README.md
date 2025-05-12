@@ -1202,10 +1202,10 @@ FormatValueFilter makeStandardFormatValueFilter( StdFilterType filterType
 |:-------|:-------|:-------|
 |**unknown**, **invalid**|(std::uint32_t)(-1)|Недопустимое/неизвестное значение.|
 |**none**|0x00|Фильтрация не производится.|
-|**xml**|0x01|XML - фильтр для текста тэгов или значений атрибутов.|
+|**xml**|0x01|XML фильтр для текста тэгов или значений атрибутов.|
 |**xmlTag**, **xmlText**|0x02|XML фильтр для текста тэгов.|
 |**xmlAttr**|0x03|XML фильтр для значений атрибутов.|
-|**html**|0x04|HTML - фильтр для текста тэгов или значений атрибутов.|
+|**html**|0x04|HTML фильтр для текста тэгов или значений атрибутов.|
 |**htmlTag**, **htmlText**|0x05|HTML фильтр для текста тэгов.|
 |**htmlAttr**|0x06|HTML фильтр для значений атрибутов.|
 |**sql**|0x07|Фильтр для значений SQL.|
@@ -1238,10 +1238,10 @@ FormatValueFilter makeStandardFormatValueFilter( const StringType &filterName
 
 |Значение|Описание|
 |:-------|:-------|
-|`'xml'`|XML - фильтр для текста тэгов или значений атрибутов.|
+|`'xml'`|XML фильтр для текста тэгов или значений атрибутов.|
 |`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML фильтр для текста тэгов.|
 |`'xml-attr'`, `'xml_attr'`, `'xmlattr'`|XML фильтр для значений атрибутов.|
-|`'html'`|HTML - фильтр для текста тэгов или значений атрибутов.|
+|`'html'`|HTML фильтр для текста тэгов или значений атрибутов.|
 |`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML фильтр для текста тэгов.|
 |`'html-attr'`, `'html_attr'`, `'htmlattr'`|HTML фильтр для значений атрибутов.|
 |`'sql'`|Фильтр для значений SQL.|
@@ -1900,10 +1900,10 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 
 |Значение|Описание|
 |:-------|:-------|
-|`'xml'`|XML - фильтр для текста тэгов или значений атрибутов.|
+|`'xml'`|XML фильтр для текста тэгов или значений атрибутов.|
 |`'xml-tag'`, `'xml-text'`, `'xml_tag'`, `'xml_text'`, `'xmltag'`, `'xmltext'`|XML фильтр для текста тэгов.|
 |`'xml-attr'`, `'xml_attr'`, `'xmlattr'`|XML фильтр для значений атрибутов.|
-|`'html'`|HTML - фильтр для текста тэгов или значений атрибутов.|
+|`'html'`|HTML фильтр для текста тэгов или значений атрибутов.|
 |`'html-tag'`, `'html-text'`, `'html_tag'`, `'html_text'`, `'htmltag'`, `'htmltext'`|HTML фильтр для текста тэгов.|
 |`'html-attr'`, `'html_attr'`, `'htmlattr'`|HTML фильтр для значений атрибутов.|
 |`'sql'`|Фильтр для значений SQL.|

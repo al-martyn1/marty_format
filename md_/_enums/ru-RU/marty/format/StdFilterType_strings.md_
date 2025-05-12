@@ -2,7 +2,7 @@
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
 - xml
-XML - фильтр для текста тэгов или значений атрибутов.
+XML фильтр для текста тэгов или значений атрибутов.
 
 - xml-tag,xml-text,xml_tag,xml_text,xmltag,xmltext
 XML фильтр для текста тэгов.
@@ -11,7 +11,7 @@ XML фильтр для текста тэгов.
 XML фильтр для значений атрибутов.
 
 - html
-HTML - фильтр для текста тэгов или значений атрибутов.
+HTML фильтр для текста тэгов или значений атрибутов.
 
 - html-tag,html-text,html_tag,html_text,htmltag,htmltext
 HTML фильтр для текста тэгов.
