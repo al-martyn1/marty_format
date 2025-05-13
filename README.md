@@ -178,7 +178,7 @@
 
 ## Зависимости
 
-- [marty_cpp](https://github.com/al-martyn1/marty_cpp) - от этого никуда не деться, базовые зависимости, enum как флаги и база для де/сериализации в строки.
+- [marty_cpp](https://github.com/al-martyn1/marty_cpp) - от этого никуда не деться, базовые зависимости, enum как флаги и база для (де)сериализации в строки.
 - [marty_decimal](https://github.com/al-martyn1/marty_decimal) - поддержка чисел с плавающей точкой и произвольной размерностью. Потенциально отключаемо.
 - [marty_utf](https://github.com/al-martyn1/marty_utf) - поддержка UTF-8. Потенциально отключаемо.
 
