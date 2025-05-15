@@ -15,10 +15,10 @@ Center   aligned: |***String larger****|
 Alignment names indirect taken
 Width: 20, precision: 13, explicit fill chars
 str: |String larger than 20|
-Default  aligned: |String larger|
-Left     aligned: |String larger       |
-Right    aligned: |String larger       |
-Center   aligned: |String larger       |
+Default  aligned: |String larger*******|
+Left     aligned: |String larger*******|
+Right    aligned: |*******String larger|
+Center   aligned: |***String larger****|
 //---
 Width: 18, precision: 9, default fill char
 str: |String larger than 20|
@@ -62,7 +62,7 @@ Int as bool string, (using spec-T): TRUE, FALSE, as native: -42, 0
 
 
 //#! FormattingPointers
-Argv Pointer: 000001D9EF03EA30
+Argv Pointer: 000002428B5AEA30
 Short as ptr: FB2E
 //#!
 

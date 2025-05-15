@@ -381,10 +381,10 @@ cout << formatMessage( //---
                        "Alignment names indirect taken\n"
                        "Width: 20, precision: 13, explicit fill chars\n"
                        "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:$20.13}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:$<20.13}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:$>20.13}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:$^20.13}|\n"
+                       "{adname:{anamew}} aligned: |{strL20:*20.13}|\n"
+                       "{alname:{anamew}} aligned: |{strL20:*<20.13}|\n"
+                       "{arname:{anamew}} aligned: |{strL20:*>20.13}|\n"
+                       "{acname:{anamew}} aligned: |{strL20:*^20.13}|\n"
                        "//---\n"
                        "Width: 18, precision: 9, default fill char\n"
                        "str: |{strL20}|\n"
@@ -429,10 +429,10 @@ Center   aligned: |***String larger****|
 Alignment names indirect taken
 Width: 20, precision: 13, explicit fill chars
 str: |String larger than 20|
-Default  aligned: |String larger|
-Left     aligned: |String larger       |
-Right    aligned: |String larger       |
-Center   aligned: |String larger       |
+Default  aligned: |String larger*******|
+Left     aligned: |String larger*******|
+Right    aligned: |*******String larger|
+Center   aligned: |***String larger****|
 //---
 Width: 18, precision: 9, default fill char
 str: |String larger than 20|
@@ -527,7 +527,7 @@ cout << formatMessage( "Argv Pointer: {argv:P}\n"
 **Вывод:**
 
 ```
-Argv Pointer: 000001D9EF03EA30
+Argv Pointer: 000002428B5AEA30
 Short as ptr: FB2E
 ```
 
