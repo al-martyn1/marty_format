@@ -409,7 +409,7 @@ unsigned charRangeToUnsigned(const char *b, const char *e)
     if (b==e)
         throw std::invalid_argument("charRangeToUnsigned: can't convert empty string");
 
-    for(; b!=e; ++e)
+    for(; b!=e; ++b)
     {
         auto d = toDigit(*b);
         if (d<0)
