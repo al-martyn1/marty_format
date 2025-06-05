@@ -11,6 +11,7 @@
 #include "marty_utf/utf.h"
 //namespace marty_utf {
 
+#include <array>
 #include <algorithm>
 #include <cstring>
 #include <functional>
@@ -1300,6 +1301,224 @@ char splitFloatNumberString(std::string numStr, std::string &partInteger, std::s
 }
 
 //----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+inline
+constexpr
+std::array<const char*, 13> getRomanDigitsLatin(bool bUpper)
+{
+    return bUpper
+         ? std::array<const char*, 13>{ "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"}
+         : std::array<const char*, 13>{ "i", "iv", "v", "ix", "x", "xl", "l", "xc", "c", "cd", "d", "cm", "m"}
+         ;
+}
+
+//----------------------------------------------------------------------------
+inline
+constexpr
+std::array<const char*, 16> getRomanDigitsUnicode(bool bUpper)
+{
+    return bUpper
+         ? std::array<const char*, 16>{ "\xE2\x85\xA0" // U+2160	Ⅰ	Римская цифра I	    1	Заглавный
+                                      , "\xE2\x85\xA1" // U+2161	Ⅱ	Римская цифра II	2	Заглавный
+                                      , "\xE2\x85\xA2" // U+2162	Ⅲ	Римская цифра III	3	Заглавный
+                                      , "\xE2\x85\xA3" // U+2163	Ⅳ	Римская цифра IV	4	Заглавный
+                                      , "\xE2\x85\xA4" // U+2164	Ⅴ	Римская цифра V 	5	Заглавный
+                                      , "\xE2\x85\xA5" // U+2165	Ⅵ	Римская цифра VI	6	Заглавный
+                                      , "\xE2\x85\xA6" // U+2166	Ⅶ	Римская цифра VII	7	Заглавный
+                                      , "\xE2\x85\xA7" // U+2167	Ⅷ	Римская цифра VIII	8	Заглавный
+                                      , "\xE2\x85\xA8" // U+2168	Ⅸ	Римская цифра IX	9	Заглавный
+                                      , "\xE2\x85\xA9" // U+2169	Ⅹ	Римская цифра X 	10	Заглавный
+                                      , "\xE2\x85\xAA" // U+216A	Ⅺ	Римская цифра XI	11	Заглавный
+                                      , "\xE2\x85\xAB" // U+216B	Ⅻ	Римская цифра XII	12	Заглавный
+                                      , "\xE2\x85\xAC" // U+216C	Ⅼ	Римская цифра L	    50	Заглавный
+                                      , "\xE2\x85\xAD" // U+216D	Ⅽ	Римская цифра C	    100	Заглавный
+                                      , "\xE2\x85\xAE" // U+216E	Ⅾ	Римская цифра D	    500	Заглавный
+                                      , "\xE2\x85\xAF" // U+216F	Ⅿ	Римская цифра M	    1000 Заглавный
+                                      }
+         : std::array<const char*, 16>{ "\xE2\x85\xB0" // U+2170	ⅰ	Римская цифра i 	1	Строчный
+                                      , "\xE2\x85\xB1" // U+2171	ⅱ	Римская цифра ii	2	Строчный
+                                      , "\xE2\x85\xB2" // U+2172	ⅲ	Римская цифра iii	3	Строчный
+                                      , "\xE2\x85\xB3" // U+2173	ⅳ	Римская цифра iv	4	Строчный
+                                      , "\xE2\x85\xB4" // U+2174	ⅴ	Римская цифра v	    5	Строчный
+                                      , "\xE2\x85\xB5" // U+2175	ⅵ	Римская цифра vi	6	Строчный
+                                      , "\xE2\x85\xB6" // U+2176	ⅶ	Римская цифра vii	7	Строчный
+                                      , "\xE2\x85\xB7" // U+2177	ⅷ	Римская цифра viii	8	Строчный
+                                      , "\xE2\x85\xB8" // U+2178	ⅸ	Римская цифра ix	9	Строчный
+                                      , "\xE2\x85\xB9" // U+2179	ⅹ	Римская цифра x 	10	Строчный
+                                      , "\xE2\x85\xBA" // U+217A	ⅺ	Римская цифра xi	11	Строчный
+                                      , "\xE2\x85\xBB" // U+217B	ⅻ	Римская цифра xii	12	Строчный
+                                      , "\xE2\x85\xBC" // U+217C	ⅼ	Римская цифра l	    50	Строчный
+                                      , "\xE2\x85\xBD" // U+217D	ⅽ	Римская цифра c	    100	Строчный
+                                      , "\xE2\x85\xBE" // U+217E	ⅾ	Римская цифра d	    500	Строчный
+                                      , "\xE2\x85\xBF" // U+217F	ⅿ	Римская цифра m	    1000	Строчный
+                                      }
+         ;
+}
+
+//----------------------------------------------------------------------------
+
+// Вытащил из старых сорцов форматирование чисел в римской нотации
+// Вроде раньше работало, особо не разбирался, только чутка адаптировал
+// Есть ещё другая моя же старая реализация
+// Надо будет потом потестить и её
+
+#define MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS1(d)  (d)
+#define MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS5(d)  (d-1)
+#define MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS10(d)  (d-2)
+
+//----------------------------------------------------------------------------
+namespace details {
+
+//----------------------------------------------------------------------------
+inline
+std::string digit2romanLatin(unsigned digit, unsigned power, const char* const roman_digits)
+{
+    ::std::string res;
+    
+    if (power<=0)
+        return res;
+    
+    if (digit)
+    {     
+        res += digit2romanLatin(digit/10, power-2, roman_digits);
+        digit %= 10;
+    } 
+   
+    if (!digit) return res;
+   
+    if (digit>=1 && digit<=3)
+    {
+        for (unsigned i=0; i<digit; i++)
+             res += roman_digits[MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS1(power)];
+        return res;
+    }
+   
+    if (digit==4)
+        res += roman_digits[MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS1(power)];
+   
+    if (digit<6)
+    {
+        res += roman_digits[MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS5(power)];
+        return res;
+    }
+   
+    if (digit>5 && digit<=8)
+    {
+        res += roman_digits[MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS5(power)];
+        for (unsigned i=0; i<digit-5; i++)
+             res += roman_digits[MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS1(power)];
+        return res;
+    }
+   
+    if (digit==9)
+        res += roman_digits[MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS1(power)];
+
+    res += roman_digits[MARTY_FORMAT_DIGIT2ROMANLATIN_AUX_ROMANOFFS10(power)];
+
+    return res;
+}
+
+inline
+void formatRomanIntegerLatinImpl(std::string &strFormatTo, std::uint64_t i, const char *roman_digits)
+{
+    std::uint64_t thousends = i/1000;
+    i %= 1000;
+    for (std::uint64_t j=0; j<thousends; j++)
+        strFormatTo.append(1,roman_digits[0]);
+    strFormatTo.append(digit2romanLatin(unsigned(i), 6, roman_digits));
+}
+
+} // namespace details
+//----------------------------------------------------------------------------
+inline
+void formatRomanIntegerLatin(std::string &strFormatTo, std::uint64_t i, bool upperCase=true)
+{
+    if (i==0)
+    {
+        strFormatTo = upperCase ? "NULLA" /* "Nulla" */  : "nulla";
+        return;
+    }
+
+    details::formatRomanIntegerLatinImpl(strFormatTo, i, upperCase ? "MDCLXVI" : "mdclxvi");
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string formatRomanIntegerLatin(std::uint64_t i, bool upperCase=true)
+{
+    std::string resStr;
+    formatRomanIntegerLatin(resStr, i, upperCase);
+    return resStr;
+}
+
+//----------------------------------------------------------------------------
+
+
+
+    // ::std::wstring formatRomanNumber(UINT64 arab, const wchar_t  **romanar)
+    //    {
+    //     const UINT64    arabar[]       = {  1,   4,    5,   9,    10,  40,  50,   90,  100, 400,  500, 900,  1000};
+    //     //const wchar_t  *romanarUpper[] = { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"};
+    //  
+    //     const SIZE_T m            = sizeof(arabar)/sizeof(arabar[0])-1, arabmax = (SIZE_T)arabar[m];
+    //     const wchar_t romanmax = romanar[m][0];
+    //     
+    //     if (!arab)
+    //        {
+    //         return ::std::wstring(L"-");
+    //        }
+    //  
+    //     ::std::wstring roman;
+    //     int  /* i = 0, */  n = 0;
+    //     while(arab>arabmax)
+    //        {
+    //         //roman[i++] = romanmax;
+    //         roman.append(1, romanmax);
+    //         arab -= arabmax;
+    //        }
+    //     n=m;
+    //     while(arab > 0)
+    //        {
+    //         if (arab >= arabar[n])
+    //            {
+    //             //roman[i++] = romanar[n][0];
+    //             roman.append(1, romanar[n][0]);
+    //             if (n&1)
+    //                {
+    //                 //roman[i++] = romanar[n][1];
+    //                 roman.append(1, romanar[n][1]);
+    //                }
+    //             arab -= arabar[n];
+    //            }
+    //         else
+    //            {
+    //             n--;
+    //            }
+    //        }
+    //     //roman[i]=0;
+    //     return roman;
+    //    }
+
+
+
+
+
+
+
+
+        // if (!bSmall)
+        //    {
+        //     const wchar_t  *romanarUpper[] = { L"I", L"IV", L"V", L"IX", L"X", L"XL", L"L", L"XC", L"C", L"CD", L"D", L"CM", L"M"};
+        //     romanString = formatRomanNumber( val, romanarUpper );
+        //    }
+        // else
+        //    {
+        //     const wchar_t  *romanarLower[] = { L"i", L"iv", L"v", L"ix", L"x", L"xl", L"l", L"xc", L"c", L"cd", L"d", L"cm", L"m"};
+        //     romanString = formatRomanNumber( val, romanarLower );
+        //    }
 
 
 
