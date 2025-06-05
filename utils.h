@@ -19,6 +19,7 @@
 #include <string>
 #include <type_traits>
 #include <variant>
+#include <utility>
 // #include <system_error>
 
 // GCC ниже 11ой версии не поддерживает std::to_chars
@@ -1305,6 +1306,7 @@ char splitFloatNumberString(std::string numStr, std::string &partInteger, std::s
 
 
 //----------------------------------------------------------------------------
+#if 0
 inline
 constexpr
 std::array<const char*, 13> getRomanDigitsLatin(bool bUpper)
@@ -1357,7 +1359,7 @@ std::array<const char*, 16> getRomanDigitsUnicode(bool bUpper)
                                       }
          ;
 }
-
+#endif
 //----------------------------------------------------------------------------
 
 // Вытащил из старых сорцов форматирование чисел в римской нотации
@@ -1422,19 +1424,20 @@ std::string digit2romanLatin(unsigned digit, unsigned power, const char* const r
 }
 
 inline
-void formatRomanIntegerLatinImpl(std::string &strFormatTo, std::uint64_t i, const char *roman_digits)
+void formatRomanIntegerLatinImpl(std::string &strFormatTo, unsigned i, const char *roman_digits)
 {
-    std::uint64_t thousends = i/1000;
-    i %= 1000;
-    for (std::uint64_t j=0; j<thousends; j++)
+    unsigned thousends = i/1000ull;
+    i %= 1000u;
+    for (unsigned j=0; j<thousends; j++)
         strFormatTo.append(1,roman_digits[0]);
     strFormatTo.append(digit2romanLatin(unsigned(i), 6, roman_digits));
 }
 
 } // namespace details
+
 //----------------------------------------------------------------------------
 inline
-void formatRomanIntegerLatin(std::string &strFormatTo, std::uint64_t i, bool upperCase=true)
+void formatRomanIntegerLatin(std::string &strFormatTo, unsigned i, bool upperCase=true)
 {
     if (i==0)
     {
@@ -1447,7 +1450,7 @@ void formatRomanIntegerLatin(std::string &strFormatTo, std::uint64_t i, bool upp
 
 //----------------------------------------------------------------------------
 inline
-std::string formatRomanIntegerLatin(std::uint64_t i, bool upperCase=true)
+std::string formatRomanIntegerLatin(unsigned i, bool upperCase=true)
 {
     std::string resStr;
     formatRomanIntegerLatin(resStr, i, upperCase);
@@ -1456,6 +1459,160 @@ std::string formatRomanIntegerLatin(std::uint64_t i, bool upperCase=true)
 
 //----------------------------------------------------------------------------
 
+
+
+//----------------------------------------------------------------------------
+namespace details {
+
+//----------------------------------------------------------------------------
+std::array< std::pair<unsigned, const char*>, 18>
+makeRomanDigitsUnicodeArrayUpper()
+{
+    return std::array< std::pair<unsigned, const char*>, 18>
+    {
+    { {1000u, "\xE2\x85\xAF"}                // Ⅿ M
+    , {900u,  "\xE2\x85\xAD\xE2\x85\xAF"}    // ⅭⅯ CM
+    , {500u,  "\xE2\x85\xAE"}                // Ⅾ D
+    , {400u,  "\xE2\x85\xAD\xE2\x85\xAE"}    // ⅭⅮ CD
+    , {100u,  "\xE2\x85\xAD"}                // Ⅽ C
+    , {90u,   "\xE2\x85\xA9\xE2\x85\xAD"}    // ⅩⅭ XC
+    , {50u,   "\xE2\x85\xAC"}                // Ⅼ L 
+    , {40u,   "\xE2\x85\xA9\xE2\x85\xAC"}    // ⅩⅬ XL
+    , {10u,   "\xE2\x85\xA9"}                // Ⅹ X
+    , {9u,    "\xE2\x85\xA8"}                // Ⅸ IX
+    , {8u,    "\xE2\x85\xA7"}                // Ⅷ VIII
+    , {7u,    "\xE2\x85\xA6"}                // Ⅶ VII
+    , {6u,    "\xE2\x85\xA5"}                // Ⅵ VI
+    , {5u,    "\xE2\x85\xA4"}                // Ⅴ V
+    , {4u,    "\xE2\x85\xA3"}                // Ⅳ IV
+    , {3u,    "\xE2\x85\xA2"}                // Ⅲ III
+    , {2u,    "\xE2\x85\xA1"}                // Ⅱ II
+    , {1u,    "\xE2\x85\xA0"}                // Ⅰ I
+    }
+    };
+}
+
+//----------------------------------------------------------------------------
+std::array< std::pair<unsigned, const char*>, 18>
+makeRomanDigitsUnicodeArrayLower()
+{
+    return std::array< std::pair<unsigned, const char*>, 18>
+    {
+    { {1000u, "\xE2\x85\xBF"}                // Ⅿ M
+    , {900u,  "\xE2\x85\xBD\xE2\x85\xBF"}    // ⅭⅯ CM
+    , {500u,  "\xE2\x85\xBE"}                // Ⅾ D
+    , {400u,  "\xE2\x85\xBD\xE2\x85\xBE"}    // ⅭⅮ CD
+    , {100u,  "\xE2\x85\xBD"}                // Ⅽ C
+    , {90u,   "\xE2\x85\xB9\xE2\x85\xBD"}    // ⅩⅭ XC
+    , {50u,   "\xE2\x85\xBC"}                // Ⅼ L 
+    , {40u,   "\xE2\x85\xB9\xE2\x85\xBC"}    // ⅩⅬ XL
+    , {10u,   "\xE2\x85\xB9"}                // Ⅹ X
+    , {9u,    "\xE2\x85\xB8"}                // Ⅸ IX
+    , {8u,    "\xE2\x85\xB7"}                // Ⅷ VIII
+    , {7u,    "\xE2\x85\xB6"}                // Ⅶ VII
+    , {6u,    "\xE2\x85\xB5"}                // Ⅵ VI
+    , {5u,    "\xE2\x85\xB4"}                // Ⅴ V
+    , {4u,    "\xE2\x85\xB3"}                // Ⅳ IV
+    , {3u,    "\xE2\x85\xB2"}                // Ⅲ III
+    , {2u,    "\xE2\x85\xB1"}                // Ⅱ II
+    , {1u,    "\xE2\x85\xB0"}                // Ⅰ I
+    }
+    };
+}
+
+//----------------------------------------------------------------------------
+const std::array< std::pair<unsigned, const char*>, 18>&
+getRomanDigitsUnicodeArrayUpper()
+{
+    static auto a = makeRomanDigitsUnicodeArrayUpper();
+    return a;
+}
+
+//----------------------------------------------------------------------------
+const std::array< std::pair<unsigned, const char*>, 18>&
+getRomanDigitsUnicodeArrayLower()
+{
+    static auto a = makeRomanDigitsUnicodeArrayLower();
+    return a;
+}
+
+//----------------------------------------------------------------------------
+const std::array< std::pair<unsigned, const char*>, 18>&
+getRomanDigitsUnicodeArray(bool upperCase=true)
+{
+    return upperCase ? getRomanDigitsUnicodeArrayUpper() : getRomanDigitsUnicodeArrayLower();
+}
+
+//----------------------------------------------------------------------------
+inline
+void formatRomanIntegerUnicodeImpl(std::string &strFormatTo, unsigned i, bool upperCase=true)
+{
+    const auto &romanNumerals = getRomanDigitsUnicodeArray(upperCase);
+
+    unsigned thousends = i/1000u;
+    i %= 1000u;
+    for (unsigned j=0; j<thousends; j++)
+        strFormatTo.append(romanNumerals[0].second);
+
+    for (const auto& p : romanNumerals)
+    {
+        while (i >= p.first)
+        {
+            strFormatTo.append(p.second);
+            i -= p.first;
+        }
+    }
+    
+}
+
+//----------------------------------------------------------------------------
+
+} // namespace details
+
+//----------------------------------------------------------------------------
+inline
+void formatRomanIntegerUnicode(std::string &strFormatTo, unsigned i, bool upperCase=true)
+{
+    if (i==0)
+    {
+        strFormatTo = upperCase ? "NULLA" /* "Nulla" */  : "nulla";
+        return;
+    }
+
+    details::formatRomanIntegerUnicodeImpl(strFormatTo, i, upperCase);
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string formatRomanIntegerUnicode(unsigned i, bool upperCase=true)
+{
+    std::string resStr;
+    formatRomanIntegerUnicode(resStr, i, upperCase);
+    return resStr;
+}
+
+//----------------------------------------------------------------------------
+
+
+
+//----------------------------------------------------------------------------
+inline
+void formatRomanInteger(std::string &strFormatTo, unsigned i, bool upperCase=true, bool bUnicode=false)
+{
+    if (bUnicode)
+        formatRomanIntegerUnicode(strFormatTo, i, upperCase);
+    else
+        formatRomanIntegerLatin(strFormatTo, i, upperCase);
+}
+
+//----------------------------------------------------------------------------
+inline
+std::string formatRomanInteger(unsigned i, bool upperCase=true, bool bUnicode=false)
+{
+    return bUnicode ? formatRomanIntegerUnicode(i, upperCase) : formatRomanIntegerLatin(i, upperCase);
+}
+
+//----------------------------------------------------------------------------
 
 
     // ::std::wstring formatRomanNumber(UINT64 arab, const wchar_t  **romanar)
