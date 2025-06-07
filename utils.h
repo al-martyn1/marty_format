@@ -568,6 +568,8 @@ bool isFormatTypeChar(utf32_char_t ch)
         || ch==utf32_char_t('Y')
         || ch==utf32_char_t('p')
         || ch==utf32_char_t('P')
+        || ch==utf32_char_t('r')
+        || ch==utf32_char_t('R')
         || ch==utf32_char_t('%')
         || ch==utf32_char_t('$')
     ;

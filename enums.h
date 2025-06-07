@@ -530,6 +530,7 @@ enum class FormattingFlags : std::uint32_t
     unknown                         = (std::uint32_t)(-1) /*!< ! */,
     invalid                         = (std::uint32_t)(-1) /*!< ! */,
     none                            = 0x00 /*!<  */,
+    romanLatin                      = 0x00 /*!<  */,
     ignoreFormatStringErrors        = 0x01 /*!< Ignore errors in format string */,
     ignoreArgumentErrors            = 0x02 /*!< Ignore errors while searching for arguments */,
     ignoreFormattingErrors          = 0x04 /*!< Ignore errors while formatting values */,
@@ -542,13 +543,14 @@ enum class FormattingFlags : std::uint32_t
     considerZeroWidthSpaces         = 0x200 /*!< Consider zero-width spaces */,
     considerCombiningChars          = 0x400 /*!< Consider combining Unicode chars */,
     fractionalGroupping             = 0x800 /*!< Group fractional part (floating point numbers) same as integer part */,
+    romanUnicode                    = 0x1000 /*!< Use Unicode special symbols for roman numbers instead of regular latin letters */,
     ignoreOptionsIndirectErrors     = ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors /*!< Ignore errors in indirect options */,
     ignoreErrors                    = ignoreFormatStringErrors | ignoreArgumentErrors | ignoreFormattingErrors | ignoreOptionsIndirectErrors | ignoreConversionErrors | ignoreNotFilterErrors | ignoreTypeMismatchErrors /*!< Ignore all errors */,
     considerUnicodeFeatures         = considerZeroWidthSpaces  | considerCombiningChars /*!< Consider options */,
     allBase                         = ignoreErrors | considerUnicodeFeatures /*!< All, but no fractional groupping */,
     all                             = allBase | fractionalGroupping /*!< All */,
-    localeForceCustom               = 0x1000 /*!< Force use passed locale */,
-    localeUseSystem                 = 0x2000 /*!< Use system locale instead of user */
+    localeForceCustom               = 0x2000 /*!< Force use passed locale */,
+    localeUseSystem                 = 0x4000 /*!< Use system locale instead of user */
 
 }; // enum 
 //#!
@@ -572,6 +574,7 @@ MARTY_CPP_ENUM_FLAGS_SERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerZeroWidthSpaces         , "ConsiderZeroWidthSpaces"       );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerCombiningChars          , "ConsiderCombiningChars"        );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "FractionalGroupping"           );
+    MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::romanUnicode                    , "RomanUnicode"                  );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "IgnoreOptionsIndirectErrors"   );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::ignoreErrors                    , "IgnoreErrors"                  );
     MARTY_CPP_ENUM_FLAGS_SERIALIZE_ITEM( FormattingFlags::considerUnicodeFeatures         , "ConsiderUnicodeFeatures"       );
@@ -585,7 +588,10 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFillIndirectErrors        , "ignore-fill-indirect-errors"      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFillIndirectErrors        , "ignore_fill_indirect_errors"      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFillIndirectErrors        , "ignorefillindirecterrors"         );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::none                            , "roman_latin"                      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::none                            , "none"                             );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::none                            , "roman-latin"                      );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::none                            , "romanlatin"                       );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignore-format-string-errors"      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignore_format_string_errors"      );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreFormatStringErrors        , "ignoreformatstringerrors"         );
@@ -625,6 +631,9 @@ MARTY_CPP_ENUM_FLAGS_DESERIALIZE_BEGIN( FormattingFlags, std::map, 1 )
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "fractional-groupping"             );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "fractional_groupping"             );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::fractionalGroupping             , "fractionalgroupping"              );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::romanUnicode                    , "roman-unicode"                    );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::romanUnicode                    , "roman_unicode"                    );
+    MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::romanUnicode                    , "romanunicode"                     );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "ignore-options-indirect-errors"   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "ignore_options_indirect_errors"   );
     MARTY_CPP_ENUM_FLAGS_DESERIALIZE_ITEM( FormattingFlags::ignoreOptionsIndirectErrors     , "ignoreoptionsindirecterrors"      );

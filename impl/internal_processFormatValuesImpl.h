@@ -1,74 +1,11 @@
 #pragma once
 
-//----------------------------------------------------------------------------
-template<typename StringType> inline
-StringType martyFormatSimpleConvertToString(const char *str)
-{
-    return str ? StringType(str) : StringType();
-}
-
-//----------------------------------------------------------------------------
-template<typename StringType> inline
-StringType martyFormatSimpleConvertToString(const std::string &str)
-{
-    return martyFormatSimpleConvertToString<StringType>(str.c_str());
-}
-
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormatString(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, const std::string &str);
-
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType, typename IntType >
-StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, const LocaleInfo *pLocaleInfo, IntType v, size_t valSize);
-
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType, typename FloatType >
-StringType martyFormatValueFormatFloat(FormattingOptions formattingOptions, const LocaleInfo *pLocaleInfo, FloatType v);
-
-//----------------------------------------------------------------------------
-
-
-
-//----------------------------------------------------------------------------
-// Данный шаблон объявлен в utils.h, чтобы компилятор видел хоть какую-то реализацию функции
-// martyFormatSimpleConvertToString
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(bool b)                  { return StringType(b ? "true" : "false" ); }
+#include "simple_convert_prototypes.h"
 //
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(char ch)                 { return StringType(1, ch); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned char      i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed char        i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned short     i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(signed short       i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned int       i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(int                i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((int     )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long      i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(long               i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((long         )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(unsigned long long i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(long long          i)    { return martyFormatSimpleConvertToString<StringType>(std::to_string((long long         )(i)).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(float f)                 { return martyFormatSimpleConvertToString<StringType>(std::to_string(f).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(double d)                { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(long double d)           { return martyFormatSimpleConvertToString<StringType>(std::to_string(d).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(const std::wstring &str) { return martyFormatSimpleConvertToString<StringType>(marty::utf::string_from_wstring(str).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(const wchar_t *str)      { return martyFormatSimpleConvertToString<StringType>(marty::utf::string_from_wstring(str?std::wstring(str):std::wstring()).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(const marty::Decimal &d) { return martyFormatSimpleConvertToString<StringType>(to_string(d).c_str()); }
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(const void* ptr)         { return martyFormatSimpleConvertToString<StringType>(std::to_string((unsigned long long)ptr).c_str()); }
+#include "value_format_prototypes.h"
+//
+#include "simple_convert_impl.h"
 
-
-template<typename StringType> inline StringType martyFormatSimpleConvertToString(FormatValueFilter f)
-{ 
-    return martyFormatSimpleConvertToString<StringType>("filter: ") + martyFormatSimpleConvertToString<StringType>(typeid(f).name());
-}
-
-//----------------------------------------------------------------------------
-
-
-
-//----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType >
-StringType martyFormatValueFormat(const FormattingOptions &formattingOptions, const LocaleInfo *pLocaleInfo, bool b);
-
-//----------------------------------------------------------------------------
 
 
 //----------------------------------------------------------------------------
@@ -89,7 +26,19 @@ StringType martyFormatValueFormatPointer(FormattingOptions formattingOptions, co
 }
 
 //----------------------------------------------------------------------------
-template< typename WidthCalculator, typename StringType=std::string >
+#if defined(USE_MARTY_BIGINT) && USE_MARTY_BIGINT!=0
+template< typename WidthCalculator, typename StringType >
+StringType martyFormatValueFormat(FormattingOptions formattingOptions, const LocaleInfo *pUserLocaleInfo, const marty::BigInt &b)
+{
+    MARTY_ARG_USED(formattingOptions);
+    MARTY_ARG_USED(pUserLocaleInfo);
+    return to_string(b);
+}
+#endif  /* USE_MARTY_BIGINT */ 
+
+//----------------------------------------------------------------------------
+#if defined(USE_MARTY_DECIMAL) && USE_MARTY_DECIMAL!=0
+template< typename WidthCalculator, typename StringType >
 StringType martyFormatValueFormat(FormattingOptions formattingOptions, const LocaleInfo *pUserLocaleInfo, marty::Decimal d)
 {
     #if 1
@@ -98,6 +47,47 @@ StringType martyFormatValueFormat(FormattingOptions formattingOptions, const Loc
     if (typeChar=='a' || typeChar=='A' || typeChar=='e' || typeChar=='E' || typeChar=='g' || typeChar=='G')
     {
         return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, d.to_double());
+    }
+
+    if (typeChar=='s' || typeChar=='S')
+    {
+        return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, to_string(d) );
+    }
+
+
+    if ( typeChar=='b' || typeChar=='B'
+      || typeChar=='h' || typeChar=='H'
+      || typeChar=='x' || typeChar=='X'
+      // || typeChar=='d' || typeChar=='n'
+      || typeChar=='o'
+      || typeChar=='p' || typeChar=='P'
+      || typeChar=='r' || typeChar=='R'
+      || typeChar=='t' || typeChar=='T'
+      || typeChar=='y' || typeChar=='Y'
+      // || typeChar=='' || typeChar==''
+       )
+    {
+        #if defined(USE_MARTY_BIGINT) && USE_MARTY_BIGINT!=0
+
+            // TODO: Если есть BigInt, то форматируем через него, если у нас "целый" форматный символ
+            return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, marty::BigInt(d));
+
+        #else
+
+            // TODO: Если BigInt'а нет, то форматируем через std::uint64_t getAsUint64() const, не забывая про знак
+            FormattingOptions fc = formattingOptions;
+            fc.optionsFlags &= ~FormattingOptionsFlags::internalSigned;
+        
+            if (d<0)
+            {
+                fc.optionsFlags |= FormattingOptionsFlags::internalNegative;
+                return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, pLocaleInfo, std::uint64_t(-d), valSize);
+            }
+        
+            return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, pLocaleInfo, std::uint64_t(d), valSize);
+
+        #endif
+
     }
 
     const bool localeFormattingOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::localeFormatting)!=0); // L option char - C++
@@ -115,6 +105,7 @@ StringType martyFormatValueFormat(FormattingOptions formattingOptions, const Loc
     {
         typeChar = 'f';
         d *= marty::Decimal(100);
+        // d = d*marty::Decimal(100);
         formatType = LocaleInfoValueType::formatPercentPositive;
     }
     else if (typeChar=='$')
@@ -254,12 +245,43 @@ StringType martyFormatValueFormat(FormattingOptions formattingOptions, const Loc
 
     #endif
 }
+#endif  /* USE_MARTY_DECIMAL */ 
 
 //----------------------------------------------------------------------------
 template< typename WidthCalculator, typename StringType, typename FloatType >
 StringType martyFormatValueFormatFloat(FormattingOptions formattingOptions, const LocaleInfo *pUserLocaleInfo, FloatType v)
 {
     auto typeChar = formattingOptions.typeChar;
+
+    if (formattingOptions.typeChar=='s' || formattingOptions.typeChar=='S')
+    {
+        return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, std::to_string(v) );
+    }
+
+    if ( typeChar=='b' || typeChar=='B'
+      || typeChar=='h' || typeChar=='H'
+      || typeChar=='x' || typeChar=='X'
+      // || typeChar=='d' || typeChar=='n'
+      || typeChar=='o'
+      || typeChar=='p' || typeChar=='P'
+      || typeChar=='r' || typeChar=='R'
+      || typeChar=='t' || typeChar=='T'
+      || typeChar=='y' || typeChar=='Y'
+      // || typeChar=='' || typeChar==''
+       )
+    {
+        FormattingOptions fc = formattingOptions;
+        fc.optionsFlags &= ~FormattingOptionsFlags::internalSigned;
+    
+        if (v<0)
+        {
+            fc.optionsFlags |= FormattingOptionsFlags::internalNegative;
+            return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, pUserLocaleInfo, std::uint64_t(-v), sizeof(std::uint64_t));
+        }
+    
+        return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(fc, pUserLocaleInfo, std::uint64_t(v), sizeof(std::uint64_t));
+    }
+
 
     const bool localeFormattingOpt = ((formattingOptions.optionsFlags&FormattingOptionsFlags::localeFormatting)!=0); // L option char - C++
     const bool useLocale = (typeChar=='n') || localeFormattingOpt;
@@ -445,22 +467,51 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, c
 {
     MARTY_ARG_USED(valSize);
 
-    if (formattingOptions.typeChar=='t' || formattingOptions.typeChar=='T' || formattingOptions.typeChar=='y' || formattingOptions.typeChar=='Y')
+    auto typeChar = formattingOptions.typeChar;
+
+    if (typeChar=='t' || typeChar=='T' || typeChar=='y' || typeChar=='Y')
         return martyFormatValueFormat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, (v==0 ? false : true) );
+
+    if (typeChar=='s' || typeChar=='S')
+    {
+        return (formattingOptions.optionsFlags & FormattingOptionsFlags::internalNegative) != 0
+             ? martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, "-" + std::to_string(v))
+             : martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, std::to_string(v))
+             ;
+    }
+
+    if (typeChar=='r' || typeChar=='R')
+    {
+        bool upperCase    = typeChar=='R';
+        bool romanUnicode = (formattingOptions.formattingFlags&FormattingFlags::romanUnicode)!=0;
+        auto romanStr     = utils::formatRomanInteger(unsigned(v), upperCase, romanUnicode);
+        if ((formattingOptions.optionsFlags & FormattingOptionsFlags::internalNegative)!=0)
+            romanStr = "-" + romanStr;
+        formattingOptions.typeChar = typeChar=='R' ? 'S' : 's';
+        return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, romanStr);
+    }
+
+    if (typeChar=='f' || typeChar=='F' || typeChar=='a' || typeChar=='A' || typeChar=='e' || typeChar=='E' || typeChar=='g' || typeChar=='G')
+    {
+        return (formattingOptions.optionsFlags & FormattingOptionsFlags::internalNegative) != 0
+             ? martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, -double(v))
+             : martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, double(v))
+             ;
+    }
 
     bool bNegative = ((formattingOptions.optionsFlags&FormattingOptionsFlags::internalNegative)!=0) ? true : false;
 
-    if (formattingOptions.typeChar=='$')
+    if (typeChar=='$')
     {
         double d = double(v);
         return martyFormatValueFormatFloat<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, bNegative ? -d :d);
     }
 
-    if (formattingOptions.typeChar=='c')
+    if (typeChar=='c')
         return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, utils::charToStringUtf8(utf32_char_t(v)));
 
 
-    if (formattingOptions.typeChar=='p' || formattingOptions.typeChar=='P')
+    if (typeChar=='p' || typeChar=='P')
     {
         formattingOptions.typeChar = (formattingOptions.typeChar=='p') ? 'x' : 'X';
         formattingOptions.width = 0; // Форматируем по ширине целиком по размеру типа
@@ -484,7 +535,7 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, c
     }
 
 
-    auto typeChar = formattingOptions.typeChar;
+    // auto typeChar = formattingOptions.typeChar;
 
     if (typeChar==0)
         typeChar = 'd';
@@ -794,7 +845,11 @@ StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions,
     // Надо добавить форматный символ ~ - который делает битовый каст к беззнаковому
     // // шестнадцатиричное и двоичные числа битово кастим и отображаем как беззнаковые
     if ( (formattingOptions.optionsFlags&FormattingOptionsFlags::bitCast)!=0
-      && (formattingOptions.typeChar=='b' || formattingOptions.typeChar=='B' || formattingOptions.typeChar=='x' || formattingOptions.typeChar=='X' || formattingOptions.typeChar=='h' || formattingOptions.typeChar=='H')
+      && (formattingOptions.typeChar=='b' || formattingOptions.typeChar=='B'
+       || formattingOptions.typeChar=='x' || formattingOptions.typeChar=='X'
+       || formattingOptions.typeChar=='h' || formattingOptions.typeChar=='H'
+       // || formattingOptions.typeChar=='r' || formattingOptions.typeChar=='R'
+         )
        )
     {
         return martyFormatValueFormatUnsigned<WidthCalculator, StringType>(formattingOptions, pLocaleInfo, utils::toUnsignedCast(v), valSize);
@@ -806,7 +861,7 @@ StringType martyFormatValueFormatInt(const FormattingOptions &formattingOptions,
     }
 
     FormattingOptions fc = formattingOptions;
-    fc.optionsFlags |= FormattingOptionsFlags::internalSigned;
+    fc.optionsFlags &= ~FormattingOptionsFlags::internalSigned; // Сбрасываем флаг, мало ли был установлен
 
     if (v<0)
     {

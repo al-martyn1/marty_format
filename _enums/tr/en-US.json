@@ -28,7 +28,8 @@
       "ignoretypemismatcherrors": "Ignore formatting type specification char mismatch errors.",
       "ignorewidthindirecterrors": "Ignore errors while searching for arguments for width.",
       "localeforcecustom": "Force use passed locale.",
-      "localeusesystem": "Use system locale instead of user."
+      "localeusesystem": "Use system locale instead of user.",
+      "romanunicode": "Use Unicode special symbols for roman numbers instead of regular latin letters."
     },
     "_generated-enums_/marty/format/formattingoptionsflags": {
       "___description___": "Internal format option flags",

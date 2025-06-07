@@ -104,12 +104,12 @@
     },
     "_generated-enums_/marty/format/stdfiltertype": {
       "___description___": "Standard filters enumeration",
-      "html": "HTML tag text or attribute text filter.",
+      "html": "Any HTML - tag text or attribute text filter.",
       "htmlattr": "HTML attribute filter.",
       "htmltag": "HTML tag text filter.",
       "none": "No filtration at all.",
       "sql": "SQL value filter.",
-      "xml": "XML tag text or attribute text filter.",
+      "xml": "Any XML - tag text or attribute text filter.",
       "xmlattr": "XML attribute filter.",
       "xmltag": "XML tag text filter."
     }

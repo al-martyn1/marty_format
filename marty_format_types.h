@@ -12,7 +12,13 @@
 // 
 #include "marty_utf/utf.h"
 //
-#include "marty_decimal/marty_decimal.h"
+#if defined(USE_MARTY_BIGINT) && USE_MARTY_BIGINT!=0
+    #include "marty_bigint/marty_bigint.h"
+#endif
+#if defined(USE_MARTY_DECIMAL) && USE_MARTY_DECIMAL!=0
+    #include "marty_decimal/marty_decimal.h"
+#endif
+
 //
 #include "utils.h"
 //namespace marty_utf {
@@ -425,7 +431,12 @@ using FormatArgumentVariant =
                 , const wchar_t*
                 , std::string
                 , std::wstring
+#if defined(USE_MARTY_BIGINT) && USE_MARTY_BIGINT!=0
+                , marty::BigInt
+#endif
+#if defined(USE_MARTY_DECIMAL) && USE_MARTY_DECIMAL!=0
                 , marty::Decimal
+#endif
                 , const void*
                 // , std::nullptr_t
                 , FormatValueFilter

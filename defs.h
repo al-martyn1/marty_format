@@ -30,3 +30,11 @@
 
 #endif
 
+#if !defined(USE_MARTY_BIGINT)
+    #define USE_MARTY_BIGINT 1
+#endif
+
+#if !defined(USE_MARTY_DECIMAL)
+    #define USE_MARTY_DECIMAL 1
+#endif
+

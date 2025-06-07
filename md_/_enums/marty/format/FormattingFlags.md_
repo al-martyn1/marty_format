@@ -10,7 +10,7 @@ Option flags for `marty::format::formatMessage` functions family.
 (std::uint32_t)(-1)
 Invalid/unknown value.
 
-- none
+- none,romanLatin
 0x00
 Empty/none value.
 
@@ -62,6 +62,10 @@ Consider combining Unicode chars.
 0x800
 Group fractional part (floating point numbers) same as integer part.
 
+- romanUnicode
+0x1000
+Use Unicode special symbols for roman numbers instead of regular latin letters.
+
 - ignoreOptionsIndirectErrors
 ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
 Ignore errors in indirect options.
@@ -83,11 +87,11 @@ allBase | fractionalGroupping
 All.
 
 - localeForceCustom
-0x1000
+0x2000
 Force use passed locale.
 
 - localeUseSystem
-0x2000
+0x4000
 Use system locale instead of user.
 
 </val-list>

@@ -8,7 +8,8 @@ grouping        ::= "," | "_" | "'"
 frac_grouping   ::= "," | "_" | "'"
 precision       ::= digit+ | "{" argId "}"
 type            ::= "a" | "A" | "b" | "B" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "h" | "H" |
-                    "n" | "o" | "p" | "s" | "S" | "t" | "T" | "x" | "X" | "y" | "Y" | "%" | "$"
+                    "n" | "o" | "p" | "P" | "r" | "R" | "s" | "S" | "t" | "T" | "x" | "X" | "y" | "Y" |
+                    "%" | "$"
 filters         ::= filter+
 filter          ::= "|" argId
 arg_id          ::= arg_index | arg_name

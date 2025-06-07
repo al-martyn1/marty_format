@@ -10,7 +10,7 @@
 (std::uint32_t)(-1)
 Недопустимое/неизвестное значение.
 
-- none
+- none,romanLatin
 0x00
 Пустое/отсутствующее значение.
 
@@ -62,6 +62,10 @@ Consider combining Unicode chars.
 0x800
 Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа. Без указания данного флага для дробной части числа следует явно указывать спецификатор разделителя разрядов.
 
+- romanUnicode
+0x1000
+Use Unicode special symbols for roman numbers instead of regular latin letters.
+
 - ignoreOptionsIndirectErrors
 ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors
 Игнорировать ошибки косвенного задания опций форматирования. Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).
@@ -83,11 +87,11 @@ allBase | fractionalGroupping
 Все флаги установлены (`ignoreErrors | fractionalGroupping`).
 
 - localeForceCustom
-0x1000
+0x2000
 Принудительно использовать переданную локаль.
 
 - localeUseSystem
-0x2000
+0x4000
 Использовать локаль системы вместо локали текущего пользователя.
 
 </val-list>

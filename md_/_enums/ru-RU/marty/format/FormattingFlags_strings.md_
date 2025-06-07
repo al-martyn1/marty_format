@@ -1,7 +1,7 @@
 
 <val-list title=":Значение|:Описание" value-style=backtick-quote>
 
-- none
+- none,roman-latin,roman_latin,romanlatin
 Пустое/отсутствующее значение.
 
 - ignore-format-string-errors,ignore_format_string_errors,ignoreformatstringerrors
@@ -39,6 +39,9 @@ Consider combining Unicode chars.
 
 - fractional-groupping,fractional_groupping,fractionalgroupping
 Группировка цифр также и в дробной части числа, если разделитель разрядов задан для целой части числа. Без указания данного флага для дробной части числа следует явно указывать спецификатор разделителя разрядов.
+
+- roman-unicode,roman_unicode,romanunicode
+Use Unicode special symbols for roman numbers instead of regular latin letters.
 
 - ignore-options-indirect-errors,ignore_options_indirect_errors,ignoreoptionsindirecterrors
 Игнорировать ошибки косвенного задания опций форматирования. Групповое значение для всех типов ошибок (`ignoreFillIndirectErrors | ignoreWidthIndirectErrors | ignorePrecisionIndirectErrors`).

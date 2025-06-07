@@ -1,7 +1,7 @@
 
 <val-list title=":Value|:Description" value-style=backtick-quote>
 
-- none
+- none,roman-latin,roman_latin,romanlatin
 Empty/none value.
 
 - ignore-format-string-errors,ignore_format_string_errors,ignoreformatstringerrors
@@ -39,6 +39,9 @@ Consider combining Unicode chars.
 
 - fractional-groupping,fractional_groupping,fractionalgroupping
 Group fractional part (floating point numbers) same as integer part.
+
+- roman-unicode,roman_unicode,romanunicode
+Use Unicode special symbols for roman numbers instead of regular latin letters.
 
 - ignore-options-indirect-errors,ignore_options_indirect_errors,ignoreoptionsindirecterrors
 Ignore errors in indirect options.
