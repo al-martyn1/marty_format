@@ -1,3 +1,6 @@
+#!insert{no-fail,doc} _enums/$(Lang)/marty/format/FormattingFlags.md_ 
+
+#/*
 # enum флаги marty::format::FormattingFlags
 
 Флаги marty::format::FormattingFlags могут принимать следующие значения:
@@ -50,4 +53,6 @@
 #// ignoreErrors | considerUnicodeFeatures
 
 </val-list>
+
+#*/
 

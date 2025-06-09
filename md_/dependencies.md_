@@ -1,5 +1,30 @@
 # Зависимости
 
 - [marty_cpp](https://github.com/al-martyn1/marty_cpp) - от этого никуда не деться, базовые зависимости, enum как флаги и база для (де)сериализации в строки.
-- [marty_decimal](https://github.com/al-martyn1/marty_decimal) - поддержка чисел с плавающей точкой и произвольной размерностью. Потенциально отключаемо.
+- [marty_decimal](https://github.com/al-martyn1/marty_decimal) - поддержка чисел с плавающей точкой и произвольной размерностью.
+- [marty_bigint](https://github.com/al-martyn1/marty_bigint) - поддержка целых чисел произвольного размера.
 - [marty_utf](https://github.com/al-martyn1/marty_utf) - поддержка UTF-8. Потенциально отключаемо.
+
+
+## Управление зависимостями
+
+Включать или выключать поддержку зависимостей можно через макросы:
+
+<val-list>
+
+- USE_MARTY_BIGINT
+Управляет использованием библиотеки "больших" чисел `marty_bigint`.
+
+- USE_MARTY_DECIMAL
+Управляет использованием библиотеки десятичных чисел с произвольной точностью `marty_deciaml`.
+
+<val-list>
+
+Для отключения той или иной библиотеки следует задать значение макроса `USE_MARTY_XXX`, равное нолю ('0').
+
+Пример отключения зависимостей в проекте 'CMake':
+
+```
+add_compile_definitions("USE_MARTY_BIGINT=0")
+add_compile_definitions("USE_MARTY_DECIMAL=0")
+```

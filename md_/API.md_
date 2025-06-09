@@ -168,6 +168,10 @@
 #!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#Args
 
 
+#// !insert{fail,doc,raise=-1} FormattingFlags.md_
+#!insert{fail,doc,raise=-1} _enums/$(Lang)/marty/format/FormattingFlags.md_
+
+
 ## marty::format::formatMessageImpl
 
 Базовая реализация функций форматирования. 
@@ -187,8 +191,6 @@ StringType formatMessageImpl( const StringType &fmt
                             )
 #*/
 
-#// !insert{fail,doc,raise=-1} FormattingFlags.md_
-#!insert{fail,doc,raise=-1} _enums/$(Lang)/marty/format/FormattingFlags.md_
 
 
 ## marty::format::formatMessage - аргументы передаются в generic-контейнере
