@@ -1446,7 +1446,7 @@ void formatRomanIntegerLatin(std::string &strFormatTo, unsigned i, bool upperCas
         strFormatTo = upperCase ? "NULLA" /* "Nulla" */  : "nulla";
         return;
     }
-    else if (i>=8192)
+    else if (i>9999)
     {
         strFormatTo = upperCase ? "INFINITAS" /* "Infinitas" */  : "infinitas";
         return;
@@ -1585,7 +1585,7 @@ void formatRomanIntegerUnicode(std::string &strFormatTo, unsigned i, bool upperC
         strFormatTo = upperCase ? "NULLA" /* "Nulla" */  : "nulla";
         return;
     }
-    else if (i>=8192)
+    else if (i>9999)
     {
         strFormatTo = upperCase ? "INFINITAS" /* "Infinitas" */  : "infinitas";
         return;
