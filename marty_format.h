@@ -143,14 +143,11 @@ struct MartyFormatValueIndexGetter< ContainerType
         }
         else
         {
-            try
+            if (!utils::charRangeToIndex(argIdB, argIdE, &szIdx))
             {
-                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
+                // Игнорим ошибку, charRangeToIndex не обновляет значение по указателю при ошибке
             }
-            catch(...)
-            {}
         }
-        
 
         if (szIdx!=std::size_t(-1))
             return szIdx;
@@ -187,12 +184,10 @@ struct MartyFormatValueIndexGetter< ContainerType
         }
         else
         {
-            try
+            if (!utils::charRangeToIndex(argIdB, argIdE, &szIdx))
             {
-                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
+                // Игнорим ошибку, charRangeToIndex не обновляет значение по указателю при ошибке
             }
-            catch(...)
-            {}
         }
 
         if (szIdx!=std::size_t(-1))
@@ -237,12 +232,10 @@ struct MartyFormatValueIndexGetter< ContainerType
         }
         else
         {
-            try
+            if (!utils::charRangeToIndex(argIdB, argIdE, &szIdx))
             {
-                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
+                // Игнорим ошибку, charRangeToIndex не обновляет значение по указателю при ошибке
             }
-            catch(...)
-            {}
         }
 
         if (szIdx!=std::size_t(-1))
@@ -291,12 +284,10 @@ struct MartyFormatValueIndexGetter< ContainerType
         }
         else
         {
-            try
+            if (!utils::charRangeToIndex(argIdB, argIdE, &szIdx))
             {
-                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
+                // Игнорим ошибку, charRangeToIndex не обновляет значение по указателю при ошибке
             }
-            catch(...)
-            {}
         }
 
         if (szIdx!=std::size_t(-1))
@@ -352,12 +343,10 @@ struct MartyFormatValueIndexGetter< ContainerType
         }
         else
         {
-            try
+            if (!utils::charRangeToIndex(argIdB, argIdE, &szIdx))
             {
-                szIdx = std::size_t(utils::charRangeToUnsigned(argIdB, argIdE));
+                // Игнорим ошибку, charRangeToIndex не обновляет значение по указателю при ошибке
             }
-            catch(...)
-            {}
         }
 
         if (szIdx!=std::size_t(-1))

@@ -403,6 +403,7 @@ std::string simpleToString(IntType i, NumeralSystem ns=NumeralSystem::dec, bool 
 }
 
 //----------------------------------------------------------------------------
+#if 0
 inline
 unsigned charRangeToUnsigned(const char *b, const char *e)
 {
@@ -415,7 +416,7 @@ unsigned charRangeToUnsigned(const char *b, const char *e)
     {
         auto d = toDigit(*b);
         if (d<0)
-            throw std::invalid_argument("charRangeToUnsigned: symbol is not a decomal digit");
+            throw std::invalid_argument("charRangeToUnsigned: symbol is not a decimal digit");
 
         auto newRes = res*10;
         newRes += unsigned(d);
@@ -426,6 +427,36 @@ unsigned charRangeToUnsigned(const char *b, const char *e)
     }
 
     return res;
+}
+#endif
+
+inline
+bool charRangeToIndex(const char *b, const char *e, std::size_t *pIdx)
+{
+    std::size_t res = 0;
+
+    if (b==e)
+        return false;
+
+    for(; b!=e; ++b)
+    {
+        auto d = toDigit(*b);
+        if (d<0)
+            return false;
+
+        auto newRes = res*10u;
+        newRes += std::size_t(unsigned(d));
+        if (newRes<res)
+            return false;
+
+        res = newRes;
+    }
+
+    if (pIdx)
+       *pIdx = res;
+
+    return true;
+
 }
 
 //----------------------------------------------------------------------------
