@@ -37,6 +37,7 @@
     - [Форматирование булевых значений](#форматирование-булевых-значений)
     - [Форматирование указателей (и целых чисел, как указателей)](#форматирование-указателей-и-целых-чисел-как-указателей)
     - [Форматирование целых чисел](#форматирование-целых-чисел)
+    - [Форматирование целых чисел римскими цифрами](#форматирование-целых-чисел-римскими-цифрами)
     - [Форматирование чисел с плавающей точкой](#форматирование-чисел-с-плавающей-точкой)
       - [Форматирование с использованием спецификаторов a/A/e/E/f/F/g/G](#форматирование-с-использованием-спецификаторов-aaeeffgg)
       - [Форматирование чисел, процентов, валют](#форматирование-чисел-процентов-валют)
@@ -203,7 +204,17 @@
 |Значение|Описание|
 |:---|:---|
 |**USE_MARTY_BIGINT**|Управляет использованием библиотеки "больших" чисел `marty_bigint`.|
-|**USE_MARTY_DECIMAL**|Управляет использованием библиотеки десятичных чисел с произвольной точностью `marty_deciaml`.<br/><br/> <val-list><br/><br/> Для отключения той или иной библиотеки следует задать значение макроса `USE_MARTY_XXX`, равное нолю ('0').<br/><br/> Пример отключения зависимостей в проекте 'CMake':<br/><br/> ``` add_compile_definitions("USE_MARTY_BIGINT=0") add_compile_definitions("USE_MARTY_DECIMAL=0") ```|
+|**USE_MARTY_DECIMAL**|Управляет использованием библиотеки десятичных чисел с произвольной точностью `marty_deciaml`.|
+
+
+Для отключения той или иной библиотеки следует задать значение макроса `USE_MARTY_XXX`, равное нолю ('0').
+
+Пример отключения зависимостей в проекте 'CMake':
+
+```
+add_compile_definitions("USE_MARTY_BIGINT=0")
+add_compile_definitions("USE_MARTY_DECIMAL=0")
+```
 
 
 ## Ссылки на референсные спецификации
@@ -550,7 +561,7 @@ cout << formatMessage( "Argv Pointer: {argv:P}\n"
 **Вывод:**
 
 ```
-Argv Pointer: 000002428B5AEA30
+Argv Pointer: 000002656973EA30
 Short as ptr: FB2E
 ```
 
@@ -609,6 +620,26 @@ cout << formatMessage("|{:*=12}|",      { -1420 }) << "\n"; // |-*******1420|
 cout << formatMessage("|{:*=12b}|",     {  1420 }) << "\n"; // |*10110001100|
 cout << formatMessage("|{:*=+!#12X}|",  {  1420 }) << "\n"; // |+******0x58C|
 cout << formatMessage("|{:= ~!#012X}|", { -1420 }) << "\n"; // | 0x0FFFFFA74|
+```
+
+
+#### Форматирование целых чисел римскими цифрами
+
+```cpp
+using std::cout;
+using namespace marty::format;
+cout << formatMessage( "{fox:R}th Century Fox is an American film production and distribution company\n"
+                       "{wedding:R}th Century Russian Wedding is a 1909 Russian short drama film\n"
+                     , Args().arg("fox", 20)
+                             .arg("wedding", 16)
+                     );
+```
+
+**Вывод:**
+
+```
+XXth Century Fox is an American film production and distribution company
+XVIth Century Russian Wedding is a 1909 Russian short drama film
 ```
 
 

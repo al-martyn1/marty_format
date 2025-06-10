@@ -1,5 +1,5 @@
 /*! \file
-    \brief 
+    \brief Форматирование строк, bool, указателей. Фильтры. Args, std::vector, std::vector<std::pair<>>
  */
 
 
@@ -203,6 +203,23 @@ int main(int argc, char* argv[])
                                "Short as ptr: {ptrShort:P}\n"
                              , Args().arg("argv", (void*)argv)
                                      .arg("ptrShort", short(-1234))
+                             );
+        //#!
+    }
+    cout << "//#!\n\n\n" << std::flush;
+
+    //----------------------------------------------------------------------------
+
+    cout << "//#! FormattingRoman\n";
+    {
+        // Примеры форматирования указателей
+        //#! FormattingRoman
+        using std::cout;
+        using namespace marty::format;
+        cout << formatMessage( "{fox:R}th Century Fox is an American film production and distribution company\n"
+                               "{wedding:R}th Century Russian Wedding is a 1909 Russian short drama film\n"
+                             , Args().arg("fox", 20)
+                                     .arg("wedding", 16)
                              );
         //#!
     }

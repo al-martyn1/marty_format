@@ -1,5 +1,5 @@
 /*! \file
-    \brief 
+    \brief Общие примеры. Args, std::initializer_list, именованные аргументы, std::vector.
  */
 
 

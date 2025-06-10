@@ -36,6 +36,15 @@
 
 
 #//---------
+# Форматирование целых чисел римскими цифрами
+
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#FormattingRoman
+
+**Вывод:**
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingRoman
+
+
+#//---------
 # Форматирование чисел с плавающей точкой
 
 Для краткости приводится только форматная строка, использованное при форматировании число (возможно, 

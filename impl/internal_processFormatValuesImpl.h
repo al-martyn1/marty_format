@@ -75,6 +75,7 @@ StringType martyFormatValueFormat(FormattingOptions formattingOptions, const Loc
     if (typeChar=='p' || typeChar=='P')
     {
         formattingOptions.typeChar = (formattingOptions.typeChar=='p') ? 'x' : 'X';
+        typeChar = formattingOptions.typeChar;
         formattingOptions.width = 0; // Форматируем по ширине целиком по размеру типа
         formattingOptions.alignment = '=';
         formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
@@ -617,7 +618,7 @@ StringType martyFormatValueFormatFloat(FormattingOptions formattingOptions, cons
 {
     auto typeChar = formattingOptions.typeChar;
 
-    if (formattingOptions.typeChar=='s' || formattingOptions.typeChar=='S')
+    if (typeChar=='s' || typeChar=='S')
     {
         return martyFormatValueFormatString<WidthCalculator, StringType>(formattingOptions, pUserLocaleInfo, std::to_string(v) );
     }
@@ -703,7 +704,7 @@ StringType martyFormatValueFormatFloat(FormattingOptions formattingOptions, cons
         numStr.erase(signIdx, 1);
     }
 
-    const bool isNumberUpper = (formattingOptions.typeChar=='A' || formattingOptions.typeChar=='E' || formattingOptions.typeChar=='F' || formattingOptions.typeChar=='G');
+    const bool isNumberUpper = (typeChar=='A' || typeChar=='E' || typeChar=='F' || typeChar=='G');
     const bool caseInvert    = ((formattingOptions.optionsFlags&FormattingOptionsFlags::caseInvert)!=0);
     const bool powerUpper    = (isNumberUpper != caseInvert);
 
@@ -885,6 +886,7 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, c
     if (typeChar=='p' || typeChar=='P')
     {
         formattingOptions.typeChar = (formattingOptions.typeChar=='p') ? 'x' : 'X';
+        typeChar = formattingOptions.typeChar;
         formattingOptions.width = 0; // Форматируем по ширине целиком по размеру типа
         formattingOptions.alignment = '=';
         formattingOptions.optionsFlags |= FormattingOptionsFlags::signZero;
@@ -947,7 +949,7 @@ StringType martyFormatValueFormatUnsigned(FormattingOptions formattingOptions, c
 
 
     std::string formatString = utils::getFormatString(pLocaleInfo, formatType, bNegative, (formattingOptions.optionsFlags&FormattingOptionsFlags::signAlterForm)!=0);
-    const bool isNumberUpper = (formattingOptions.typeChar=='B' || formattingOptions.typeChar=='O' || formattingOptions.typeChar=='X' || formattingOptions.typeChar=='H');
+    const bool isNumberUpper = (typeChar=='B' || typeChar=='O' || typeChar=='X' || typeChar=='H');
     const bool caseInvert    = ((formattingOptions.optionsFlags&FormattingOptionsFlags::caseInvert)!=0);
     /* case    bInvert    prefix
         0         0          0
