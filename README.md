@@ -1,3 +1,9 @@
+**Информация о документе**
+
+**URL**: https://github.com/al-martyn1/umba-md-pp/blob/main/README.md
+
+---
+
 # Библиотека форматирования marty::format
 
 
@@ -201,7 +207,7 @@
 Включать или выключать поддержку зависимостей можно через макросы:
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |**USE_MARTY_BIGINT**|Управляет использованием библиотеки "больших" чисел `marty_bigint`.|
 |**USE_MARTY_DECIMAL**|Управляет использованием библиотеки десятичных чисел с произвольной точностью `marty_deciaml`.|
@@ -237,40 +243,24 @@ add_compile_definitions("USE_MARTY_DECIMAL=0")
 
 #### Используем std::initializer_list
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
-                     , { 10, "Very long string, does not fit into 20 characters"
-                       , 10, 20, 3.14159
-                       }
-                     ) << "\n";
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingInitializerList
 
 **Вывод:**
 
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingInitializerList
 
 
 #### Используем std::vector
 
-```cpp
-using std::cout;
-using namespace marty::format;
-auto argsVec = std::vector<FormatArgumentVariant>{ 10, "Very long string, "
-                      "does not fit into 20 characters", 10, 20, 3.14159 };
-cout << formatMessage( "Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}"
-                     , argsVec
-                     ) << "\n";
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFlatVector
 
 **Вывод:**
 
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingFlatVector
 
 
 #### Используем marty::format::Args
@@ -280,48 +270,24 @@ Integer number: 10, string: Very long string, do, Pi: 3.142
   задаём также аргументами, а не в форматной строке
 
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage("Integer number: {:d}, string: {:{}.{}s}, Pi: {:f}\n"
-                     , Args().arg(10)
-                             .arg("Very long string, does not fit into "
-                                  "20 characters")
-                             .arg(10) // задаём ширину поля
-                             .arg(20) // это точность (для чисел), но для строк
-                                      // это максимальная ширина поля
-                             .arg(3.14159)
-                     );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingArgs
 
 **Вывод:**
 
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingArgs
 
 
 #### Используем marty::format::Args с именоваными параметрами
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage(
-    "Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
-     , Args().arg("str", "Very long string, does not fit into 20 characters")
-             .arg("Pi", 3.14159)
-             .arg("strMaxW", 20) // это точность (для чисел), но для строк
-                                 // это максимальная ширина поля
-             .arg("strW", 10) // задаём ширину поля
-             .arg("int", 10)
-     );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingNamedArgs
 
 **Вывод:**
 
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingNamedArgs
 
 
 #### Используем std::vector с парами std::pair<std::string, FormatArgumentVariant>
@@ -330,25 +296,13 @@ Integer number: 10, string: Very long string, do, Pi: 3.142
 аналогично использованию `marty::format::Args`,
 но поиск по имени каждый раз производится перебором от начала вектора. Не слишком эффективно, но работает без лишних сущностей.
 
-```cpp
-using std::cout;
-using namespace marty::format;
-auto argsVec = std::vector< std::pair<std::string, FormatArgumentVariant> >
-               { {"str", "Very long string, does not fit into 20 characters"}
-               , {"Pi", 3.14159}
-               , {"strMaxW", 20}
-               , {"strW", 10}
-               , {"int", 10}
-               };
-cout << formatMessage("Integer number: {int:d}, string: {str:{strW}.{strMaxW}s}, "
-                      "Pi: {Pi:f}\n", argsVec);
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingVectorOfNameValuePairs
 
 **Вывод:**
 
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingVectorOfNameValuePairs
 
 
 
@@ -356,44 +310,24 @@ Integer number: 10, string: Very long string, do, Pi: 3.142
 
 #### Задаём конвертацию аргумента, также символ заполнения передаём аргументом
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage(
-    "Integer number: {int:d}, string: {str!s:{fill}<{strW}.{strMaxW}s}, Pi: {Pi:f}\n"
-     , Args().arg("str", "Very long string, does not fit into 20 characters")
-             .arg("Pi", 3.14159)
-             .arg("fill", '*')
-             .arg("strMaxW", 20) // это точность (для чисел), но для строк
-                                 // это максимальная ширина поля
-             .arg("strW", 10) // задаём ширину поля
-             .arg("int", 10)
-     );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingFillRefAndConvert
 
 **Вывод:**
 
-```
-Integer number: 10, string: Very long string, do, Pi: 3.142
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingFillRefAndConvert
 
 
 #### Используем фильтры для вывода в HTML
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
-                     , Args().arg("url" , "http://site.com/&q=/'")
-                             .arg("text", "<Some & text>")
-                     );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#UsingHtmlFilters
 
 **Вывод:**
 
-```
-<a href="http://site.com/&amp;q=/&apos;">&lt;Some &amp; text&gt;</a>
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#UsingHtmlFilters
 
 
 
@@ -403,247 +337,54 @@ cout << formatMessage( "<a href=\"{url|html-attr}\">{text|html-text}</a>\n"
 
 При выводе используем как непосредственное задание ширины и точности, так и косвенное.
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage( //---
-                       "Alignment names explicitly taken\n"
-                       "Width: 20, precision: 13, explicit fill chars\n"
-                       "str: |{strL20}|\n"
-                       "Default  aligned: |{strL20:*20.13}|\n"
-                       "Left     aligned: |{strL20:*<20.13}|\n"
-                       "Right    aligned: |{strL20:*>20.13}|\n"
-                       "Center   aligned: |{strL20:*^20.13}|\n"
-                       "//---\n"
-                       "Alignment names indirect taken\n"
-                       "Width: 20, precision: 13, explicit fill chars\n"
-                       "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:*20.13}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:*<20.13}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:*>20.13}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:*^20.13}|\n"
-                       "//---\n"
-                       "Width: 18, precision: 9, default fill char\n"
-                       "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:20.9}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:<20.9}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:>20.9}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:^20.9}|\n"
-                       "//---\n"
-                       "Width (I): {w1}, precision (I): {p1}\n"
-                       "str: |{strL20}|\n"
-                       "{adname:{anamew}} aligned: |{strL20:@{w1}.{p1}}|\n"
-                       "{alname:{anamew}} aligned: |{strL20:@<{w1}.{p1}}|\n"
-                       "{arname:{anamew}} aligned: |{strL20:@>{w1}.{p1}}|\n"
-                       "{acname:{anamew}} aligned: |{strL20:@^{w1}.{p1}}|\n"
-                       // "//---\n"
-                     , Args().arg("anamew", 8)            // alignment name width
-                             .arg("adname", "Default")    // name for default alignment
-                             .arg("alname", "Left")       // name for left alignment
-                             .arg("arname", "Right")      // name for right alignment
-                             .arg("acname", "Center")     // name for center alignment
-                             //---
-                             .arg("w1", 16).arg("p1", 13) // indirect width & precision #1
-                             //---
-                             .arg("strL20", "String larger than 20")
-                             .arg("strS19", "Str smaler than 19")
-                             .arg("strS4" , "S<4")
-                             .arg("strL5" , "Str > 5")
-                     );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#StringWidthPrecision01
 
 **Вывод:**
 
-```
-Alignment names explicitly taken
-Width: 20, precision: 13, explicit fill chars
-str: |String larger than 20|
-Default  aligned: |String larger*******|
-Left     aligned: |String larger*******|
-Right    aligned: |*******String larger|
-Center   aligned: |***String larger****|
-//---
-Alignment names indirect taken
-Width: 20, precision: 13, explicit fill chars
-str: |String larger than 20|
-Default  aligned: |String larger*******|
-Left     aligned: |String larger*******|
-Right    aligned: |*******String larger|
-Center   aligned: |***String larger****|
-//---
-Width: 18, precision: 9, default fill char
-str: |String larger than 20|
-Default  aligned: |String la           |
-Left     aligned: |String la           |
-Right    aligned: |           String la|
-Center   aligned: |     String la      |
-//---
-Width (I): 16, precision (I): 13
-str: |String larger than 20|
-Default  aligned: |String larger@@@|
-Left     aligned: |String larger@@@|
-Right    aligned: |@@@String larger|
-Center   aligned: |@String larger@@|
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#StringWidthPrecision01
 
 
 #### Форматирование булевых значений
 
 Также выводим целые числа как булевы значения.
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout<<formatMessage
-        ( "Bool as string, true : {bt:s}, false: {bf:s}\n"
-          "Bool as string, upper case: {bt:S}, {bf:S}\n"
-          "Bool as string, mixed case (first char upper): {bt:!s}, {bf:!}\n"
-          "Bool as string, mixed case (first char lower): {bt:!S}, {bf:!S}\n"
-          "Bool as string, single char (using precision): {bt:.1S}, {bf:.1S}\n"
-          "Bool as string, (using spec-t): {bt:t}, {bf:t}\n"
-          "Bool as string, (using spec-T): {bt:T}, {bf:T}\n"
-          "Bool as string, (using spec-y): {bt:y}, {bf:y}\n"
-          "Bool as string, (using spec-Y): {bt:Y}, {bf:Y}\n"
-          "Bool as string, (using spec-t#): {bt:#t}, {bf:#t}\n"
-          "Bool as string, (using spec-T#): {bt:#T}, {bf:#T}\n"
-          "Bool as string, (using spec-y#): {bt:#y}, {bf:#y}\n"
-          "Bool as string, (using spec-Y#): {bt:#Y}, {bf:#Y}\n"
-          "Unsigned as bool string, (using spec-y#): {ut:#y}, {uf:#y}, as native: {ut:d}, {uf:d}\n"
-          "Unsigned as bool string, (using spec-Y#): {ut:#Y}, {uf:#Y}, as native: {ut:d}, {uf:d}\n"
-          "Unsigned as bool string, (using spec-t#): {ut:#t}, {uf:#t}, as native: {ut:d}, {uf:d}\n"
-          "Unsigned as bool string, (using spec-T#): {ut:#T}, {uf:#T}, as native: {ut:d}, {uf:d}\n"
-          "Int as bool string, (using spec-y): {st:y}, {sf:y}, as native: {st:d}, {sf:d}\n"
-          "Int as bool string, (using spec-Y): {st:Y}, {sf:Y}, as native: {st:d}, {sf:d}\n"
-          "Int as bool string, (using spec-t): {st:t}, {sf:t}, as native: {st:d}, {sf:d}\n"
-          "Int as bool string, (using spec-T): {st:T}, {sf:T}, as native: {st:d}, {sf:d}\n"
-        , Args().arg("bt", true).arg("bf", false)
-                .arg("ut", 42u) .arg("uf", 0u)
-                .arg("st", -42) .arg("sf", 0)
-        );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#FormattingBool
 
 **Вывод:**
 
-```
-Bool as string, true : true, false: false
-Bool as string, upper case: TRUE, FALSE
-Bool as string, mixed case (first char upper): True, False
-Bool as string, mixed case (first char lower): tRUE, fALSE
-Bool as string, single char (using precision): T, F
-Bool as string, (using spec-t): true, false
-Bool as string, (using spec-T): TRUE, FALSE
-Bool as string, (using spec-y): yes, no
-Bool as string, (using spec-Y): YES, NO
-Bool as string, (using spec-t#): t, f
-Bool as string, (using spec-T#): T, F
-Bool as string, (using spec-y#): y, n
-Bool as string, (using spec-Y#): Y, N
-Unsigned as bool string, (using spec-y#): y, n, as native: 42, 0
-Unsigned as bool string, (using spec-Y#): Y, N, as native: 42, 0
-Unsigned as bool string, (using spec-t#): t, f, as native: 42, 0
-Unsigned as bool string, (using spec-T#): T, F, as native: 42, 0
-Int as bool string, (using spec-y): yes, no, as native: -42, 0
-Int as bool string, (using spec-Y): YES, NO, as native: -42, 0
-Int as bool string, (using spec-t): true, false, as native: -42, 0
-Int as bool string, (using spec-T): TRUE, FALSE, as native: -42, 0
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingBool
 
 
 #### Форматирование указателей (и целых чисел, как указателей)
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage( "Argv Pointer: {argv:P}\n"
-                       "Short as ptr: {ptrShort:P}\n"
-                     , Args().arg("argv", (void*)argv)
-                             .arg("ptrShort", short(-1234))
-                     );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#FormattingPointers
 
 **Вывод:**
 
-```
-Argv Pointer: 000002656973EA30
-Short as ptr: FB2E
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingPointers
 
 
 #### Форматирование целых чисел
 
-```cpp
-// Форматирование в 2ую СС
-cout << formatMessage("|{:0b}|",   {-1420})<<"\n"; // |-00000000000000000000010110001100|
-cout << formatMessage("|{:0'b}|",  {-1420})<<"\n"; // |-0000'0000'0000'0000'0000'0101'1000'1100|
-cout << formatMessage("|{:12b}|",  {-1420})<<"\n"; // |-10110001100|
-cout << formatMessage("|{:12'b}|", {-1420})<<"\n"; // |-101'1000'1100|
-cout << formatMessage("|{:#0b}|",  {-1420})<<"\n"; // |-0b00000000000000000000010110001100|
-cout << formatMessage("|{:~0'b}|", {-1420})<<"\n"; // |1111'1111'1111'1111'1111'1010'0111'0100|
-cout << formatMessage("|{:#0'b}|", {-1420})<<"\n"; // |-0b0000'0000'0000'0000'0000'0101'1000'1100|
-cout << formatMessage("|{:#12b}|", {-1420})<<"\n"; // |-0b10110001100|
-cout << formatMessage("|{:#12'b}|",{-1420})<<"\n"; // |-0b101'1000'1100|
-
-// Фрматирование в 16ую СС
-cout << formatMessage("|{:0x}|",        { -1420 }) << "\n"; // |-0000058c|
-cout << formatMessage("|{:0X}|",        { -1420 }) << "\n"; // |-0000058C|
-cout << formatMessage("|{:0'x}|",       { -1420 }) << "\n"; // |-0000'058c|
-cout << formatMessage("|{:12X}|",       { -1420 }) << "\n"; // |-58C        |
-cout << formatMessage("|{:#0h}|",       { -1420 }) << "\n"; // |-0000058ch|
-cout << formatMessage("|{:#12x}|",      { -1420 }) << "\n"; // |-0x58c      |
-cout << formatMessage("|{:!#0X}|",      { -1420 }) << "\n"; // |-0x0000058C|
-cout << formatMessage("|{:~!#0X}|",     { -1420 }) << "\n"; // |0xFFFFFA74|
-cout << formatMessage("|{:~!#0'X}|",    { -1420 }) << "\n"; // |0xFFFF'FA74|
-cout << formatMessage("|{:^12x}|",      { -1420 }) << "\n"; // |    -58c    |
-cout << formatMessage("|{:^12X}|",      { -1420 }) << "\n"; // |    -58C    |
-cout << formatMessage("|{:^~12X}|",     { -1420 }) << "\n"; // |  FFFFFA74  |
-cout << formatMessage("|{:^+~12x}|",    { -1420 }) << "\n"; // | +fffffa74  |
-
-// Форматирование в 10ую СС (по умолчанию спецификатор 'd' можно не указывать)
-cout << formatMessage("|{:12}|",        { -1420 }) << "\n"; // |-1420       |
-cout << formatMessage("|{:12%}|",       { -1420 }) << "\n"; // |-1420%      |
-cout << formatMessage("|{:*=12}|",      { -1420 }) << "\n"; // |-*******1420|
-cout << formatMessage("|{:*<12}|",      { -1420 }) << "\n"; // |-1420*******|
-cout << formatMessage("|{:*<12'}|",     { -1420 }) << "\n"; // |-1'420******|
-cout << formatMessage("|{:*<12'%}|",    { -1420 }) << "\n"; // |-1'420%*****|
-cout << formatMessage("|{:>12%}|",      { -1420 }) << "\n"; // |      -1420%|
-cout << formatMessage("|{:>12'}|",      { -1420 }) << "\n"; // |      -1'420|
-cout << formatMessage("|{:>12'%}|",     { -1420 }) << "\n"; // |     -1'420%|
-cout << formatMessage("|{:^12}|",       { -1420 }) << "\n"; // |   -1420    |
-cout << formatMessage("|{:^12%}|",      { -1420 }) << "\n"; // |   -1420%   |
-cout << formatMessage("|{:^12'}|",      { -1420 }) << "\n"; // |   -1'420   |
-
-// Форматирование по ширине с заполнением fill-символом
-// (без ведущего нуля в поле ширины)
-cout << formatMessage("|{:=12}|",       { -1420 }) << "\n"; // |-       1420|
-cout << formatMessage("|{:=12b}|",      {  1420 }) << "\n"; // | 10110001100|
-cout << formatMessage("|{:=12x}|",      { -1420 }) << "\n"; // |-        58c|
-cout << formatMessage("|{:=12X}|",      { -1420 }) << "\n"; // |-        58C|
-cout << formatMessage("|{:=12%}|",      { -1420 }) << "\n"; // |-      1420%|
-cout << formatMessage("|{:*=12}|",      { -1420 }) << "\n"; // |-*******1420|
-cout << formatMessage("|{:*=12b}|",     {  1420 }) << "\n"; // |*10110001100|
-cout << formatMessage("|{:*=+!#12X}|",  {  1420 }) << "\n"; // |+******0x58C|
-cout << formatMessage("|{:= ~!#012X}|", { -1420 }) << "\n"; // | 0x0FFFFFA74|
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} integer_format_sampes.cpp
 
 
 #### Форматирование целых чисел римскими цифрами
 
-```cpp
-using std::cout;
-using namespace marty::format;
-cout << formatMessage( "{fox:R}th Century Fox is an American film production and distribution company\n"
-                       "{wedding:R}th Century Russian Wedding is a 1909 Russian short drama film\n"
-                     , Args().arg("fox", 20)
-                             .arg("wedding", 16)
-                     );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/example_02.cpp#FormattingRoman
 
 **Вывод:**
 
-```
-XXth Century Fox is an American film production and distribution company
-XVIth Century Russian Wedding is a 1909 Russian short drama film
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} examples/../samples_output.txt#FormattingRoman
 
 
 #### Форматирование чисел с плавающей точкой
@@ -658,165 +399,15 @@ XVIth Century Russian Wedding is a 1909 Russian short drama film
 Также продемонстрированно использование различного заполнения и выравнивания, и разделения на разряды.
 
 
-```
-{:.05f}         with  3.141593       : |3.14159|
-{:.020f}        with  3.141593       : |3.14159265358979311600|
-{:.05f}         with  -3.141593      : |-3.14159|
-{:.020f}        with  -3.141593      : |-3.14159265358979311600|
-{:.5f}          with  3.141593       : |3.14159|
-{:.20f}         with  3.141593       : |3.14159265358979311600|
-
-{:09.05f}       with  3.141593       : |003.14159|
-{:010.05f}      with  -3.141593      : |-003.14159|
-{:010.05f}      with  -3.141593      : |-003.14159|
-{:+010.05f}     with  3.141593       : |+003.14159|
-
-{:= 010.05f}    with  3.141593       : | 003.14159|
-{:=+010.05f}    with  3.141593       : |+003.14159|
-{:=-010.05f}    with  3.141593       : |0003.14159|
-{:= 010.05f}    with  -3.141593      : |-003.14159|
-{:=+010.05f}    with  -3.141593      : |-003.14159|
-{:=-010.05f}    with  -3.141593      : |-003.14159|
-
-{:= 10.05f}     with  3.141593       : |   3.14159|
-{:=+10.05f}     with  3.141593       : |+  3.14159|
-{:=-10.05f}     with  3.141593       : |   3.14159|
-{:= 10.05f}     with  -3.141593      : |-  3.14159|
-{:=+10.05f}     with  -3.141593      : |-  3.14159|
-{:=-10.05f}     with  -3.141593      : |-  3.14159|
-
-{:= 10.05f}     with  3.141593       : |   3.14159|
-{:=+10.05f}     with  3.141593       : |+  3.14159|
-{:=-10.05f}     with  3.141593       : |   3.14159|
-{:= 10.05f}     with  -3.141593      : |-  3.14159|
-{:=+10.05f}     with  -3.141593      : |-  3.14159|
-{:=-10.05f}     with  -3.141593      : |-  3.14159|
-
-{:< 10.05f}     with  3.141593       : | 3.14159  |
-{:<+10.05f}     with  3.141593       : |+3.14159  |
-{:<-10.05f}     with  3.141593       : |3.14159   |
-{:< 10.05f}     with  -3.141593      : |-3.14159  |
-{:<+10.05f}     with  -3.141593      : |-3.14159  |
-{:<-10.05f}     with  -3.141593      : |-3.14159  |
-
-{:> 10.05f}     with  3.141593       : |   3.14159|
-{:>+10.05f}     with  3.141593       : |  +3.14159|
-{:>-10.05f}     with  3.141593       : |   3.14159|
-{:> 10.05f}     with  -3.141593      : |  -3.14159|
-{:>+10.05f}     with  -3.141593      : |  -3.14159|
-{:>-10.05f}     with  -3.141593      : |  -3.14159|
-
-{:^ 010.05f}    with  3.141593       : |  3.14159 |
-{:^+010.05f}    with  3.141593       : | +3.14159 |
-{:^-010.05f}    with  3.141593       : | 3.14159  |
-{:^ 010.05f}    with  -3.141593      : | -3.14159 |
-{:^+010.05f}    with  -3.141593      : | -3.14159 |
-{:^-010.05f}    with  -3.141593      : | -3.14159 |
-
-{:.05f}         with  2.718282       : |2.71828|
-{:.020f}        with  2.718282       : |2.71828182845904509080|
-
-{:012'.05f}     with  2.718282       : |00'002.71828|
-{:012'.018f}    with  2.718282       : |2.718281828459045091|
-{:012'.05'f}    with  2.718282       : |0'002.718'28|
-{:012'.018'f}   with  2.718282       : |2.718'281'828'459'045'091|
-{:012'.5'f}     with  2.718282       : |0'002.718'28|
-{:012'.18'f}    with  2.718282       : |2.718'281'828'459'045'091|
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} float_test_smp_output.txt
 
 ##### Форматирование чисел, процентов, валют
 
 Также продемонстрированно использование пользовательской локали, получаемой из системы.
 
-```
-//---------------------
-// n - десятичное число, форматирование с использованием локали.
-// Точность не задана, берётся из текущей локали пользователя
-// (русская под Win - 2 десятичных знака)
-{:n}            with  3.141593       : |3.14|
-
-// n - десятичное число, форматирование с использованием локали.
-// Точность задана явно, .4.
-{:.4n}          with  3.141593       : |3.1416|
-
-// n - десятичное число, форматирование с использованием локали.
-// Точность задана явно, .6.
-// Указано разделение на разряды дробной части.
-// Разделитель используется из локали пользователя в ОС.
-{:.6_n}         with  3.141593       : |3.141 593|
-
-//---------------------
-// d - число. Точность не задана, берётся из локали
-// (дефолтная "C"/invariant локаль - 3 символа)
-{:d}            with  3.141593       : |3.142|
-
-// d - число. Точность не задана, берётся из пользовательской локали
-// (русская под Win - 2 десятичных знака)
-// Маркер локали 'L' указывает использовать локаль из ОС
-{:Ld}           with  3.141593       : |3.14|
-
-// d - число. Точность не задана, альтер маркер '#' указывает
-// выбрать точность автоматически
-{:#d}           with  3.141593       : |3.141593|
-
-//---------------------
-// % - проценты - число умножается на 100.
-// Точность не задана, берётся из invariant локали - 3 символа
-{:%}            with  3.141593       : |314.159%|
-
-// % - проценты - число умножается на 100.
-// Точность не задана, берётся из пользовательской локали - 2 символа
-{:L%}           with  3.141593       : |314.16%|
-
-// % - проценты, альтернативная форма, знак '%' опускается, invariant локаль, .3.
-{:#%}           with  3.141593       : |314.159|
-
-// % - проценты, альтернативная форма, знак '%' опускается, пользовательская локаль, .2.
-{:#L%}          with  3.141593       : |314.16|
-
-// % - проценты, точность задаётся явно.
-{:.4%}          with  3.141593       : |314.1593%|
-
-//---------------------
-// $ - валюта.
-// Точность не задана, берётся из invariant локали - 2 символа
-{:$}            with  3.141593       : |$3.14|
-
-// $ - валюта.
-// Точность не задана, берётся из пользовательской локали - 2 символа
-{:L$}           with  3.141593       : |3.14 ₽|
-
-// $ - валюта, альтернативная форма, знак валюты опускается, invariant локаль, .2.
-{:#$}           with  3.141593       : |3.14|
-
-// $ - валюта, альтернативная форма, знак '$' опускается, пользовательская локаль, .2.
-{:#L$}          with  3.141593       : |3.14|
-
-// $ - валюта, точность задаётся явно.
-{:.4$}          with  3.141593       : |$3.1416|
-
-
-//---------------------
-// Краткий сводный пример форматирования чисел, процентов, валюты.
-
-{:n}            with  3.141593       : |3.14|
-
-// 9 знаков после запятой, разбиение дробной части по разрядам.
-// Используется локаль пользователя системы.
-// Разделитель - неразрывный пробел (&nbsp;) - локаль RU-ru.
-{:.9'n}         with  3.141593       : |3.141 592 654|
-
-{:d}            with  3.141593       : |3.142|
-{:.9'd}         with  3.141593       : |3.141'592'654|
-{:f}            with  3.141593       : |3.142|
-{:.9'f}         with  3.141593       : |3.141'592'654|
-{:%}            with  3.141593       : |314.159%|
-{:L%}           with  3.141593       : |314.16%|
-{:#L%}          with  3.141593       : |314.16|
-{:$}            with  3.141593       : |$3.14|
-{:L$}           with  3.141593       : |3.14 ₽|
-{:#L$}          with  3.141593       : |3.14|
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} float_test_locale_output.txt
 
 
 
@@ -851,203 +442,16 @@ XVIth Century Russian Wedding is a 1909 Russian short drama film
 Если в форматной строке не задано использование локали, то для форматирования 
 используется `invariant`/`"C"`-локаль.
 
-```cpp
-class LocaleInfo
-{
-
-public: // constructors
-
-    LocaleInfo();
-
-    LocaleInfo(const LocaleInfo &) = default;
-    LocaleInfo& operator=(const LocaleInfo &) = default;
-    LocaleInfo(LocaleInfo &&) = default;
-    LocaleInfo& operator=(LocaleInfo &&) = default;
-
-
-public: // types
-
-// Для отладки удобнее std::vector<std::uint8_t>,
-// а в релизе std::basic_string<std::uint8_t> гораздо быстрее
-#if defined(DEBUG) || defined(_DEBUG)
-    using group_info_t = std::vector<std::uint8_t>;
-    static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u)
-    {
-        gi.resize(gi.size()+n, u);
-    }
-#else
-    using group_info_t = std::basic_string<std::uint8_t>;
-    static void groupInfoAppend(group_info_t &gi, std::size_t n, std::uint8_t u)
-    {
-        gi.append(n, u);
-    }
-#endif
-
-
-public: // virtual methods
-
-    virtual ~LocaleInfo() {}
-
-    virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //!
-                                         , NumeralSystem ns       //!
-                                         ) const;
-
-    //! Обрабатывает LocaleInfoValueType::sign* и LocaleInfoValueType::format*
-    virtual std::string getLocaleInfoValue(LocaleInfoValueType vt) const;
-
-    virtual group_info_t getGroupInfo(NumeralSystem ns, bool bFractionalPart) const;
-
-    virtual std::string substFormatString( const std::string &fmt
-                                         , const std::string &numStr
-                                         , PositiveNumbersMode pm
-                                         ) const;
-
-    // digitsDecimal / digitsCurrency
-    virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
-
-
-public: // members
-
-    // Integer part/Fractional part
-    group_info_t groupInfoCur[2]; // Currency
-    group_info_t groupInfoBin[2];
-    group_info_t groupInfoOct[2];
-    group_info_t groupInfoDec[2];
-    group_info_t groupInfoHex[2];
-
-    // Integer part/Fractional part
-    std::string groupSeparatorCur[2];
-    std::string groupSeparatorBin[2];
-    std::string groupSeparatorOct[2];
-    std::string groupSeparatorDec[2];
-    std::string groupSeparatorHex[2];
-
-    std::string signDecimal            = ".";
-    std::string signPlus               = "+";
-    std::string signMinus              = "-";
-    std::string signPercent            = "%";
-    std::string signCurrency           = "$";
-
-    std::string formatPercentNegative       = "-#%";
-    std::string formatPercentPositive       = "+#%";
-    std::string formatPercentShortNegative  = "-#" ;
-    std::string formatPercentShortPositive  = "+#" ;
-    std::string formatCurrencyNegative      = "-$#";
-    std::string formatCurrencyPositive      = "+$#";
-    std::string formatCurrencyShortNegative = "-#" ;
-    std::string formatCurrencyShortPositive = "+#" ;
-
-    // Числа любой СС форматируем по тем же правилам.
-    // Только перед подстановкой в форматную строку строки числа могут быть дополнены
-    // или пробелами или нулями, в зависимости от режима выравнивания
-    std::string formatNumberNegative   = "-#";
-    std::string formatNumberPositive   = "+#";
-
-    unsigned digitsNumber              = 3;
-    unsigned digitsCurrency            = 2;
-
-public: // static helper methods
-
-    //! Подстановка локализованных символов в шаблон форматной строки
-    static
-    std::string substFormatString( const std::string &fmt
-                                 , const std::string &numStr
-                                 , const std::string &symbolPlus
-                                 , const std::string &symbolMinus
-                                 , const std::string &symbolPercent
-                                 , const std::string &symbolCurrency
-                                 , PositiveNumbersMode pm
-                                 );
-
-    //! Нулем может быть только последний элемент.
-    /*! Данная функция фиксит разобранное из строки описание групп
-        При дальнейшей работе с группами элемент с нулевым размером
-        будет считаться последним
-     */
-    static group_info_t fixGroupInfo(group_info_t &&grpInfo);
-
-    //! Разбор строк вида "3;2;0" в group_info_t
-    static group_info_t parseGroupingString(const std::string &str);
-
-    //! Восстановление group_info_t в строку
-    static std::string composeGroupingString(const group_info_t &grpInfo);
-
-
-    // 3;0     3,000,000,000,000
-    // 3;2;0   30,00,00,00,00,000
-    // 3       3000000000,000
-    // 3;2     30000000,00,000
-    static bool testAppendGroupSeparator(std::size_t curDigitIndex, const group_info_t &grpInfo);
-
-    static std::string insertGroupSeparators( std::string numStr
-                                            , std::string sep
-                                            , const group_info_t &grpInfo
-                                            , bool bFractionalPart
-                                            );
-
-    // полная длина дополняемой строки, включает разделители разрядов
-    static
-    std::string expandWithGroupSeparator
-            ( std::string numStr, std::string sep, const group_info_t &grpInfo
-            , bool bFractionalPart
-            , std::size_t sepCalculatedLen // Посчитанная снаружи длина разделителя
-            , std::size_t &numStrLen       // Посчитанная снаружи полная длина дополняемой строки
-            , std::size_t &digitsCount
-            , std::size_t maxLen
-            );
-
-    // maxLen - Макс длина в цифрах
-    static
-    std::string expandWithGroupSeparatorToNumDigits( std::string numStr
-                                                   , std::string sep
-                                                   , const group_info_t &grpInfo
-                                                   , bool bFractionalPart
-                                                   , std::size_t &digitsCount
-                                                   , std::size_t maxLen
-                                                   );
-
-protected: // static helper methods
-
-    static
-    std::string insertGroupSeparatorsImplHelper( const std::string &numStr
-                                               , const std::string &sep
-                                               , const group_info_t &grpInfo
-                                               );
-
-    /*!
-        @param sepCalculatedLen Посчитанная снаружи длина разделителя
-        @param numStrLen Посчитанная снаружи полная длина строки, которую дополняем,
-        включая сепараторы
-    */
-    static
-    std::string expandWithGroupSeparatorImplHelper( std::string numStr
-                                                  , const std::string &sep
-                                                  , const group_info_t &grpInfo
-                                                  , std::size_t sepCalculatedLen
-                                                  , std::size_t &numStrLen
-                                                  , std::size_t &digitsCount
-                                                  , std::size_t maxLen
-                                                  );
-
-    static
-    std::string expandWithGroupSeparatorToNumDigitsImplHelper( std::string numStr
-                                                             , const std::string &sep
-                                                             , const group_info_t &grpInfo
-                                                             , std::size_t &digitsCount
-                                                             , std::size_t maxLen
-                                                             );
-
-}; // class LocaleInfo
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} locale_info.h#LocaleInfo
 
 
 #### Функция marty::format::getLocaleInfo - получение стандартной локали
 
 Функция для получения одной из стандартных локалей.
 
-```cpp
-const LocaleInfo* getLocaleInfo(LocaleInfoType lt);
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} locale_info.h#getLocaleInfo
 
 Запрашиваемые локали имеют тип `marty::format::LocaleInfoType`.
 
@@ -1076,45 +480,8 @@ const LocaleInfo* getLocaleInfo(LocaleInfoType lt);
 
 В базовом классе локали `LocaleInfo` есть следующие поля:
 
-```cpp
-// Integer part/Fractional part
-group_info_t groupInfoCur[2]; // Currency
-group_info_t groupInfoBin[2];
-group_info_t groupInfoOct[2];
-group_info_t groupInfoDec[2];
-group_info_t groupInfoHex[2];
-
-// Integer part/Fractional part
-std::string groupSeparatorCur[2];
-std::string groupSeparatorBin[2];
-std::string groupSeparatorOct[2];
-std::string groupSeparatorDec[2];
-std::string groupSeparatorHex[2];
-
-std::string signDecimal            = ".";
-std::string signPlus               = "+";
-std::string signMinus              = "-";
-std::string signPercent            = "%";
-std::string signCurrency           = "$";
-
-std::string formatPercentNegative       = "-#%";
-std::string formatPercentPositive       = "+#%";
-std::string formatPercentShortNegative  = "-#" ;
-std::string formatPercentShortPositive  = "+#" ;
-std::string formatCurrencyNegative      = "-$#";
-std::string formatCurrencyPositive      = "+$#";
-std::string formatCurrencyShortNegative = "-#" ;
-std::string formatCurrencyShortPositive = "+#" ;
-
-// Числа любой СС форматируем по тем же правилам.
-// Только перед подстановкой в форматную строку строки числа могут быть дополнены
-// или пробелами или нулями, в зависимости от режима выравнивания
-std::string formatNumberNegative   = "-#";
-std::string formatNumberPositive   = "+#";
-
-unsigned digitsNumber              = 3;
-unsigned digitsCurrency            = 2;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} locale_info.h#LocaleInfoMembers
 
 Поля, являющиеся массивами из двух элементов, задают значения для целой и дробной частей соответсвующих
 форматов, где нулевой индекс отвечает за целую часть, а единичный - за дробную.
@@ -1134,24 +501,8 @@ unsigned digitsCurrency            = 2;
 
 Виртуальные методы класса `marty::format::LocaleInfo`, доступные для переопределения:
 
-```cpp
-virtual std::string getGroupSeparator( LocaleInfoSeparatorType vt //!
-                                     , NumeralSystem ns       //!
-                                     ) const;
-
-//! Обрабатывает LocaleInfoValueType::sign* и LocaleInfoValueType::format*
-virtual std::string getLocaleInfoValue(LocaleInfoValueType vt) const;
-
-virtual group_info_t getGroupInfo(NumeralSystem ns, bool bFractionalPart) const;
-
-virtual std::string substFormatString( const std::string &fmt
-                                     , const std::string &numStr
-                                     , PositiveNumbersMode pm
-                                     ) const;
-
-// digitsDecimal / digitsCurrency
-virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} locale_info.h#LocaleInfoVirtualFunctions
 
 
 #### Форматная строка для чисел - marty::format::LocaleInfo::format*
@@ -1169,19 +520,13 @@ virtual unsigned getNumberOfDigits(LocaleInfoDigitsType vt) const;
 
 Фильтрация производится после форматирования поля.
 
-```cpp
-template<typename InputIteratorType, typename OutputIteratorType>
-using BasicFormatValueFilter = std::function< OutputIteratorType( InputIteratorType  // begin
-                                                                , InputIteratorType  // end
-                                                                , OutputIteratorType
-                                                                )
-                                            >;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicFormatValueFilter
 
 Параметры шаблона:
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |**InputIteratorType**|Тип входного итератора, должен иметь конструктор, принимающий два аргумента: `const CharType* pBegin` и `const CharType* pEnd`, и конструктор без параметров, создающий `end`-итератор, при вызове оператора `operator==` для него и итератора, в котором равенство указателей `pBegin` и `pEnd` обозначает достижение конца последовательности, должен возвращать `true`.|
 |**OutputIteratorType**|Тип выходного итератора, добавляет символы в результирующую строку/контейнер символов.|
@@ -1192,56 +537,27 @@ using BasicFormatValueFilter = std::function< OutputIteratorType( InputIteratorT
 
 #### Пример реализации методов InputIteratorType для использования совместно с BasicFormatValueFilter
 
-```cpp
-bool operator==(InputIterator other) const
-{
-    return isIteratorEnd()==other.isIteratorEnd();
-}
-
-bool operator!=(InputIterator other) const
-{
-    return isIteratorEnd()!=other.isIteratorEnd();
-}
-
-InputIterator() : m_ptr(0), m_ptrEnd(0) {}
-
-InputIterator(const char* b, const char* e)
-: m_ptr(const_pointer_type(b)), m_ptrEnd(const_pointer_type(e))
-{}
-
-bool isIteratorEnd() const
-{
-    return m_ptr==m_ptrEnd;
-}
-
-const char* m_ptr     = 0;
-const char* m_ptrEnd  = 0;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,no-filename,no-path,no-filename-line-no} input_iterator_sample_methods.cpp
 
 
 ### Тип фильтра FormatValueFilter
 
 Специализация базового фильтра `BasicFormatValueFilter` для UTF-8 строк: 
 
-```cpp
-using FormatValueFilter = BasicFormatValueFilter< marty::utf::UtfInputIterator<char>
-                                                , marty::utf::UtfOutputIterator<char>
-                                                >;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#FormatValueFilter
 
 
 ### Мейкер стандартных фильтров по типу StdFilterType - makeStandardFormatValueFilter
 
 Возвращает стандартный фильтр по его StdFilterType-идентификатору.
 
-```cpp
-FormatValueFilter makeStandardFormatValueFilter( StdFilterType filterType
-                                               , bool *pNoneReturned=0
-                                               );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!snippet{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilterId
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |**filterType**|Тип фильтра (`marty::format::StdFilterType`).|
 |**pNoneReturned**|Опциональный указатель на `bool` переменную, принимающую признак, был ли возвращён `none` фильтр. Если данный указатель задан нулевым, то вместо возвращения `none` фильтра будет выброшено исключение.|
@@ -1274,15 +590,11 @@ FormatValueFilter makeStandardFormatValueFilter( StdFilterType filterType
 
 Возвращает стандартный фильтр по его имени.
 
-```cpp
-template<typename StringType>
-FormatValueFilter makeStandardFormatValueFilter( const StringType &filterName
-                                               , bool *pNoneReturned=0
-                                               );
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#makeStandardFormatValueFilterStr
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |**filterName**|Имя фильтра (строка).|
 |**pNoneReturned**|Опциональный указатель на `bool` переменную, принимающую признак, был ли возвращён `none` фильтр. Если данный указатель задан нулевым, то вместо возвращения `none` фильтра будет выброшено исключение.|
@@ -1314,35 +626,8 @@ FormatValueFilter makeStandardFormatValueFilter( const StringType &filterName
 в базовой реализации функции форматирования `formatMessageImpl` и в стандартных 
 реализациях `formatMessage`.
 
-```cpp
-struct StdFilterFactory
-{
-    template<typename StringType>
-    FormatValueFilter operator()(StdFilterType filterType) const
-    {
-        return makeStandardFormatValueFilter(filterType);
-    }
-
-    template<typename StringType>
-    FormatValueFilter operator()(StdFilterType filterType, bool *pNoneReturned) const
-    {
-        return makeStandardFormatValueFilter(filterType, pNoneReturned);
-    }
-
-    template<typename StringType>
-    FormatValueFilter operator()(const StringType &filterName) const
-    {
-        return makeStandardFormatValueFilter(filterName);
-    }
-
-    template<typename StringType>
-    FormatValueFilter operator()(const StringType &filterName, bool *pNoneReturned) const
-    {
-        return makeStandardFormatValueFilter(filterName, pNoneReturned);
-    }
-
-}; // struct StdFilterFactory
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#StdFilterFactory
 
 
 ### marty::format::FormatArgumentVariant - Variant-тип аргумента
@@ -1352,38 +637,8 @@ struct StdFilterFactory
 Это стандартный тип `marty::format::FormatArgumentVariant`. Пользователь библиотеки может определить
 свой вариант variant'а и использовать его в своих библиотеках или прикладном коде.
 
-```cpp
-using FormatArgumentVariant =
-    std::variant< bool
-                , char
-                , unsigned char        // std::uint8_t
-                , signed char          // std::int8_t
-                , unsigned short       // std::uint16_t
-                , signed short         // std::int16_t
-                , unsigned int         // std::uint32_t
-                , int                  // std::int32_t
-                , unsigned long        // 32/64, it's depends
-                , long                 // 32/64, it's depends
-                , unsigned long long   // std::uint64_t
-                , long long            // std::int64_t
-                , float
-                , double
-                , long double
-                , const char*
-                , const wchar_t*
-                , std::string
-                , std::wstring
-#if defined(USE_MARTY_BIGINT) && USE_MARTY_BIGINT!=0
-                , marty::BigInt
-#endif
-#if defined(USE_MARTY_DECIMAL) && USE_MARTY_DECIMAL!=0
-                , marty::Decimal
-#endif
-                , const void*
-                // , std::nullptr_t
-                , FormatValueFilter
-                >;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#FormatArgumentVariant
 
 
 ### marty::format::BasicArgs
@@ -1401,14 +656,8 @@ using FormatArgumentVariant =
 Контейнер типа `marty::format::BasicArgs` предоставляет как метод `find` по имени, так и метод 
 `find_by_pos(std::size_t)` для "поиска" по индексу.
 
-```cpp
-template< typename ArgumentVariantType=FormatArgumentVariant
-        , typename VectorType=std::vector<ArgumentVariantType>
-        , typename MapType=std::unordered_map<std::string, std::size_t>
-        , typename WidthCalculator = utils::DefaultUtfWidthCalculator
-        >
-class BasicArgs
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs
 
 
 #### Конструктор marty::format::BasicArgs
@@ -1419,11 +668,8 @@ class BasicArgs
 Игнорирование регистра именованных аргументов производится путём приведения имён
 к нижнему регистру, и работает только для имён, содержащих символы из базовой таблицы ASCII.
 
-```cpp
-BasicArgs(bool caseIgnore=true)
-: m_caseIgnore(caseIgnore)
-{}
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgsCtor
 
 
 #### Методы marty::format::BasicArgs::arg
@@ -1433,40 +679,31 @@ BasicArgs(bool caseIgnore=true)
 
 Добавляет безымянный аргумент:
 
-```cpp
-template<typename T> BasicArgs& arg(T t)
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_T
 
 Добавляет именованный аргумент, имя задаётся параметром типа `const char*`:
 
-```cpp
-template<typename T> BasicArgs& arg(const char* k, T t)
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_CharK_T
 
 Добавляет именованный аргумент, имя задаётся параметром типа ключа в `map`, хранящей индексы именованных аргументов:
 
-```cpp
-template<typename T> BasicArgs& arg(const key_type &k, T t)
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_KeyK_T
 
 Добавляет безымянный аргумент типа int со значением `0`:
 
-```cpp
-BasicArgs& arg()
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format_types.h#BasicArgs_arg_empty
 
 
 ### marty::format::Args
 
 Данный тип является специализацией типа `BasicArgs` с использованием `marty::format::FormatArgumentVariant`.
 
-```cpp
-using Args = BasicArgs< FormatArgumentVariant
-                      , std::vector<FormatArgumentVariant>
-                      , std::unordered_map<std::string, std::size_t>
-                      , DefaultUtfWidthCalculator
-                      >;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#Args
 
 
 ### marty::format::FormattingFlags флаги
@@ -1510,77 +747,28 @@ using Args = BasicArgs< FormatArgumentVariant
 Пользователь библиотеки может создать свой собственный variant-тип аргумента, добавив
 свои собственные типы, и, используя данную функцию, сделать свою кастомизированную функцию форматирования.
 
-```cpp
-template< typename StringType      = std::string
-        , typename ArgsType        = Args
-        , typename WidthCalculator = DefaultUtfWidthCalculator
-        , typename FilterFactory   = StdFilterFactory
-        >
-StringType formatMessageImpl( const StringType &fmt
-                            , const ArgsType   &args
-                            , const LocaleInfo *pLocaleInfo = 0
-                            , FormattingFlags   formattingFlags=FormattingFlags::allBase
-                            )
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#BasicImpl
 
 
 
 
 ### marty::format::formatMessage - аргументы передаются в generic-контейнере
 
-```cpp
-template< typename StringType      = std::string
-        , typename ArgsType        = Args
-        , typename WidthCalculator = DefaultUtfWidthCalculator
-        , typename FilterFactory   = StdFilterFactory
-        >
-StringType formatMessage( const StringType &fmt
-                        , const ArgsType   &args
-                        , const LocaleInfo *pLocaleInfo = 0
-                        , FormattingFlags  formattingFlags=FormattingFlags::allBase
-                        )
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageGeneric
 
-```cpp
-template< typename ArgsType        = Args
-        , typename WidthCalculator = DefaultUtfWidthCalculator
-        , typename FilterFactory   = StdFilterFactory
-        >
-std::string formatMessage( const char       *fmt
-                         , const ArgsType   &args
-                         , const LocaleInfo *pLocaleInfo = 0
-                         , FormattingFlags  formattingFlags=FormattingFlags::allBase
-                         )
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageGenericConstCharPtr
 
 
 ### marty::format::formatMessage - аргументы передаются в виде std::initializer_list
 
-```cpp
-using FormatArgumentVariantList = std::initializer_list<FormatArgumentVariant>;
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerList
 
-template< typename StringType = std::string
-        , typename WidthCalculator = DefaultUtfWidthCalculator
-        , typename FilterFactory   = StdFilterFactory
-        >
-StringType formatMessage( const StringType          &fmt
-                        , FormatArgumentVariantList &&args
-                        , const LocaleInfo          *pLocaleInfo = 0
-                        , FormattingFlags           formattingFlags=FormattingFlags::allBase
-                        )
-```
-
-```cpp
-template< typename WidthCalculator = DefaultUtfWidthCalculator
-        , typename FilterFactory   = StdFilterFactory
-        >
-inline
-std::string formatMessage( const char                *fmt
-                         , FormatArgumentVariantList &&args
-                         , const LocaleInfo          *pLocaleInfo = 0
-                         , FormattingFlags           formattingFlags=FormattingFlags::allBase
-                         )
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#formatMessageInitializerListConstCharPtr
 
 
 ### Базовая реализация функтора вычисления отображаемой ширины строки
@@ -1589,45 +777,11 @@ std::string formatMessage( const char                *fmt
 `marty::utf` с префиксом `suf` - `simpleUnicodeFeature`. В текущий момент поддерживается
 детект пробелов нулевой ширины по кодам символов и детект комбинируемых диакретиков (по диапазонам символов).
 
-```cpp
-struct DefaultUtfWidthCalculator
-{
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} utils.h#DefaultUtfWidthCalculator
 
-    std::size_t operator()(marty::utf::unicode_char_t ch) const
-    {
-        // suf - simpleUnicodeFeature
-        if (marty::utf::sufIsZeroWidthSpace(ch) || marty::utf::sufIsCombiningDiacretic(ch))
-            return 0;
-
-        return 1;
-    }
-
-    std::size_t operator()(const char* b, const char* e) const
-    {
-        auto it    = marty::utf::UtfInputIterator<char>(b, e);
-        auto endIt = marty::utf::UtfInputIterator<char>();
-
-        std::size_t size = 0;
-
-        for(; it!=endIt; ++it)
-        {
-            size += operator()(*it);
-        }
-
-        return size;
-    }
-
-    std::size_t operator()(const char* b, std::size_t strLen) const
-    {
-        return operator()(b, b+std::ptrdiff_t(strLen));
-    }
-
-}; // struct DefaultUtfWidthCalculator
-```
-
-```cpp
-using DefaultUtfWidthCalculator = utils::DefaultUtfWidthCalculator;
-```
+!!! File not found in: F:\_github\umba-tools\umba-md-pp, F:\_github\umba-tools\umba-md-pp\doc, F:\_github\umba-tools\umba-md-pp\doc.drafts, F:\_github\umba-tools\umba-md-pp\conf, F:\_github\umba-tools\umba-md-pp\tests\snippets, F:\_github\umba-tools\umba-md-pp\_src, F:\_github\umba-tools\umba-md-pp\src
+#!insert{trim,nolineno,noKeepCutTags,nofilename,no-path,no-filename-line-no} marty_format.h#DefaultUtfWidthCalculator
 
 
 
@@ -1674,7 +828,7 @@ format_spec       ::= format_spec_expr
 Описание полей грамматики полей замены:
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |**arg_id**|Идентификатор аргумента. Может отсутствовать, тогда используется автоматически подставляемый индекс, который инкрементируется при появлении каждого "поля замены" с отсутствующим идентификатором аргумента.|
 |**arg_index**|Индекс аргумента, начиная с нуля. Для ассоциативных контейнеров типа `std::map` и `std::unordered_map` обращение по индексу производится с использованием `std::advance`. Индекс аргумента должен быть корректным десятичным числом.|
@@ -1704,7 +858,7 @@ format_spec       ::= format_spec_expr
 **NOT_IMPLEMENTED** - в данный момент не реализовано, но обрабатывается в форматной строке.
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |`s`|преобразует аргумент в строку (см. описание [str](https://docs.python.org/3/library/stdtypes.html#str)).|
 |`r`|преобразует аргумент в строку (см. описание [repr](https://docs.python.org/3/library/functions.html#repr)).|
@@ -1742,7 +896,7 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 Описание полей спецификатора формата:
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |**format_spec**|полный спецификатор формата.|
 |**options**|опции форматирования в составе спецификатора формата.|
@@ -1806,7 +960,7 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 #### Маркер выравнивания align
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |`'<'`|Задаёт выравнивание по левому краю поля вывода.|
 |`'>'`|Задаёт выравнивание по правому краю поля вывода. Используется по умолчанию.|
@@ -1821,7 +975,7 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 #### Признак знака sign
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |`'+'`|Указывает, что знак следует использовать как для положительных, так и для отрицательных чисел.\||
 |`'-'`|Указывает, что знак следует использовать только для отрицательных чисел. Для положительных чисел не производится вставка знака `'+'` или пробела. Данное поведение используется по умолчанию.|
@@ -1863,7 +1017,7 @@ identifier_char ::= &quot;_&quot; | &quot;a&quot;-&quot;z&quot; | &quot;A&quot;-
 ##### Опции форматирования, влияющие на отображение bool в строковом виде
 
 
-|Значение|Описание|
+|||
 |:---|:---|
 |`'!'`|Инверсия регистра - меняет регистр первого символа строкового представления булевой переменной на противоположный: 'True', 'fALSE'.|
 |`'#'`|Альтернативное отображение - отображение `bool` в виде одного символа, соответствует заданию точности в 1 символ.|
