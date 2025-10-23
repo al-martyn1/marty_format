@@ -31,7 +31,7 @@ int main()
     std::array<char, 3> fillChars  = {0, ' ', '*'}; // Fill используем, только если используется align
     std::array<char, 5> alignChars = {0, '=', '<', '>', '^' };
     std::array<char, 4> signChars  = {0, '-', '+', ' '};
-    std::array<const char*, 5> alignNames = {"Default", "Width", "Left", "Right", "Center"};
+    // std::array<const char*, 5> alignNames = {"Default", "Width", "Left", "Right", "Center"};
 
     int valueInitialVal = 1420;
     std::array<int, 2> signs  = {-1, 1};

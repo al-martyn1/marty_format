@@ -233,7 +233,7 @@ void test(bool doTest=false)
 }
 
 
-int main(int argc)
+int main(int argc, char*  /* argv */ [])
 {
     try
     {
