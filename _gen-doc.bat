@@ -6,7 +6,7 @@
 @rem set BRIEF_EXTRA_OPTS_TXT=--scan-notes "--notes-output-path=%~dp0\doc\_md"
 @set BRIEF_EXTRA_OPTS_MD=--scan-notes "--notes-output-path=%~dp0\doc\_md"
 
-@rem call "%~dp0.bat\gen-doc.bat"
+@rem call "%~dp0.umba.bat\gen-doc.bat"
 
 @set EXAMPLES_INCLUDE="--add-examples-path=%~dp0\." "--add-examples-path=%~dp0\md_"
 @rem "--add-examples-path=%~dp0" "--add-examples-path=%~dp0\md_"
